@@ -488,6 +488,16 @@ async def initialize_bonzai_services():
             except ImportError as e:
                 logger.warning(f"WebSocket Coordinator API not available: {e}")
 
+            # Register MCP Remote Server API
+            try:
+                from api.mcp_remote_server import integrate_mcp_remote_with_app
+                integrate_mcp_remote_with_app(app)
+                logger.info("[OK] MCP Remote Server API registered - Claude Web integration ready!")
+                logger.info("   🌐 Claude Web URL: https://mofy.ai/api/mcp")
+                logger.info("   📱 Perfect for mobile and remote access!")
+            except ImportError as e:
+                logger.warning(f"MCP Remote Server API not available: {e}")
+
             logger.info("[OK] API blueprints registered successfully")
         except Exception as e:
             logger.error(f"[ERROR] Failed to register API blueprints: {e}")
