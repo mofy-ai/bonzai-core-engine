@@ -1,0 +1,22 @@
+{
+  "id": "research_agent_v1",
+  "name": "Research Specialist",
+  "type": "research",
+  "description": "Deep research agent with web scraping, data analysis, and report generation",
+  "capabilities": [
+    "web_research",
+    "data_analysis",
+    "report_generation",
+    "fact_checking",
+    "source_validation"
+  ],
+  "default_config": {
+    "max_research_depth": 5,
+    "sources_required": 3,
+    "fact_check_enabled": true,
+    "output_format": "markdown",
+    "research_timeout": 300
+  },
+  "created_at": "2025-07-05T21:37:55.201041",
+  "version": "1.0.0"
+}

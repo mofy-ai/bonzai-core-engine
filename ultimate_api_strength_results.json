@@ -1,0 +1,671 @@
+{
+  "timestamp": "2025-07-05 17:40:15.449304",
+  "api_keys": {
+    "google_keys": {
+      "podplay-build-alpha": {
+        "status": "\u2705 Working",
+        "models_tested": 42,
+        "models_working": 24,
+        "success_rate": 57.14285714285714,
+        "model_details": {
+          "models/gemini-1.0-pro-vision-latest": {
+            "status": "\u274c Failed",
+            "error": "404 Gemini 1.0 Pro Vision has been deprecated on J"
+          },
+          "models/gemini-pro-vision": {
+            "status": "\u274c Failed",
+            "error": "404 Gemini 1.0 Pro Vision has been deprecated on J"
+          },
+          "models/gemini-1.5-pro-latest": {
+            "status": "\u2705 Working",
+            "response_time_ms": 429.77,
+            "sample_response": "Hello there! How can..."
+          },
+          "models/gemini-1.5-pro-002": {
+            "status": "\u2705 Working",
+            "response_time_ms": 561.09,
+            "sample_response": "Hello! How can I..."
+          },
+          "models/gemini-1.5-pro": {
+            "status": "\u2705 Working",
+            "response_time_ms": 434.56,
+            "sample_response": "Hello! How can I..."
+          },
+          "models/gemini-1.5-flash-latest": {
+            "status": "\u2705 Working",
+            "response_time_ms": 366.8,
+            "sample_response": "Hello there! How can..."
+          },
+          "models/gemini-1.5-flash": {
+            "status": "\u2705 Working",
+            "response_time_ms": 367.97,
+            "sample_response": "Hello there! How can..."
+          },
+          "models/gemini-1.5-flash-002": {
+            "status": "\u2705 Working",
+            "response_time_ms": 365.25,
+            "sample_response": "Hello there! How can..."
+          },
+          "models/gemini-1.5-flash-8b": {
+            "status": "\u2705 Working",
+            "response_time_ms": 367.06,
+            "sample_response": "Hello! How can I..."
+          },
+          "models/gemini-1.5-flash-8b-001": {
+            "status": "\u2705 Working",
+            "response_time_ms": 370.53,
+            "sample_response": "Hello! How can I..."
+          },
+          "models/gemini-1.5-flash-8b-latest": {
+            "status": "\u2705 Working",
+            "response_time_ms": 414.5,
+            "sample_response": "Hello!  How can..."
+          },
+          "models/gemini-2.5-pro-preview-03-25": {
+            "status": "\u274c Failed",
+            "error": "Invalid operation: The `response.text` quick acces"
+          },
+          "models/gemini-2.5-flash-preview-04-17": {
+            "status": "\u274c Failed",
+            "error": "Invalid operation: The `response.text` quick acces"
+          },
+          "models/gemini-2.5-flash-preview-05-20": {
+            "status": "\u274c Failed",
+            "error": "Invalid operation: The `response.text` quick acces"
+          },
+          "models/gemini-2.5-flash": {
+            "status": "\u274c Failed",
+            "error": "Invalid operation: The `response.text` quick acces"
+          },
+          "models/gemini-2.5-flash-preview-04-17-thinking": {
+            "status": "\u274c Failed",
+            "error": "Invalid operation: The `response.text` quick acces"
+          },
+          "models/gemini-2.5-flash-lite-preview-06-17": {
+            "status": "\u2705 Working",
+            "response_time_ms": 378.52,
+            "sample_response": "Hello there! How can..."
+          },
+          "models/gemini-2.5-pro-preview-05-06": {
+            "status": "\u274c Failed",
+            "error": "Invalid operation: The `response.text` quick acces"
+          },
+          "models/gemini-2.5-pro-preview-06-05": {
+            "status": "\u274c Failed",
+            "error": "Invalid operation: The `response.text` quick acces"
+          },
+          "models/gemini-2.5-pro": {
+            "status": "\u274c Failed",
+            "error": "Invalid operation: The `response.text` quick acces"
+          },
+          "models/gemini-2.0-flash-exp": {
+            "status": "\u2705 Working",
+            "response_time_ms": 532.37,
+            "sample_response": "Hello! How can I..."
+          },
+          "models/gemini-2.0-flash": {
+            "status": "\u2705 Working",
+            "response_time_ms": 265.8,
+            "sample_response": "Hi there! How can..."
+          },
+          "models/gemini-2.0-flash-001": {
+            "status": "\u2705 Working",
+            "response_time_ms": 231.95,
+            "sample_response": "Hello there! How can..."
+          },
+          "models/gemini-2.0-flash-lite-001": {
+            "status": "\u2705 Working",
+            "response_time_ms": 344.99,
+            "sample_response": "Hi there! How can..."
+          },
+          "models/gemini-2.0-flash-lite": {
+            "status": "\u2705 Working",
+            "response_time_ms": 402.87,
+            "sample_response": "Hi there! How can..."
+          },
+          "models/gemini-2.0-flash-lite-preview-02-05": {
+            "status": "\u2705 Working",
+            "response_time_ms": 503.34,
+            "sample_response": "Hi there! How can..."
+          },
+          "models/gemini-2.0-flash-lite-preview": {
+            "status": "\u2705 Working",
+            "response_time_ms": 394.92,
+            "sample_response": "Hi there! How can..."
+          },
+          "models/gemini-2.0-pro-exp": {
+            "status": "\u274c Failed",
+            "error": "429 You exceeded your current quota. Please migrat"
+          },
+          "models/gemini-2.0-pro-exp-02-05": {
+            "status": "\u274c Failed",
+            "error": "429 You exceeded your current quota. Please migrat"
+          },
+          "models/gemini-exp-1206": {
+            "status": "\u274c Failed",
+            "error": "429 You exceeded your current quota. Please migrat"
+          },
+          "models/gemini-2.0-flash-thinking-exp-01-21": {
+            "status": "\u274c Failed",
+            "error": "Invalid operation: The `response.text` quick acces"
+          },
+          "models/gemini-2.0-flash-thinking-exp": {
+            "status": "\u274c Failed",
+            "error": "Invalid operation: The `response.text` quick acces"
+          },
+          "models/gemini-2.0-flash-thinking-exp-1219": {
+            "status": "\u274c Failed",
+            "error": "Invalid operation: The `response.text` quick acces"
+          },
+          "models/gemini-2.5-flash-preview-tts": {
+            "status": "\u274c Failed",
+            "error": "400 The requested combination of response modaliti"
+          },
+          "models/gemini-2.5-pro-preview-tts": {
+            "status": "\u274c Failed",
+            "error": "400 The requested combination of response modaliti"
+          },
+          "models/learnlm-2.0-flash-experimental": {
+            "status": "\u2705 Working",
+            "response_time_ms": 491.72,
+            "sample_response": "Hello there! How can..."
+          },
+          "models/gemma-3-1b-it": {
+            "status": "\u2705 Working",
+            "response_time_ms": 886.64,
+            "sample_response": "Hello there! How'..."
+          },
+          "models/gemma-3-4b-it": {
+            "status": "\u2705 Working",
+            "response_time_ms": 1308.29,
+            "sample_response": "Hello there! How can..."
+          },
+          "models/gemma-3-12b-it": {
+            "status": "\u2705 Working",
+            "response_time_ms": 2431.74,
+            "sample_response": "Hello there! How can..."
+          },
+          "models/gemma-3-27b-it": {
+            "status": "\u2705 Working",
+            "response_time_ms": 604.15,
+            "sample_response": "Hello there! \ud83d\udc4b ..."
+          },
+          "models/gemma-3n-e4b-it": {
+            "status": "\u2705 Working",
+            "response_time_ms": 752.55,
+            "sample_response": "Hello there! \ud83d\ude0a ..."
+          },
+          "models/gemma-3n-e2b-it": {
+            "status": "\u2705 Working",
+            "response_time_ms": 527.31,
+            "sample_response": "Hello there! \ud83d\ude0a ..."
+          }
+        }
+      },
+      "Gemini-API": {
+        "status": "\u2705 Working",
+        "models_tested": 42,
+        "models_working": 24,
+        "success_rate": 57.14285714285714,
+        "model_details": {
+          "models/gemini-1.0-pro-vision-latest": {
+            "status": "\u274c Failed",
+            "error": "404 Gemini 1.0 Pro Vision has been deprecated on J"
+          },
+          "models/gemini-pro-vision": {
+            "status": "\u274c Failed",
+            "error": "404 Gemini 1.0 Pro Vision has been deprecated on J"
+          },
+          "models/gemini-1.5-pro-latest": {
+            "status": "\u2705 Working",
+            "response_time_ms": 415.91,
+            "sample_response": "Hello! How can I..."
+          },
+          "models/gemini-1.5-pro-002": {
+            "status": "\u2705 Working",
+            "response_time_ms": 537.18,
+            "sample_response": "Hello! How can I..."
+          },
+          "models/gemini-1.5-pro": {
+            "status": "\u2705 Working",
+            "response_time_ms": 488.2,
+            "sample_response": "Hello there! How can..."
+          },
+          "models/gemini-1.5-flash-latest": {
+            "status": "\u2705 Working",
+            "response_time_ms": 363.35,
+            "sample_response": "Hello there! How can..."
+          },
+          "models/gemini-1.5-flash": {
+            "status": "\u2705 Working",
+            "response_time_ms": 342.56,
+            "sample_response": "Hello there! How can..."
+          },
+          "models/gemini-1.5-flash-002": {
+            "status": "\u2705 Working",
+            "response_time_ms": 341.59,
+            "sample_response": "Hello there! How can..."
+          },
+          "models/gemini-1.5-flash-8b": {
+            "status": "\u2705 Working",
+            "response_time_ms": 357.8,
+            "sample_response": "Hello!  How can..."
+          },
+          "models/gemini-1.5-flash-8b-001": {
+            "status": "\u2705 Working",
+            "response_time_ms": 510.86,
+            "sample_response": "Hello! How can I..."
+          },
+          "models/gemini-1.5-flash-8b-latest": {
+            "status": "\u2705 Working",
+            "response_time_ms": 345.42,
+            "sample_response": "Hello! How can I..."
+          },
+          "models/gemini-2.5-pro-preview-03-25": {
+            "status": "\u274c Failed",
+            "error": "Invalid operation: The `response.text` quick acces"
+          },
+          "models/gemini-2.5-flash-preview-04-17": {
+            "status": "\u274c Failed",
+            "error": "Invalid operation: The `response.text` quick acces"
+          },
+          "models/gemini-2.5-flash-preview-05-20": {
+            "status": "\u274c Failed",
+            "error": "Invalid operation: The `response.text` quick acces"
+          },
+          "models/gemini-2.5-flash": {
+            "status": "\u274c Failed",
+            "error": "Invalid operation: The `response.text` quick acces"
+          },
+          "models/gemini-2.5-flash-preview-04-17-thinking": {
+            "status": "\u274c Failed",
+            "error": "Invalid operation: The `response.text` quick acces"
+          },
+          "models/gemini-2.5-flash-lite-preview-06-17": {
+            "status": "\u2705 Working",
+            "response_time_ms": 209.85,
+            "sample_response": "Hello there! How can..."
+          },
+          "models/gemini-2.5-pro-preview-05-06": {
+            "status": "\u274c Failed",
+            "error": "Invalid operation: The `response.text` quick acces"
+          },
+          "models/gemini-2.5-pro-preview-06-05": {
+            "status": "\u274c Failed",
+            "error": "Invalid operation: The `response.text` quick acces"
+          },
+          "models/gemini-2.5-pro": {
+            "status": "\u274c Failed",
+            "error": "Invalid operation: The `response.text` quick acces"
+          },
+          "models/gemini-2.0-flash-exp": {
+            "status": "\u2705 Working",
+            "response_time_ms": 417.0,
+            "sample_response": "Hello! How can I..."
+          },
+          "models/gemini-2.0-flash": {
+            "status": "\u2705 Working",
+            "response_time_ms": 257.88,
+            "sample_response": "Hello! How can I..."
+          },
+          "models/gemini-2.0-flash-001": {
+            "status": "\u2705 Working",
+            "response_time_ms": 259.59,
+            "sample_response": "Hello! How can I..."
+          },
+          "models/gemini-2.0-flash-lite-001": {
+            "status": "\u2705 Working",
+            "response_time_ms": 367.97,
+            "sample_response": "Hi there! How can..."
+          },
+          "models/gemini-2.0-flash-lite": {
+            "status": "\u2705 Working",
+            "response_time_ms": 433.69,
+            "sample_response": "Hi there! How can..."
+          },
+          "models/gemini-2.0-flash-lite-preview-02-05": {
+            "status": "\u2705 Working",
+            "response_time_ms": 346.04,
+            "sample_response": "Hello! How can I..."
+          },
+          "models/gemini-2.0-flash-lite-preview": {
+            "status": "\u2705 Working",
+            "response_time_ms": 383.52,
+            "sample_response": "Hello! How can I..."
+          },
+          "models/gemini-2.0-pro-exp": {
+            "status": "\u274c Failed",
+            "error": "429 You exceeded your current quota. Please migrat"
+          },
+          "models/gemini-2.0-pro-exp-02-05": {
+            "status": "\u274c Failed",
+            "error": "429 You exceeded your current quota. Please migrat"
+          },
+          "models/gemini-exp-1206": {
+            "status": "\u274c Failed",
+            "error": "429 You exceeded your current quota. Please migrat"
+          },
+          "models/gemini-2.0-flash-thinking-exp-01-21": {
+            "status": "\u274c Failed",
+            "error": "Invalid operation: The `response.text` quick acces"
+          },
+          "models/gemini-2.0-flash-thinking-exp": {
+            "status": "\u274c Failed",
+            "error": "Invalid operation: The `response.text` quick acces"
+          },
+          "models/gemini-2.0-flash-thinking-exp-1219": {
+            "status": "\u274c Failed",
+            "error": "Invalid operation: The `response.text` quick acces"
+          },
+          "models/gemini-2.5-flash-preview-tts": {
+            "status": "\u274c Failed",
+            "error": "400 The requested combination of response modaliti"
+          },
+          "models/gemini-2.5-pro-preview-tts": {
+            "status": "\u274c Failed",
+            "error": "400 The requested combination of response modaliti"
+          },
+          "models/learnlm-2.0-flash-experimental": {
+            "status": "\u2705 Working",
+            "response_time_ms": 566.17,
+            "sample_response": "Hi there! How can..."
+          },
+          "models/gemma-3-1b-it": {
+            "status": "\u2705 Working",
+            "response_time_ms": 341.93,
+            "sample_response": "Hello there! How'..."
+          },
+          "models/gemma-3-4b-it": {
+            "status": "\u2705 Working",
+            "response_time_ms": 816.44,
+            "sample_response": "Hello there! How can..."
+          },
+          "models/gemma-3-12b-it": {
+            "status": "\u2705 Working",
+            "response_time_ms": 793.74,
+            "sample_response": "Hello there! How can..."
+          },
+          "models/gemma-3-27b-it": {
+            "status": "\u2705 Working",
+            "response_time_ms": 561.45,
+            "sample_response": "Hello there! \ud83d\udc4b ..."
+          },
+          "models/gemma-3n-e4b-it": {
+            "status": "\u2705 Working",
+            "response_time_ms": 588.23,
+            "sample_response": "Hello there! \ud83d\udc4b ..."
+          },
+          "models/gemma-3n-e2b-it": {
+            "status": "\u2705 Working",
+            "response_time_ms": 610.84,
+            "sample_response": "Hello there! \ud83d\ude0a ..."
+          }
+        }
+      },
+      "podplay-build-beta": {
+        "status": "\u2705 Working",
+        "models_tested": 42,
+        "models_working": 21,
+        "success_rate": 50.0,
+        "model_details": {
+          "models/gemini-1.0-pro-vision-latest": {
+            "status": "\u274c Failed",
+            "error": "404 Gemini 1.0 Pro Vision has been deprecated on J"
+          },
+          "models/gemini-pro-vision": {
+            "status": "\u274c Failed",
+            "error": "404 Gemini 1.0 Pro Vision has been deprecated on J"
+          },
+          "models/gemini-1.5-pro-latest": {
+            "status": "\u274c Failed",
+            "error": "429 You exceeded your current quota, please check "
+          },
+          "models/gemini-1.5-pro-002": {
+            "status": "\u274c Failed",
+            "error": "429 You exceeded your current quota, please check "
+          },
+          "models/gemini-1.5-pro": {
+            "status": "\u274c Failed",
+            "error": "429 You exceeded your current quota, please check "
+          },
+          "models/gemini-1.5-flash-latest": {
+            "status": "\u2705 Working",
+            "response_time_ms": 338.84,
+            "sample_response": "Hello there! How can..."
+          },
+          "models/gemini-1.5-flash": {
+            "status": "\u2705 Working",
+            "response_time_ms": 408.67,
+            "sample_response": "Hello there! How can..."
+          },
+          "models/gemini-1.5-flash-002": {
+            "status": "\u2705 Working",
+            "response_time_ms": 364.38,
+            "sample_response": "Hello there! How can..."
+          },
+          "models/gemini-1.5-flash-8b": {
+            "status": "\u2705 Working",
+            "response_time_ms": 375.92,
+            "sample_response": "Hello!  How can..."
+          },
+          "models/gemini-1.5-flash-8b-001": {
+            "status": "\u2705 Working",
+            "response_time_ms": 358.01,
+            "sample_response": "Hello! How can I..."
+          },
+          "models/gemini-1.5-flash-8b-latest": {
+            "status": "\u2705 Working",
+            "response_time_ms": 347.26,
+            "sample_response": "Hello! How can I..."
+          },
+          "models/gemini-2.5-pro-preview-03-25": {
+            "status": "\u274c Failed",
+            "error": "429 Gemini 2.5 Pro Preview doesn't have a free quo"
+          },
+          "models/gemini-2.5-flash-preview-04-17": {
+            "status": "\u274c Failed",
+            "error": "Invalid operation: The `response.text` quick acces"
+          },
+          "models/gemini-2.5-flash-preview-05-20": {
+            "status": "\u274c Failed",
+            "error": "Invalid operation: The `response.text` quick acces"
+          },
+          "models/gemini-2.5-flash": {
+            "status": "\u274c Failed",
+            "error": "Invalid operation: The `response.text` quick acces"
+          },
+          "models/gemini-2.5-flash-preview-04-17-thinking": {
+            "status": "\u274c Failed",
+            "error": "Invalid operation: The `response.text` quick acces"
+          },
+          "models/gemini-2.5-flash-lite-preview-06-17": {
+            "status": "\u2705 Working",
+            "response_time_ms": 332.83,
+            "sample_response": "Hello there! How can..."
+          },
+          "models/gemini-2.5-pro-preview-05-06": {
+            "status": "\u274c Failed",
+            "error": "429 Gemini 2.5 Pro Preview doesn't have a free quo"
+          },
+          "models/gemini-2.5-pro-preview-06-05": {
+            "status": "\u274c Failed",
+            "error": "429 Gemini 2.5 Pro Preview doesn't have a free quo"
+          },
+          "models/gemini-2.5-pro": {
+            "status": "\u274c Failed",
+            "error": "Invalid operation: The `response.text` quick acces"
+          },
+          "models/gemini-2.0-flash-exp": {
+            "status": "\u2705 Working",
+            "response_time_ms": 537.01,
+            "sample_response": "Hello there! How can..."
+          },
+          "models/gemini-2.0-flash": {
+            "status": "\u2705 Working",
+            "response_time_ms": 284.27,
+            "sample_response": "Hi there! How can..."
+          },
+          "models/gemini-2.0-flash-001": {
+            "status": "\u2705 Working",
+            "response_time_ms": 247.77,
+            "sample_response": "Hello there! How can..."
+          },
+          "models/gemini-2.0-flash-lite-001": {
+            "status": "\u2705 Working",
+            "response_time_ms": 382.81,
+            "sample_response": "Hi there! How can..."
+          },
+          "models/gemini-2.0-flash-lite": {
+            "status": "\u2705 Working",
+            "response_time_ms": 409.23,
+            "sample_response": "Hello there! How can..."
+          },
+          "models/gemini-2.0-flash-lite-preview-02-05": {
+            "status": "\u2705 Working",
+            "response_time_ms": 364.48,
+            "sample_response": "Hi there! How can..."
+          },
+          "models/gemini-2.0-flash-lite-preview": {
+            "status": "\u2705 Working",
+            "response_time_ms": 380.25,
+            "sample_response": "Hello! How can I..."
+          },
+          "models/gemini-2.0-pro-exp": {
+            "status": "\u274c Failed",
+            "error": "429 You exceeded your current quota, please check "
+          },
+          "models/gemini-2.0-pro-exp-02-05": {
+            "status": "\u274c Failed",
+            "error": "429 You exceeded your current quota, please check "
+          },
+          "models/gemini-exp-1206": {
+            "status": "\u274c Failed",
+            "error": "429 You exceeded your current quota, please check "
+          },
+          "models/gemini-2.0-flash-thinking-exp-01-21": {
+            "status": "\u274c Failed",
+            "error": "Invalid operation: The `response.text` quick acces"
+          },
+          "models/gemini-2.0-flash-thinking-exp": {
+            "status": "\u274c Failed",
+            "error": "Invalid operation: The `response.text` quick acces"
+          },
+          "models/gemini-2.0-flash-thinking-exp-1219": {
+            "status": "\u274c Failed",
+            "error": "Invalid operation: The `response.text` quick acces"
+          },
+          "models/gemini-2.5-flash-preview-tts": {
+            "status": "\u274c Failed",
+            "error": "400 The requested combination of response modaliti"
+          },
+          "models/gemini-2.5-pro-preview-tts": {
+            "status": "\u274c Failed",
+            "error": "429 You exceeded your current quota, please check "
+          },
+          "models/learnlm-2.0-flash-experimental": {
+            "status": "\u2705 Working",
+            "response_time_ms": 532.47,
+            "sample_response": "Hi there! How can..."
+          },
+          "models/gemma-3-1b-it": {
+            "status": "\u2705 Working",
+            "response_time_ms": 499.75,
+            "sample_response": "Hello there! How'..."
+          },
+          "models/gemma-3-4b-it": {
+            "status": "\u2705 Working",
+            "response_time_ms": 1173.31,
+            "sample_response": "Hello there! How can..."
+          },
+          "models/gemma-3-12b-it": {
+            "status": "\u2705 Working",
+            "response_time_ms": 961.35,
+            "sample_response": "Hello there! How can..."
+          },
+          "models/gemma-3-27b-it": {
+            "status": "\u2705 Working",
+            "response_time_ms": 695.02,
+            "sample_response": "Hello there! \ud83d\udc4b ..."
+          },
+          "models/gemma-3n-e4b-it": {
+            "status": "\u2705 Working",
+            "response_time_ms": 593.57,
+            "sample_response": "Hello there! \ud83d\udc4b ..."
+          },
+          "models/gemma-3n-e2b-it": {
+            "status": "\u2705 Working",
+            "response_time_ms": 966.16,
+            "sample_response": "Hello there! \ud83d\ude0a ..."
+          }
+        }
+      }
+    },
+    "anthropic": {
+      "status": "\u2705 Working",
+      "models_tested": 5,
+      "models_working": 4,
+      "success_rate": 80.0,
+      "model_details": {
+        "claude-3-5-sonnet-20241022": {
+          "status": "\u2705 Working",
+          "response_time_ms": 1122.36,
+          "sample_response": "Hi! How can I..."
+        },
+        "claude-3-5-haiku-20241022": {
+          "status": "\u2705 Working",
+          "response_time_ms": 1179.43,
+          "sample_response": "Hi there! How are..."
+        },
+        "claude-3-haiku-20240307": {
+          "status": "\u2705 Working",
+          "response_time_ms": 529.09,
+          "sample_response": "Hello! How can I..."
+        },
+        "claude-3-opus-20240229": {
+          "status": "\u2705 Working",
+          "response_time_ms": 1044.29,
+          "sample_response": "Hello! How can I..."
+        },
+        "claude-3-sonnet-20240229": {
+          "status": "\u274c Failed",
+          "error": "Error code: 404 - {'type': 'error', 'error': {'typ"
+        }
+      }
+    },
+    "openai": {
+      "status": "\u274c No working models",
+      "models_tested": 3,
+      "models_working": 0,
+      "total_models_available": 48,
+      "success_rate": 0.0,
+      "model_details": {
+        "gpt-4o": {
+          "status": "\u274c Failed",
+          "error": "Error code: 429 - {'error': {'message': 'You excee"
+        },
+        "gpt-4o-mini": {
+          "status": "\u274c Failed",
+          "error": "Error code: 429 - {'error': {'message': 'You excee"
+        },
+        "gpt-3.5-turbo": {
+          "status": "\u274c Failed",
+          "error": "Error code: 429 - {'error': {'message': 'You excee"
+        }
+      }
+    },
+    "deepseek": {}
+  },
+  "endpoints": {
+    "google_ai_standard": {},
+    "vertex_ai_express": {},
+    "anthropic_api": {},
+    "openai_api": {},
+    "deepseek_api": {}
+  },
+  "model_summary": {
+    "total_working_models": 0,
+    "by_provider": {},
+    "by_api_key": {},
+    "recommendations": []
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "models/gemini-1.5-pro": {
+    "avg_response_time": 4208.119630813599,
+    "success_rate": 1.0,
+    "cost_per_token": 0.001,
+    "quality_score": 0.85,
+    "last_used": "2025-07-05T18:17:19.894897",
+    "quota_status": "available"
+  }
+}

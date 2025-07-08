@@ -1,0 +1,25 @@
+{
+  "id": "security_analyst_v1",
+  "name": "Security Analyst",
+  "type": "security",
+  "description": "Application security analysis, vulnerability detection, and hardening",
+  "capabilities": [
+    "vulnerability_scanning",
+    "security_analysis",
+    "penetration_testing",
+    "compliance_checking",
+    "security_recommendations"
+  ],
+  "default_config": {
+    "scan_depth": "comprehensive",
+    "compliance_standards": [
+      "OWASP",
+      "SOC2"
+    ],
+    "automated_fixes": false,
+    "report_detail": "high",
+    "continuous_monitoring": true
+  },
+  "created_at": "2025-07-05T21:37:55.201062",
+  "version": "1.0.0"
+}

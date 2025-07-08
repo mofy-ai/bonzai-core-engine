@@ -1,0 +1,43 @@
+# Development Dockerfile for Revolutionary Backend with debugging
+FROM python:3.11-slim
+
+# Install system dependencies including debugging tools
+RUN apt-get update && apt-get install -y \
+    build-essential \
+    curl \
+    git \
+    vim \
+    htop \
+    && rm -rf /var/lib/apt/lists/*
+
+# Create non-root user
+RUN groupadd -r revolutionary && useradd -r -g revolutionary revolutionary
+
+# Set working directory
+WORKDIR /app
+
+# Copy requirements first
+COPY requirements.txt .
+
+# Install Python dependencies including development tools
+RUN pip install --no-cache-dir -r requirements.txt && \
+    pip install --no-cache-dir \
+    debugpy \
+    pytest \
+    black \
+    flake8 \
+    isort \
+    mypy
+
+# Create directories and set permissions
+RUN mkdir -p /app/mama_bear_memory /app/logs /app/data && \
+    chown -R revolutionary:revolutionary /app
+
+# Switch to non-root user
+USER revolutionary
+
+# Expose ports (main app + debugger)
+EXPOSE 7777 5678
+
+# Development command with hot reload
+CMD ["python", "app.py"]

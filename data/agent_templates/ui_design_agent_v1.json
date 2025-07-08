@@ -1,0 +1,26 @@
+{
+  "id": "ui_design_agent_v1",
+  "name": "UI/UX Designer",
+  "type": "ui_design",
+  "description": "Intelligent UI designer with modern frameworks and accessibility focus",
+  "capabilities": [
+    "component_design",
+    "responsive_layouts",
+    "accessibility_compliance",
+    "design_systems",
+    "user_experience_optimization"
+  ],
+  "default_config": {
+    "framework_preference": "react",
+    "accessibility_level": "WCAG_AA",
+    "design_system": "material_design",
+    "responsive_breakpoints": [
+      "mobile",
+      "tablet",
+      "desktop"
+    ],
+    "performance_first": true
+  },
+  "created_at": "2025-07-05T21:37:55.201056",
+  "version": "1.0.0"
+}

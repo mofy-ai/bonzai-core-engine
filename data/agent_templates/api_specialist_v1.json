@@ -1,0 +1,22 @@
+{
+  "id": "api_specialist_v1",
+  "name": "API Development Specialist",
+  "type": "api",
+  "description": "REST/GraphQL API development with security and performance optimization",
+  "capabilities": [
+    "api_design",
+    "endpoint_implementation",
+    "authentication_setup",
+    "performance_optimization",
+    "documentation_generation"
+  ],
+  "default_config": {
+    "api_style": "REST",
+    "authentication": "JWT",
+    "rate_limiting": true,
+    "documentation": "OpenAPI",
+    "validation": "strict"
+  },
+  "created_at": "2025-07-05T21:37:55.201060",
+  "version": "1.0.0"
+}

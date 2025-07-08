@@ -1,0 +1,103 @@
+{
+  "timestamp": "2025-07-05 21:37:52.588450",
+  "python_version": "3.12.3 (main, Jun 18 2025, 17:59:45) [GCC 13.3.0]",
+  "environment": {
+    "GEMINI_API_KEY": "\u2705 Set",
+    "MEM0_API_KEY": "\u2705 Set",
+    "MEM0_USER_ID": "\u2705 Set",
+    "PORT": "\u2705 Set",
+    "FLASK_SECRET_KEY": "\u2705 Set",
+    "SCRAPYBARA_API_KEY": "\u26a0\ufe0f Optional",
+    "E2B_API_KEY": "\u26a0\ufe0f Optional",
+    "GITHUB_PAT": "\u26a0\ufe0f Optional",
+    "PIPEDREAM_API_TOKEN": "\u26a0\ufe0f Optional"
+  },
+  "services": {
+    "dep_flask": "\u2705 v3.1.1",
+    "dep_flask_cors": "\u274c Missing",
+    "dep_flask_socketio": "\u2705 vUnknown",
+    "dep_google.generativeai": "\u2705 vUnknown",
+    "dep_mem0": "\u2705 v0.1.114",
+    "dep_dotenv": "\u2705 vUnknown",
+    "dep_requests": "\u2705 v2.32.4",
+    "dep_asyncio": "\u2705 vUnknown",
+    "ZAI Orchestration Core": "\u2705 Ready",
+    "Model Manager": "\u2705 Ready",
+    "Memory System": "\u2705 Ready",
+    "7 Specialist Variants": "\u2705 Ready",
+    "Express Vertex (6x speed)": "\u2705 Ready",
+    "Vertex Supercharger": "\u26a0\ufe0f Optional",
+    "WebSocket Bridge": "\u2705 Ready",
+    "Agent Communication": "\u2705 Ready",
+    "Multi-AI Orchestration": "\u2705 Ready",
+    "Task Router": "\u2705 Ready",
+    "Task Orchestrator": "\u2705 Ready",
+    "MCP RAG System": "\u26a0\ufe0f Optional",
+    "MCP Integration": "\u26a0\ufe0f Optional",
+    "Research System": "\u2705 Ready",
+    "Agent Registry": "\u2705 Ready",
+    "Agent Factory": "\u2705 Ready",
+    "Agentic Powers": "\u26a0\ufe0f Optional",
+    "Pro Memory": "\u26a0\ufe0f Optional",
+    "Env Snapshots": "\u2705 Ready",
+    "Workspaces": "\u26a0\ufe0f Optional",
+    "Pipedream": "\u26a0\ufe0f Optional",
+    "Web Scraping": "\u26a0\ufe0f Optional",
+    "Enhanced Scraping": "\u26a0\ufe0f Optional",
+    "DeepSeek AI": "\u26a0\ufe0f Optional",
+    "Virtual Computer": "\u2705 Ready",
+    "Code Execution": "\u26a0\ufe0f Optional"
+  },
+  "ai_providers": {
+    "OPENAI_API_KEY": "\u2705 Configured",
+    "DEEPSEEK_API_KEY": "\u26a0\ufe0f Optional",
+    "ANTHROPIC_API_KEY": "\u2705 Configured",
+    "GOOGLE_AI_API_KEY": "\u2705 Configured",
+    "sdk_openai": "\u2705 v1.93.0",
+    "sdk_anthropic": "\u2705 v0.57.1",
+    "sdk_google.cloud.aiplatform": "\u2705 vUnknown"
+  },
+  "memory_system": {
+    "library": "\u2705 Installed",
+    "api_key": "\u2705 PASSED",
+    "user_id": "\u2705 PASSED",
+    "service": "\u2705 PASSED",
+    "professional": "\u26a0\ufe0f WARNING"
+  },
+  "websocket": {
+    "flask_socketio": "\u2705 PASSED",
+    "coordinator": "\u2705 PASSED",
+    "agent_client": "\u2705 PASSED"
+  },
+  "ports": {
+    "5000": "\u2705 Available",
+    "5001": "\u2705 Available",
+    "8765": "\u2705 Available",
+    "8080": "\u2705 Available",
+    "3000": "\u2705 Available",
+    "5173": "\u2705 Available",
+    "8100": "\u2705 Available",
+    "8200": "\u2705 Available",
+    "8300": "\u2705 Available",
+    "8400": "\u2705 Available"
+  },
+  "zai_variants": {
+    "Research": "\u2705 PASSED",
+    "DevOps": "\u2705 PASSED",
+    "Scout": "\u2705 PASSED",
+    "Analyst": "\u2705 PASSED",
+    "Creative": "\u2705 PASSED",
+    "Support": "\u2705 PASSED",
+    "Coordinator": "\u2705 PASSED"
+  },
+  "extensions": {
+    "C:\\Bonzai-Desktop\\bonzai-claude-ext": "\u26a0\ufe0f WARNING",
+    "C:\\Bonzai-Desktop\\aether-ai-command-center\\mofy-family-bridge.dxt": "\u26a0\ufe0f WARNING",
+    "C:\\Bonzai-Desktop\\zai-scrapybara-workspace\\bonzai-claude-ext": "\u26a0\ufe0f WARNING"
+  },
+  "summary": {
+    "passed": 57,
+    "failed": 1,
+    "warnings": 24
+  }
+}

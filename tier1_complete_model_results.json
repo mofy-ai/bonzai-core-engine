@@ -1,0 +1,460 @@
+{
+  "timestamp": "2025-07-05 17:56:11.776288",
+  "tier1_test_results": {
+    "podplay-build-alpha": {
+      "key_results": {
+        "Gemini 1.5 Pro": {
+          "models/gemini-1.5-pro": {
+            "status": "\u2705 WORKING",
+            "response_time_ms": 685.6,
+            "sample": "Hi!\n"
+          },
+          "models/gemini-1.5-pro-002": {
+            "status": "\u2705 WORKING",
+            "response_time_ms": 536.42,
+            "sample": "Hi!\n"
+          },
+          "models/gemini-1.5-pro-latest": {
+            "status": "\u2705 WORKING",
+            "response_time_ms": 420.92,
+            "sample": "Hi!\n"
+          }
+        },
+        "Gemini 1.5 Flash": {
+          "models/gemini-1.5-flash": {
+            "status": "\u2705 WORKING",
+            "response_time_ms": 334.99,
+            "sample": "Okay.\n"
+          },
+          "models/gemini-1.5-flash-002": {
+            "status": "\u2705 WORKING",
+            "response_time_ms": 341.55,
+            "sample": "Okay.\n"
+          },
+          "models/gemini-1.5-flash-latest": {
+            "status": "\u2705 WORKING",
+            "response_time_ms": 380.57,
+            "sample": "Okay.\n"
+          }
+        },
+        "Gemini 1.5 Flash-8B": {
+          "models/gemini-1.5-flash-8b": {
+            "status": "\u2705 WORKING",
+            "response_time_ms": 431.4,
+            "sample": "Hello.\n"
+          },
+          "models/gemini-1.5-flash-8b-001": {
+            "status": "\u2705 WORKING",
+            "response_time_ms": 427.94,
+            "sample": "Hello.\n"
+          },
+          "models/gemini-1.5-flash-8b-latest": {
+            "status": "\u2705 WORKING",
+            "response_time_ms": 352.44,
+            "sample": "Hello.\n"
+          }
+        },
+        "Gemini 2.0 Flash": {
+          "models/gemini-2.0-flash": {
+            "status": "\u2705 WORKING",
+            "response_time_ms": 401.34,
+            "sample": "Okay.\n"
+          },
+          "models/gemini-2.0-flash-001": {
+            "status": "\u2705 WORKING",
+            "response_time_ms": 249.62,
+            "sample": "Okay.\n"
+          },
+          "models/gemini-2.0-flash-exp": {
+            "status": "\u2705 WORKING",
+            "response_time_ms": 656.05,
+            "sample": "Okay.\n"
+          }
+        },
+        "Gemini 2.0 Flash-Lite": {
+          "models/gemini-2.0-flash-lite": {
+            "status": "\u2705 WORKING",
+            "response_time_ms": 374.07,
+            "sample": "Okay.\n"
+          },
+          "models/gemini-2.0-flash-lite-001": {
+            "status": "\u2705 WORKING",
+            "response_time_ms": 396.85,
+            "sample": "Okay.\n"
+          },
+          "models/gemini-2.0-flash-lite-preview": {
+            "status": "\u2705 WORKING",
+            "response_time_ms": 356.83,
+            "sample": "Okay.\n"
+          }
+        },
+        "Gemini 2.5 Pro (SHOULD WORK)": {
+          "models/gemini-2.5-pro": {
+            "status": "\u2705 WORKING",
+            "response_time_ms": 1690.04,
+            "sample": "response:\nGenerateContentRespo"
+          },
+          "models/gemini-2.5-pro-preview-05-06": {
+            "status": "\u2705 WORKING",
+            "response_time_ms": 1788.75,
+            "sample": "response:\nGenerateContentRespo"
+          },
+          "models/gemini-2.5-pro-preview-06-05": {
+            "status": "\u2705 WORKING",
+            "response_time_ms": 881.22,
+            "sample": "response:\nGenerateContentRespo"
+          },
+          "models/gemini-2.5-pro-preview-03-25": {
+            "status": "\u2705 WORKING",
+            "response_time_ms": 3290.99,
+            "sample": "response:\nGenerateContentRespo"
+          }
+        },
+        "Gemini 2.5 Flash (SHOULD WORK)": {
+          "models/gemini-2.5-flash": {
+            "status": "\u2705 WORKING",
+            "response_time_ms": 295.44,
+            "sample": "response:\nGenerateContentRespo"
+          },
+          "models/gemini-2.5-flash-preview": {
+            "status": "\ud83d\udcc5 Not found/deprecated",
+            "error": "404 models/gemini-2.5-flash-preview is not found for API version v1beta, or is not supported for gen"
+          },
+          "models/gemini-2.5-flash-preview-04-17": {
+            "status": "\u2705 WORKING",
+            "response_time_ms": 487.99,
+            "sample": "response:\nGenerateContentRespo"
+          },
+          "models/gemini-2.5-flash-preview-05-20": {
+            "status": "\u2705 WORKING",
+            "response_time_ms": 291.19,
+            "sample": "response:\nGenerateContentRespo"
+          }
+        },
+        "Gemini 1.0 Pro": {
+          "models/gemini-1.0-pro": {
+            "status": "\ud83d\udcc5 Not found/deprecated",
+            "error": "404 models/gemini-1.0-pro is not found for API version v1beta, or is not supported for generateConte"
+          },
+          "models/gemini-pro": {
+            "status": "\ud83d\udcc5 Not found/deprecated",
+            "error": "404 models/gemini-pro is not found for API version v1beta, or is not supported for generateContent. "
+          }
+        }
+      },
+      "total_working": 22,
+      "pro_models_working": [
+        "models/gemini-1.5-pro",
+        "models/gemini-1.5-pro-002",
+        "models/gemini-1.5-pro-latest",
+        "models/gemini-2.5-pro",
+        "models/gemini-2.5-pro-preview-05-06",
+        "models/gemini-2.5-pro-preview-06-05",
+        "models/gemini-2.5-pro-preview-03-25"
+      ],
+      "pro_count": 7
+    },
+    "Gemini-API": {
+      "key_results": {
+        "Gemini 1.5 Pro": {
+          "models/gemini-1.5-pro": {
+            "status": "\u2705 WORKING",
+            "response_time_ms": 552.47,
+            "sample": "Hi!\n"
+          },
+          "models/gemini-1.5-pro-002": {
+            "status": "\u2705 WORKING",
+            "response_time_ms": 539.77,
+            "sample": "Hi!\n"
+          },
+          "models/gemini-1.5-pro-latest": {
+            "status": "\u2705 WORKING",
+            "response_time_ms": 431.99,
+            "sample": "Hi!\n"
+          }
+        },
+        "Gemini 1.5 Flash": {
+          "models/gemini-1.5-flash": {
+            "status": "\u2705 WORKING",
+            "response_time_ms": 353.58,
+            "sample": "Okay.\n"
+          },
+          "models/gemini-1.5-flash-002": {
+            "status": "\u2705 WORKING",
+            "response_time_ms": 374.98,
+            "sample": "Okay.\n"
+          },
+          "models/gemini-1.5-flash-latest": {
+            "status": "\u2705 WORKING",
+            "response_time_ms": 332.76,
+            "sample": "Okay.\n"
+          }
+        },
+        "Gemini 1.5 Flash-8B": {
+          "models/gemini-1.5-flash-8b": {
+            "status": "\u2705 WORKING",
+            "response_time_ms": 339.56,
+            "sample": "Hello.\n"
+          },
+          "models/gemini-1.5-flash-8b-001": {
+            "status": "\u2705 WORKING",
+            "response_time_ms": 355.94,
+            "sample": "Hello.\n"
+          },
+          "models/gemini-1.5-flash-8b-latest": {
+            "status": "\u2705 WORKING",
+            "response_time_ms": 359.25,
+            "sample": "Hello.\n"
+          }
+        },
+        "Gemini 2.0 Flash": {
+          "models/gemini-2.0-flash": {
+            "status": "\u2705 WORKING",
+            "response_time_ms": 267.96,
+            "sample": "Okay.\n"
+          },
+          "models/gemini-2.0-flash-001": {
+            "status": "\u2705 WORKING",
+            "response_time_ms": 301.57,
+            "sample": "Okay.\n"
+          },
+          "models/gemini-2.0-flash-exp": {
+            "status": "\u2705 WORKING",
+            "response_time_ms": 420.37,
+            "sample": "Okay.\n"
+          }
+        },
+        "Gemini 2.0 Flash-Lite": {
+          "models/gemini-2.0-flash-lite": {
+            "status": "\u2705 WORKING",
+            "response_time_ms": 356.35,
+            "sample": "Okay.\n"
+          },
+          "models/gemini-2.0-flash-lite-001": {
+            "status": "\u2705 WORKING",
+            "response_time_ms": 351.86,
+            "sample": "Okay.\n"
+          },
+          "models/gemini-2.0-flash-lite-preview": {
+            "status": "\u2705 WORKING",
+            "response_time_ms": 363.57,
+            "sample": "Okay.\n"
+          }
+        },
+        "Gemini 2.5 Pro (SHOULD WORK)": {
+          "models/gemini-2.5-pro": {
+            "status": "\u2705 WORKING",
+            "response_time_ms": 1241.77,
+            "sample": "response:\nGenerateContentRespo"
+          },
+          "models/gemini-2.5-pro-preview-05-06": {
+            "status": "\u2705 WORKING",
+            "response_time_ms": 952.51,
+            "sample": "response:\nGenerateContentRespo"
+          },
+          "models/gemini-2.5-pro-preview-06-05": {
+            "status": "\u2705 WORKING",
+            "response_time_ms": 1405.82,
+            "sample": "response:\nGenerateContentRespo"
+          },
+          "models/gemini-2.5-pro-preview-03-25": {
+            "status": "\u2705 WORKING",
+            "response_time_ms": 1276.16,
+            "sample": "response:\nGenerateContentRespo"
+          }
+        },
+        "Gemini 2.5 Flash (SHOULD WORK)": {
+          "models/gemini-2.5-flash": {
+            "status": "\u2705 WORKING",
+            "response_time_ms": 275.38,
+            "sample": "response:\nGenerateContentRespo"
+          },
+          "models/gemini-2.5-flash-preview": {
+            "status": "\ud83d\udcc5 Not found/deprecated",
+            "error": "404 models/gemini-2.5-flash-preview is not found for API version v1beta, or is not supported for gen"
+          },
+          "models/gemini-2.5-flash-preview-04-17": {
+            "status": "\u2705 WORKING",
+            "response_time_ms": 405.18,
+            "sample": "response:\nGenerateContentRespo"
+          },
+          "models/gemini-2.5-flash-preview-05-20": {
+            "status": "\u2705 WORKING",
+            "response_time_ms": 451.88,
+            "sample": "response:\nGenerateContentRespo"
+          }
+        },
+        "Gemini 1.0 Pro": {
+          "models/gemini-1.0-pro": {
+            "status": "\ud83d\udcc5 Not found/deprecated",
+            "error": "404 models/gemini-1.0-pro is not found for API version v1beta, or is not supported for generateConte"
+          },
+          "models/gemini-pro": {
+            "status": "\ud83d\udcc5 Not found/deprecated",
+            "error": "404 models/gemini-pro is not found for API version v1beta, or is not supported for generateContent. "
+          }
+        }
+      },
+      "total_working": 22,
+      "pro_models_working": [
+        "models/gemini-1.5-pro",
+        "models/gemini-1.5-pro-002",
+        "models/gemini-1.5-pro-latest",
+        "models/gemini-2.5-pro",
+        "models/gemini-2.5-pro-preview-05-06",
+        "models/gemini-2.5-pro-preview-06-05",
+        "models/gemini-2.5-pro-preview-03-25"
+      ],
+      "pro_count": 7
+    },
+    "podplay-build-beta": {
+      "key_results": {
+        "Gemini 1.5 Pro": {
+          "models/gemini-1.5-pro": {
+            "status": "\ud83d\udcb0 Quota exceeded",
+            "error": "429 You exceeded your current quota, please check your plan and billing details. For more informatio"
+          },
+          "models/gemini-1.5-pro-002": {
+            "status": "\ud83d\udcb0 Quota exceeded",
+            "error": "429 You exceeded your current quota, please check your plan and billing details. For more informatio"
+          },
+          "models/gemini-1.5-pro-latest": {
+            "status": "\ud83d\udcb0 Quota exceeded",
+            "error": "429 You exceeded your current quota, please check your plan and billing details. For more informatio"
+          }
+        },
+        "Gemini 1.5 Flash": {
+          "models/gemini-1.5-flash": {
+            "status": "\u2705 WORKING",
+            "response_time_ms": 393.5,
+            "sample": "Okay.\n"
+          },
+          "models/gemini-1.5-flash-002": {
+            "status": "\u2705 WORKING",
+            "response_time_ms": 312.16,
+            "sample": "Okay.\n"
+          },
+          "models/gemini-1.5-flash-latest": {
+            "status": "\u2705 WORKING",
+            "response_time_ms": 320.26,
+            "sample": "Okay.\n"
+          }
+        },
+        "Gemini 1.5 Flash-8B": {
+          "models/gemini-1.5-flash-8b": {
+            "status": "\u2705 WORKING",
+            "response_time_ms": 395.06,
+            "sample": "Hello.\n"
+          },
+          "models/gemini-1.5-flash-8b-001": {
+            "status": "\u2705 WORKING",
+            "response_time_ms": 346.18,
+            "sample": "Hello.\n"
+          },
+          "models/gemini-1.5-flash-8b-latest": {
+            "status": "\u2705 WORKING",
+            "response_time_ms": 395.73,
+            "sample": "Hello.\n"
+          }
+        },
+        "Gemini 2.0 Flash": {
+          "models/gemini-2.0-flash": {
+            "status": "\u2705 WORKING",
+            "response_time_ms": 257.3,
+            "sample": "Okay.\n"
+          },
+          "models/gemini-2.0-flash-001": {
+            "status": "\u2705 WORKING",
+            "response_time_ms": 223.47,
+            "sample": "Okay.\n"
+          },
+          "models/gemini-2.0-flash-exp": {
+            "status": "\u2705 WORKING",
+            "response_time_ms": 442.19,
+            "sample": "Okay.\n"
+          }
+        },
+        "Gemini 2.0 Flash-Lite": {
+          "models/gemini-2.0-flash-lite": {
+            "status": "\u2705 WORKING",
+            "response_time_ms": 407.42,
+            "sample": "Okay.\n"
+          },
+          "models/gemini-2.0-flash-lite-001": {
+            "status": "\u2705 WORKING",
+            "response_time_ms": 335.54,
+            "sample": "Okay.\n"
+          },
+          "models/gemini-2.0-flash-lite-preview": {
+            "status": "\u2705 WORKING",
+            "response_time_ms": 379.52,
+            "sample": "Okay.\n"
+          }
+        },
+        "Gemini 2.5 Pro (SHOULD WORK)": {
+          "models/gemini-2.5-pro": {
+            "status": "\u2705 WORKING",
+            "response_time_ms": 1105.95,
+            "sample": "response:\nGenerateContentRespo"
+          },
+          "models/gemini-2.5-pro-preview-05-06": {
+            "status": "\ud83d\udcb0 Quota exceeded",
+            "error": "429 Gemini 2.5 Pro Preview doesn't have a free quota tier. For more information on this error, head "
+          },
+          "models/gemini-2.5-pro-preview-06-05": {
+            "status": "\ud83d\udcb0 Quota exceeded",
+            "error": "429 Gemini 2.5 Pro Preview doesn't have a free quota tier. For more information on this error, head "
+          },
+          "models/gemini-2.5-pro-preview-03-25": {
+            "status": "\ud83d\udcb0 Quota exceeded",
+            "error": "429 Gemini 2.5 Pro Preview doesn't have a free quota tier. For more information on this error, head "
+          }
+        },
+        "Gemini 2.5 Flash (SHOULD WORK)": {
+          "models/gemini-2.5-flash": {
+            "status": "\u2705 WORKING",
+            "response_time_ms": 389.1,
+            "sample": "response:\nGenerateContentRespo"
+          },
+          "models/gemini-2.5-flash-preview": {
+            "status": "\ud83d\udcc5 Not found/deprecated",
+            "error": "404 models/gemini-2.5-flash-preview is not found for API version v1beta, or is not supported for gen"
+          },
+          "models/gemini-2.5-flash-preview-04-17": {
+            "status": "\u2705 WORKING",
+            "response_time_ms": 279.33,
+            "sample": "response:\nGenerateContentRespo"
+          },
+          "models/gemini-2.5-flash-preview-05-20": {
+            "status": "\u2705 WORKING",
+            "response_time_ms": 593.64,
+            "sample": "response:\nGenerateContentRespo"
+          }
+        },
+        "Gemini 1.0 Pro": {
+          "models/gemini-1.0-pro": {
+            "status": "\ud83d\udcc5 Not found/deprecated",
+            "error": "404 models/gemini-1.0-pro is not found for API version v1beta, or is not supported for generateConte"
+          },
+          "models/gemini-pro": {
+            "status": "\ud83d\udcc5 Not found/deprecated",
+            "error": "404 models/gemini-pro is not found for API version v1beta, or is not supported for generateContent. "
+          }
+        }
+      },
+      "total_working": 16,
+      "pro_models_working": [
+        "models/gemini-2.5-pro"
+      ],
+      "pro_count": 1
+    }
+  },
+  "orchestration_matrix": {
+    "total_pro_models": 15,
+    "total_working_models": 60,
+    "theoretical_rpm": 30,
+    "orchestration_ready": true
+  },
+  "pro_model_availability": {},
+  "rate_limits_tested": {}
+}
