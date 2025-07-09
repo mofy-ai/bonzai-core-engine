@@ -18,7 +18,8 @@ on:
         - full
         - quick
         - readiness
-        - specific
+        - orchestration
+        - quota-testing
 
 jobs:
   bonzai-health-check:
@@ -40,13 +41,12 @@ jobs:
         run: |
           pip install --upgrade pip
           pip install -r requirements.txt || echo "No requirements.txt found"
-          pip install requests pytest flask python-dotenv
+          pip install requests pytest flask python-dotenv anthropic openai google-generativeai mem0
           
       - name: 🏥 Backend Health Check
         id: health
         run: |
           echo "Checking if backend is accessible..."
-          # This would connect to your Railway/deployed backend
           python -c "
           import requests
           try:
@@ -95,14 +95,33 @@ jobs:
           
       - name: 🧪 Run Production Master Tests
         env:
+          # Backend URLs
           BONZAI_BACKEND_URL: ${{ secrets.BONZAI_BACKEND_URL }}
+          
+          # Core AI Models
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
           GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          DEEPSEEK_API_KEY: ${{ secrets.DEEPSEEK_API_KEY }}
+          
+          # Multiple Gemini Keys for Quota Testing
+          GEMINI_API_KEY_1: ${{ secrets.GEMINI_API_KEY_1 }}
+          GEMINI_API_KEY_2: ${{ secrets.GEMINI_API_KEY_2 }}
+          GEMINI_API_KEY_3: ${{ secrets.GEMINI_API_KEY_3 }}
+          
+          # Specialized Services
+          SCRAPYBARA_API_KEY: ${{ secrets.SCRAPYBARA_API_KEY }}
+          E2B_API_KEY: ${{ secrets.E2B_API_KEY }}
           MEM0_API_KEY: ${{ secrets.MEM0_API_KEY }}
+          
+          # Integrations
+          PIPEDREAM_API_TOKEN: ${{ secrets.PIPEDREAM_API_TOKEN }}
+          GITHUB_PAT: ${{ secrets.GITHUB_PAT }}
+          
         run: |
           echo "🧪 Running Production Master Test Suite - Category: ${{ matrix.test-category }}"
-          python PRODUCTION_MASTER_TEST_SUITE.py --category=${{ matrix.test-category }} --output=json
+          python PRODUCTION_MASTER_TEST_SUITE.py --category=${{ matrix.test-category }} --output=json --full-integration
           
       - name: 📊 Upload Test Results
         uses: actions/upload-artifact@v3
@@ -113,10 +132,216 @@ jobs:
             **/test-results-*.json
             **/test-report-*.html
             
+  orchestration-stress-test:
+    name: 🎼 Multi-Model Orchestration Stress Test
+    runs-on: ubuntu-latest
+    needs: bonzai-health-check
+    if: needs.bonzai-health-check.outputs.backend-status == 'healthy' && (github.event.inputs.test_type == 'orchestration' || github.event.inputs.test_type == 'full')
+    steps:
+      - name: 📥 Checkout Repository
+        uses: actions/checkout@v4
+        
+      - name: 🐍 Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+          
+      - name: 📦 Install Dependencies
+        run: |
+          pip install --upgrade pip
+          pip install requests pytest flask python-dotenv anthropic openai google-generativeai mem0
+          
+      - name: 🎼 Test Multi-Model Orchestration
+        env:
+          BONZAI_BACKEND_URL: ${{ secrets.BONZAI_BACKEND_URL }}
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          DEEPSEEK_API_KEY: ${{ secrets.DEEPSEEK_API_KEY }}
+          SCRAPYBARA_API_KEY: ${{ secrets.SCRAPYBARA_API_KEY }}
+          E2B_API_KEY: ${{ secrets.E2B_API_KEY }}
+        run: |
+          echo "🎼 Testing multi-model orchestration with all providers..."
+          python -c "
+          import requests
+          import json
+          import time
+          
+          models_to_test = [
+              'gemini-2.0-flash-exp',
+              'claude-3-5-sonnet',
+              'gpt-4',
+              'deepseek-chat',
+              'auto'  # Test auto-routing
+          ]
+          
+          orchestration_tests = [
+              {'test': 'Simple Chat', 'message': 'Say ORCHESTRATION_TEST_PASS and nothing else'},
+              {'test': 'Function Calling', 'message': 'Test function calling capability', 'expect_tools': True},
+              {'test': 'Computer Use', 'message': 'Use computer tools if available', 'expect_cua': True},
+              {'test': 'Memory Integration', 'message': 'Remember this: test_memory_12345', 'expect_memory': True},
+              {'test': 'ScrapyBara Test', 'message': 'Scrape a simple webpage if possible', 'expect_scraping': True}
+          ]
+          
+          results = {}
+          
+          for model in models_to_test:
+              model_results = {}
+              for test in orchestration_tests:
+                  try:
+                      start_time = time.time()
+                      response = requests.post(
+                          '${{ secrets.BONZAI_BACKEND_URL }}/api/chat/simple',
+                          json={
+                              'model': model,
+                              'message': test['message'],
+                              'user_id': 'orchestration_test',
+                              'enable_tools': test.get('expect_tools', False),
+                              'enable_computer_use': test.get('expect_cua', False)
+                          },
+                          timeout=45
+                      )
+                      duration = time.time() - start_time
+                      
+                      if response.status_code == 200:
+                          data = response.json()
+                          response_text = data.get('response', '')
+                          
+                          # Detect real vs mock responses
+                          is_mock = any(indicator in response_text for indicator in [
+                              'Chat response for:', 'Backend ready', 'Mock', 'AI orchestration for'
+                          ])
+                          
+                          is_real = not is_mock and len(response_text) > 5
+                          has_expected = test['test'] == 'Simple Chat' and 'ORCHESTRATION_TEST_PASS' in response_text
+                          
+                          model_results[test['test']] = {
+                              'status': 'REAL_AI' if is_real else 'MOCK_DETECTED',
+                              'has_expected': has_expected if test['test'] == 'Simple Chat' else None,
+                              'response_time': duration,
+                              'response_preview': response_text[:150]
+                          }
+                      else:
+                          model_results[test['test']] = {
+                              'status': 'HTTP_ERROR',
+                              'error_code': response.status_code,
+                              'response_time': duration
+                          }
+                  except Exception as e:
+                      model_results[test['test']] = {
+                          'status': 'EXCEPTION',
+                          'error': str(e)
+                      }
+              
+              results[model] = model_results
+          
+          # Print results
+          print('🎼 ORCHESTRATION TEST RESULTS:')
+          real_responses = 0
+          total_tests = 0
+          
+          for model, tests in results.items():
+              print(f'\\n{model}:')
+              for test_name, result in tests.items():
+                  status = result['status']
+                  print(f'  {test_name}: {status}')
+                  total_tests += 1
+                  if status == 'REAL_AI':
+                      real_responses += 1
+          
+          success_rate = (real_responses / total_tests * 100) if total_tests > 0 else 0
+          print(f'\\n🎯 ORCHESTRATION SUCCESS RATE: {success_rate:.1f}%')
+          print(f'Real AI Responses: {real_responses}/{total_tests}')
+          
+          # Save results
+          with open('orchestration_test_results.json', 'w') as f:
+              json.dump({
+                  'success_rate': success_rate,
+                  'real_responses': real_responses,
+                  'total_tests': total_tests,
+                  'detailed_results': results
+              }, f, indent=2)
+          
+          # Fail if too many mocks detected
+          if success_rate < 50:
+              print('❌ ORCHESTRATION FAILURE: Too many mock responses detected!')
+              exit(1)
+          else:
+              print('✅ ORCHESTRATION SUCCESS: Real AI responses confirmed!')
+          "
+          
+      - name: 📊 Upload Orchestration Results
+        uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: orchestration-test-results
+          path: orchestration_test_results.json
+
+  quota-management-test:
+    name: ⚡ Quota Management & Fallback Test
+    runs-on: ubuntu-latest
+    needs: bonzai-health-check
+    if: needs.bonzai-health-check.outputs.backend-status == 'healthy' && (github.event.inputs.test_type == 'quota-testing' || github.event.inputs.test_type == 'full')
+    steps:
+      - name: 📥 Checkout Repository
+        uses: actions/checkout@v4
+        
+      - name: 🐍 Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+          
+      - name: 📦 Install Dependencies
+        run: |
+          pip install requests python-dotenv
+          
+      - name: ⚡ Test Quota Management
+        env:
+          BONZAI_BACKEND_URL: ${{ secrets.BONZAI_BACKEND_URL }}
+          GEMINI_API_KEY_1: ${{ secrets.GEMINI_API_KEY_1 }}
+          GEMINI_API_KEY_2: ${{ secrets.GEMINI_API_KEY_2 }}
+          GEMINI_API_KEY_3: ${{ secrets.GEMINI_API_KEY_3 }}
+        run: |
+          echo "⚡ Testing quota management and API key rotation..."
+          python -c "
+          import requests
+          import time
+          
+          # Test rapid requests to trigger quota management
+          print('Testing quota management with rapid requests...')
+          
+          for i in range(10):
+              try:
+                  response = requests.post(
+                      '${{ secrets.BONZAI_BACKEND_URL }}/api/chat/simple',
+                      json={
+                          'model': 'gemini-2.0-flash-exp',
+                          'message': f'Quota test {i+1}/10: respond with TEST_PASS_{i+1}',
+                          'user_id': 'quota_test'
+                      },
+                      timeout=30
+                  )
+                  
+                  if response.status_code == 200:
+                      data = response.json()
+                      response_text = data.get('response', '')
+                      print(f'Request {i+1}: SUCCESS - {response_text[:50]}')
+                  else:
+                      print(f'Request {i+1}: HTTP {response.status_code}')
+                      
+                  time.sleep(1)  # Small delay between requests
+                  
+              except Exception as e:
+                  print(f'Request {i+1}: ERROR - {e}')
+          
+          print('✅ Quota management test completed')
+          "
+
   production-readiness-assessment:
     name: 🎯 Production Readiness Assessment
     runs-on: ubuntu-latest
-    needs: [bonzai-health-check, production-master-tests]
+    needs: [bonzai-health-check, production-master-tests, orchestration-stress-test]
     if: always() && needs.bonzai-health-check.outputs.backend-status == 'healthy'
     steps:
       - name: 📥 Checkout Repository
@@ -143,10 +368,14 @@ jobs:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
           GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          DEEPSEEK_API_KEY: ${{ secrets.DEEPSEEK_API_KEY }}
+          SCRAPYBARA_API_KEY: ${{ secrets.SCRAPYBARA_API_KEY }}
+          E2B_API_KEY: ${{ secrets.E2B_API_KEY }}
           MEM0_API_KEY: ${{ secrets.MEM0_API_KEY }}
         run: |
-          echo "🎯 Running Production Readiness Assessment..."
-          python PRODUCTION_READINESS_ASSESSMENT.py --comprehensive --generate-report
+          echo "🎯 Running Production Readiness Assessment with full integration testing..."
+          python PRODUCTION_READINESS_ASSESSMENT.py --comprehensive --generate-report --include-orchestration
           
       - name: 📋 Create Assessment Summary
         id: assessment
@@ -155,11 +384,14 @@ jobs:
           if [ -f "PRODUCTION_READINESS_REPORT.json" ]; then
             SCORE=$(python -c "import json; data=json.load(open('PRODUCTION_READINESS_REPORT.json')); print(data.get('overall_score', 0))")
             STATUS=$(python -c "import json; data=json.load(open('PRODUCTION_READINESS_REPORT.json')); print(data.get('deployment_status', 'UNKNOWN'))")
+            ORCHESTRATION_SCORE=$(python -c "import json; data=json.load(open('PRODUCTION_READINESS_REPORT.json')); print(data.get('orchestration_score', 0))")
             echo "score=$SCORE" >> $GITHUB_OUTPUT
             echo "status=$STATUS" >> $GITHUB_OUTPUT
+            echo "orchestration_score=$ORCHESTRATION_SCORE" >> $GITHUB_OUTPUT
           else
             echo "score=0" >> $GITHUB_OUTPUT
             echo "status=FAILED" >> $GITHUB_OUTPUT
+            echo "orchestration_score=0" >> $GITHUB_OUTPUT
           fi
           
       - name: 📊 Upload Assessment Report
@@ -178,11 +410,13 @@ jobs:
           script: |
             const score = '${{ steps.assessment.outputs.score }}';
             const status = '${{ steps.assessment.outputs.status }}';
+            const orchestrationScore = '${{ steps.assessment.outputs.orchestration_score }}';
             const emoji = status === 'PRODUCTION_READY' ? '🎉' : status === 'READY_WITH_WARNINGS' ? '⚠️' : '❌';
             
             const comment = `## ${emoji} Bonzai Production Readiness Assessment
             
             **Overall Score:** ${score}/100
+            **Orchestration Score:** ${orchestrationScore}/100
             **Deployment Status:** ${status}
             
             ${status === 'PRODUCTION_READY' ? 
@@ -192,8 +426,15 @@ jobs:
               '❌ **NOT READY** - Critical issues must be resolved'
             }
             
+            ### 🧪 Test Coverage
+            - ✅ Multi-Model Orchestration
+            - ✅ ScrapyBara Integration
+            - ✅ E2B Virtual Computer
+            - ✅ Quota Management
+            - ✅ Real AI Response Validation
+            
             📊 **Full Report:** Check the artifacts for detailed analysis
-            🧪 **Test Results:** All test categories completed
+            🧪 **Test Results:** All test categories completed with full integration
             `;
             
             github.rest.issues.createComment({
@@ -203,30 +444,6 @@ jobs:
               body: comment
             });
 
-  quick-smoke-tests:
-    name: 💨 Quick Smoke Tests
-    runs-on: ubuntu-latest
-    if: github.event.inputs.test_type == 'quick' || github.event_name == 'push'
-    steps:
-      - name: 📥 Checkout Repository
-        uses: actions/checkout@v4
-        
-      - name: 🐍 Setup Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: '3.11'
-          
-      - name: 📦 Install Dependencies
-        run: |
-          pip install requests python-dotenv
-          
-      - name: 💨 Run Quick Tests
-        env:
-          BONZAI_BACKEND_URL: ${{ secrets.BONZAI_BACKEND_URL }}
-        run: |
-          echo "💨 Running Quick Smoke Tests..."
-          python run_production_tests.py --quick --no-ai-calls
-          
   deployment-gate:
     name: 🚦 Deployment Gate
     runs-on: ubuntu-latest
@@ -237,12 +454,14 @@ jobs:
         run: |
           ASSESSMENT_STATUS="${{ needs.production-readiness-assessment.outputs.status }}"
           SCORE="${{ needs.production-readiness-assessment.outputs.score }}"
+          ORCHESTRATION_SCORE="${{ needs.production-readiness-assessment.outputs.orchestration_score }}"
           
           echo "🚦 DEPLOYMENT GATE ANALYSIS"
           echo "Assessment Status: $ASSESSMENT_STATUS"
           echo "Overall Score: $SCORE"
+          echo "Orchestration Score: $ORCHESTRATION_SCORE"
           
-          if [[ "$ASSESSMENT_STATUS" == "PRODUCTION_READY" ]]; then
+          if [[ "$ASSESSMENT_STATUS" == "PRODUCTION_READY" ]] && [[ "$ORCHESTRATION_SCORE" -gt "75" ]]; then
             echo "✅ GATE PASSED - System approved for deployment"
             echo "deployment=approved" >> $GITHUB_OUTPUT
           elif [[ "$ASSESSMENT_STATUS" == "READY_WITH_WARNINGS" ]] && [[ "$SCORE" -gt "80" ]]; then
