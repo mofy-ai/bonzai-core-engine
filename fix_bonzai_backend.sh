@@ -1,8 +1,8 @@
 #!/bin/bash
-# 🔥 BONZAI BACKEND COMPREHENSIVE FIX SCRIPT
-# Generated: 2025-07-05 21:37:55.309642
+#  BONZAI BACKEND COMPREHENSIVE FIX SCRIPT
+# Generated: 2025-07-09 11:25:24.925126
 
-echo "🔧 BONZAI BACKEND FIX SCRIPT"
+echo " BONZAI BACKEND FIX SCRIPT"
 echo "============================"
 
 # Activate virtual environment if exists
@@ -20,7 +20,7 @@ pip install requests aiohttp asyncio
 pip install beautifulsoup4 lxml
 
 # Install AI SDKs
-echo "🤖 Installing AI SDKs..."
+echo " Installing AI SDKs..."
 pip install openai anthropic google-cloud-aiplatform
 
 # Install optional dependencies
@@ -39,10 +39,10 @@ mkdir -p services/supervisor
 
 # Environment setup
 if [ ! -f .env ]; then
-    echo "📝 Creating .env from template..."
+    echo " Creating .env from template..."
     cp .env.example .env
     echo ""
-    echo "⚠️  IMPORTANT: Edit .env file and add your API keys!"
+    echo "  IMPORTANT: Edit .env file and add your API keys!"
     echo ""
 fi
 
@@ -51,11 +51,11 @@ echo "📥 Checking service files..."
 # Add any specific file downloads here
 
 echo ""
-echo "✅ Fix script complete!"
+echo " Fix script complete!"
 echo ""
 echo "📋 NEXT STEPS:"
 echo "1. Edit .env file with your API keys"
 echo "2. Run: python app.py"
 echo "3. Check http://localhost:5001/api/health"
 echo ""
-echo "🚀 Ready for DXT packaging once backend starts!"
+echo " Ready for DXT packaging once backend starts!"
