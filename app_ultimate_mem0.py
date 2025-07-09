@@ -66,7 +66,7 @@ class UltimateMem0FamilySystem:
         
         # Get Mem0 credentials from environment
         mem0_api_key = os.getenv('MEM0_API_KEY')
-        mem0_org_id = os.getenv('MEM0_ORG_ID', 'daddyholmes-default-org')
+        mem0_org_id = os.getenv('MEM0_ORG_ID', 'org_3fnXbTK2Indmg54y2LSvBerDV7Arerb2bJYX1ezr')
         mem0_project_id = os.getenv('MEM0_PROJECT_ID', 'default-project')
         
         if not mem0_api_key:
