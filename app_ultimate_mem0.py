@@ -535,12 +535,15 @@ class UltimateMem0APIKeyManager:
         ]
         
         for key_data in default_keys:
-            await self.family_system.add_family_memory(
-                content=f"API Key Configuration: {key_data['api_key']}",
-                member_id="system",
-                category="api_keys",
-                metadata=key_data
-            )
+            try:
+                self.family_system.add_family_memory(
+                    content=f"API Key Configuration: {key_data['api_key']}",
+                    member_id="system",
+                    category="api_keys",
+                    metadata=key_data
+                )
+            except Exception as e:
+                logger.warning(f"Could not store API key in memory: {e}")
     
     async def generate_api_key(self, user_id: str, tier: str = "family") -> str:
         """Generate new API key stored in Mem0"""
