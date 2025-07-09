@@ -1,0 +1,2366 @@
+{
+  "metadata": {
+    "backend_url": "http://127.0.0.1:5001",
+    "test_timestamp": "2025-07-09T09:17:42.511428",
+    "total_endpoints": 15,
+    "categories": [
+      "CORE",
+      "ZAI_PRIME",
+      "MCP_INTEGRATION",
+      "MEMORY_SYSTEM",
+      "AI_ORCHESTRATION",
+      "ADVANCED_FEATURES",
+      "SCRAPYBARA"
+    ]
+  },
+  "summary": {
+    "total_tested": 15,
+    "total_successful": 15,
+    "total_failed": 0,
+    "success_rate": 100.0,
+    "category_stats": {
+      "CORE": {
+        "tested": 2,
+        "successful": 2,
+        "success_rate": 100.0
+      },
+      "ZAI_PRIME": {
+        "tested": 3,
+        "successful": 3,
+        "success_rate": 100.0
+      },
+      "MCP_INTEGRATION": {
+        "tested": 2,
+        "successful": 2,
+        "success_rate": 100.0
+      },
+      "MEMORY_SYSTEM": {
+        "tested": 2,
+        "successful": 2,
+        "success_rate": 100.0
+      },
+      "AI_ORCHESTRATION": {
+        "tested": 2,
+        "successful": 2,
+        "success_rate": 100.0
+      },
+      "ADVANCED_FEATURES": {
+        "tested": 3,
+        "successful": 3,
+        "success_rate": 100.0
+      },
+      "SCRAPYBARA": {
+        "tested": 1,
+        "successful": 1,
+        "success_rate": 100.0
+      }
+    }
+  },
+  "detailed_results": {
+    "CORE": [
+      {
+        "category": "CORE",
+        "name": "Root",
+        "url": "/",
+        "method": "GET",
+        "timestamp": "2025-07-09T09:17:42.511572",
+        "success": true,
+        "status_code": 200,
+        "response_time_ms": 5.38,
+        "raw_response": {
+          "endpoints": {
+            "agents": "/api/agents",
+            "chat": "/api/chat",
+            "health": "/api/health",
+            "mcp_execute": "/api/mcp/execute",
+            "mcp_tools": "/api/mcp/tools",
+            "memory": "/api/memory"
+          },
+          "message": "ZAI Prime Supervisor and AI Family ready",
+          "service": "Bonzai Backend",
+          "status": "operational",
+          "timestamp": "2025-07-09T09:17:42.515375",
+          "version": "2.0"
+        },
+        "data_structure": {
+          "type": "dict",
+          "path": "",
+          "value_sample": null,
+          "children": {
+            "endpoints": {
+              "type": "dict",
+              "path": "endpoints",
+              "value_sample": null,
+              "children": {
+                "agents": {
+                  "type": "str",
+                  "path": "endpoints.agents",
+                  "value_sample": "/api/agents",
+                  "children": {}
+                },
+                "chat": {
+                  "type": "str",
+                  "path": "endpoints.chat",
+                  "value_sample": "/api/chat",
+                  "children": {}
+                },
+                "health": {
+                  "type": "str",
+                  "path": "endpoints.health",
+                  "value_sample": "/api/health",
+                  "children": {}
+                },
+                "mcp_execute": {
+                  "type": "str",
+                  "path": "endpoints.mcp_execute",
+                  "value_sample": "/api/mcp/execute",
+                  "children": {}
+                },
+                "mcp_tools": {
+                  "type": "str",
+                  "path": "endpoints.mcp_tools",
+                  "value_sample": "/api/mcp/tools",
+                  "children": {}
+                },
+                "memory": {
+                  "type": "str",
+                  "path": "endpoints.memory",
+                  "value_sample": "/api/memory",
+                  "children": {}
+                }
+              },
+              "keys": [
+                "agents",
+                "chat",
+                "health",
+                "mcp_execute",
+                "mcp_tools",
+                "memory"
+              ],
+              "key_count": 6
+            },
+            "message": {
+              "type": "str",
+              "path": "message",
+              "value_sample": "ZAI Prime Supervisor and AI Family ready",
+              "children": {}
+            },
+            "service": {
+              "type": "str",
+              "path": "service",
+              "value_sample": "Bonzai Backend",
+              "children": {}
+            },
+            "status": {
+              "type": "str",
+              "path": "status",
+              "value_sample": "operational",
+              "children": {}
+            },
+            "timestamp": {
+              "type": "str",
+              "path": "timestamp",
+              "value_sample": "2025-07-09T09:17:42.515375",
+              "children": {}
+            },
+            "version": {
+              "type": "str",
+              "path": "version",
+              "value_sample": "2.0",
+              "children": {}
+            }
+          },
+          "keys": [
+            "endpoints",
+            "message",
+            "service",
+            "status",
+            "timestamp",
+            "version"
+          ],
+          "key_count": 6
+        },
+        "error": null,
+        "headers": {
+          "Server": "Werkzeug/3.1.3 Python/3.13.5",
+          "Date": "Wed, 09 Jul 2025 08:17:42 GMT",
+          "Content-Type": "application/json",
+          "Content-Length": "390",
+          "Access-Control-Allow-Origin": "http://localhost:3000",
+          "Vary": "Origin",
+          "Connection": "close"
+        },
+        "content_length": 390
+      },
+      {
+        "category": "CORE",
+        "name": "Health Check",
+        "url": "/api/health",
+        "method": "GET",
+        "timestamp": "2025-07-09T09:17:42.517136",
+        "success": true,
+        "status_code": 200,
+        "response_time_ms": 3.01,
+        "raw_response": {
+          "message": "Bonzai Backend is running",
+          "status": "healthy",
+          "success": true,
+          "timestamp": "2025-07-09T09:17:42.519239"
+        },
+        "data_structure": {
+          "type": "dict",
+          "path": "",
+          "value_sample": null,
+          "children": {
+            "message": {
+              "type": "str",
+              "path": "message",
+              "value_sample": "Bonzai Backend is running",
+              "children": {}
+            },
+            "status": {
+              "type": "str",
+              "path": "status",
+              "value_sample": "healthy",
+              "children": {}
+            },
+            "success": {
+              "type": "bool",
+              "path": "success",
+              "value_sample": "True",
+              "children": {}
+            },
+            "timestamp": {
+              "type": "str",
+              "path": "timestamp",
+              "value_sample": "2025-07-09T09:17:42.519239",
+              "children": {}
+            }
+          },
+          "keys": [
+            "message",
+            "status",
+            "success",
+            "timestamp"
+          ],
+          "key_count": 4
+        },
+        "error": null,
+        "headers": {
+          "Server": "Werkzeug/3.1.3 Python/3.13.5",
+          "Date": "Wed, 09 Jul 2025 08:17:42 GMT",
+          "Content-Type": "application/json",
+          "Content-Length": "132",
+          "Access-Control-Allow-Origin": "http://localhost:3000",
+          "Vary": "Origin",
+          "Connection": "close"
+        },
+        "content_length": 132
+      }
+    ],
+    "ZAI_PRIME": [
+      {
+        "category": "ZAI_PRIME",
+        "name": "ZAI Prime Status",
+        "url": "/api/zai-prime/status",
+        "method": "GET",
+        "timestamp": "2025-07-09T09:17:42.520439",
+        "success": true,
+        "status_code": 200,
+        "response_time_ms": 10.34,
+        "raw_response": {
+          "success": true,
+          "timestamp": "2025-07-09T09:17:42.529646",
+          "zai_prime_status": {
+            "active": true,
+            "active_pages": {},
+            "agent_count": 0,
+            "recent_events": [],
+            "spawning_stats": {
+              "active_agents": 0,
+              "active_by_type": {},
+              "capacity_used": 0.0,
+              "cleanup_runs": 0,
+              "max_agents": 8000,
+              "queue_size": 0,
+              "spawn_failures": 0,
+              "spawn_requests": 0,
+              "supported_types": [
+                "general",
+                "specialist",
+                "researcher",
+                "coder",
+                "designer",
+                "qa",
+                "monitor",
+                "optimizer",
+                "security",
+                "analytics"
+              ],
+              "terminated_agents": 0,
+              "total_spawned": 0
+            },
+            "system_health": {
+              "active_agents": 0,
+              "error_agents": 0,
+              "event_queue_size": 0,
+              "events_processed": 0,
+              "interventions_made": 0,
+              "memory_usage": {
+                "percent": 0.9156838834711936,
+                "rss": 313786368,
+                "vms": 792190976
+              },
+              "total_agents": 0,
+              "uptime": "0:00:22.648043"
+            }
+          }
+        },
+        "data_structure": {
+          "type": "dict",
+          "path": "",
+          "value_sample": null,
+          "children": {
+            "success": {
+              "type": "bool",
+              "path": "success",
+              "value_sample": "True",
+              "children": {}
+            },
+            "timestamp": {
+              "type": "str",
+              "path": "timestamp",
+              "value_sample": "2025-07-09T09:17:42.529646",
+              "children": {}
+            },
+            "zai_prime_status": {
+              "type": "dict",
+              "path": "zai_prime_status",
+              "value_sample": null,
+              "children": {
+                "active": {
+                  "type": "bool",
+                  "path": "zai_prime_status.active",
+                  "value_sample": "True",
+                  "children": {}
+                },
+                "active_pages": {
+                  "type": "dict",
+                  "path": "zai_prime_status.active_pages",
+                  "value_sample": null,
+                  "children": {},
+                  "keys": [],
+                  "key_count": 0
+                },
+                "agent_count": {
+                  "type": "int",
+                  "path": "zai_prime_status.agent_count",
+                  "value_sample": "0",
+                  "children": {}
+                },
+                "recent_events": {
+                  "type": "list",
+                  "path": "zai_prime_status.recent_events",
+                  "value_sample": null,
+                  "children": {},
+                  "length": 0,
+                  "item_types": []
+                },
+                "spawning_stats": {
+                  "type": "dict",
+                  "path": "zai_prime_status.spawning_stats",
+                  "value_sample": null,
+                  "children": {
+                    "active_agents": {
+                      "type": "int",
+                      "path": "zai_prime_status.spawning_stats.active_agents",
+                      "value_sample": "0",
+                      "children": {}
+                    },
+                    "active_by_type": {
+                      "type": "dict",
+                      "path": "zai_prime_status.spawning_stats.active_by_type",
+                      "value_sample": null,
+                      "children": {},
+                      "keys": [],
+                      "key_count": 0
+                    },
+                    "capacity_used": {
+                      "type": "float",
+                      "path": "zai_prime_status.spawning_stats.capacity_used",
+                      "value_sample": "0.0",
+                      "children": {}
+                    },
+                    "cleanup_runs": {
+                      "type": "int",
+                      "path": "zai_prime_status.spawning_stats.cleanup_runs",
+                      "value_sample": "0",
+                      "children": {}
+                    },
+                    "max_agents": {
+                      "type": "int",
+                      "path": "zai_prime_status.spawning_stats.max_agents",
+                      "value_sample": "8000",
+                      "children": {}
+                    },
+                    "queue_size": {
+                      "type": "int",
+                      "path": "zai_prime_status.spawning_stats.queue_size",
+                      "value_sample": "0",
+                      "children": {}
+                    },
+                    "spawn_failures": {
+                      "type": "int",
+                      "path": "zai_prime_status.spawning_stats.spawn_failures",
+                      "value_sample": "0",
+                      "children": {}
+                    },
+                    "spawn_requests": {
+                      "type": "int",
+                      "path": "zai_prime_status.spawning_stats.spawn_requests",
+                      "value_sample": "0",
+                      "children": {}
+                    },
+                    "supported_types": {
+                      "type": "list",
+                      "path": "zai_prime_status.spawning_stats.supported_types",
+                      "value_sample": null,
+                      "children": {
+                        "[0]": {
+                          "type": "str",
+                          "path": "zai_prime_status.spawning_stats.supported_types[0]",
+                          "value_sample": "general",
+                          "children": {}
+                        }
+                      },
+                      "length": 10,
+                      "item_types": [
+                        "str"
+                      ]
+                    },
+                    "terminated_agents": {
+                      "type": "int",
+                      "path": "zai_prime_status.spawning_stats.terminated_agents",
+                      "value_sample": "0",
+                      "children": {}
+                    },
+                    "total_spawned": {
+                      "type": "int",
+                      "path": "zai_prime_status.spawning_stats.total_spawned",
+                      "value_sample": "0",
+                      "children": {}
+                    }
+                  },
+                  "keys": [
+                    "active_agents",
+                    "active_by_type",
+                    "capacity_used",
+                    "cleanup_runs",
+                    "max_agents",
+                    "queue_size",
+                    "spawn_failures",
+                    "spawn_requests",
+                    "supported_types",
+                    "terminated_agents",
+                    "total_spawned"
+                  ],
+                  "key_count": 11
+                },
+                "system_health": {
+                  "type": "dict",
+                  "path": "zai_prime_status.system_health",
+                  "value_sample": null,
+                  "children": {
+                    "active_agents": {
+                      "type": "int",
+                      "path": "zai_prime_status.system_health.active_agents",
+                      "value_sample": "0",
+                      "children": {}
+                    },
+                    "error_agents": {
+                      "type": "int",
+                      "path": "zai_prime_status.system_health.error_agents",
+                      "value_sample": "0",
+                      "children": {}
+                    },
+                    "event_queue_size": {
+                      "type": "int",
+                      "path": "zai_prime_status.system_health.event_queue_size",
+                      "value_sample": "0",
+                      "children": {}
+                    },
+                    "events_processed": {
+                      "type": "int",
+                      "path": "zai_prime_status.system_health.events_processed",
+                      "value_sample": "0",
+                      "children": {}
+                    },
+                    "interventions_made": {
+                      "type": "int",
+                      "path": "zai_prime_status.system_health.interventions_made",
+                      "value_sample": "0",
+                      "children": {}
+                    },
+                    "memory_usage": {
+                      "type": "dict",
+                      "path": "zai_prime_status.system_health.memory_usage",
+                      "value_sample": null,
+                      "children": {
+                        "percent": {
+                          "type": "float",
+                          "path": "zai_prime_status.system_health.memory_usage.percent",
+                          "value_sample": "0.9156838834711936",
+                          "children": {}
+                        },
+                        "rss": {
+                          "type": "int",
+                          "path": "zai_prime_status.system_health.memory_usage.rss",
+                          "value_sample": "313786368",
+                          "children": {}
+                        },
+                        "vms": {
+                          "type": "int",
+                          "path": "zai_prime_status.system_health.memory_usage.vms",
+                          "value_sample": "792190976",
+                          "children": {}
+                        }
+                      },
+                      "keys": [
+                        "percent",
+                        "rss",
+                        "vms"
+                      ],
+                      "key_count": 3
+                    },
+                    "total_agents": {
+                      "type": "int",
+                      "path": "zai_prime_status.system_health.total_agents",
+                      "value_sample": "0",
+                      "children": {}
+                    },
+                    "uptime": {
+                      "type": "str",
+                      "path": "zai_prime_status.system_health.uptime",
+                      "value_sample": "0:00:22.648043",
+                      "children": {}
+                    }
+                  },
+                  "keys": [
+                    "active_agents",
+                    "error_agents",
+                    "event_queue_size",
+                    "events_processed",
+                    "interventions_made",
+                    "memory_usage",
+                    "total_agents",
+                    "uptime"
+                  ],
+                  "key_count": 8
+                }
+              },
+              "keys": [
+                "active",
+                "active_pages",
+                "agent_count",
+                "recent_events",
+                "spawning_stats",
+                "system_health"
+              ],
+              "key_count": 6
+            }
+          },
+          "keys": [
+            "success",
+            "timestamp",
+            "zai_prime_status"
+          ],
+          "key_count": 3
+        },
+        "error": null,
+        "headers": {
+          "Server": "Werkzeug/3.1.3 Python/3.13.5",
+          "Date": "Wed, 09 Jul 2025 08:17:42 GMT",
+          "Content-Type": "application/json",
+          "Content-Length": "1063",
+          "Access-Control-Allow-Origin": "http://localhost:3000",
+          "Vary": "Origin",
+          "Connection": "close"
+        },
+        "content_length": 1063
+      },
+      {
+        "category": "ZAI_PRIME",
+        "name": "Agents List",
+        "url": "/api/zai-prime/agents",
+        "method": "GET",
+        "timestamp": "2025-07-09T09:17:42.531006",
+        "success": true,
+        "status_code": 200,
+        "response_time_ms": 21.16,
+        "raw_response": {
+          "agents": [],
+          "stats": {
+            "active_agents": 0,
+            "active_by_type": {},
+            "capacity_used": 0.0,
+            "cleanup_runs": 0,
+            "max_agents": 8000,
+            "queue_size": 0,
+            "spawn_failures": 0,
+            "spawn_requests": 0,
+            "supported_types": [
+              "general",
+              "specialist",
+              "researcher",
+              "coder",
+              "designer",
+              "qa",
+              "monitor",
+              "optimizer",
+              "security",
+              "analytics"
+            ],
+            "terminated_agents": 0,
+            "total_spawned": 0
+          },
+          "success": true,
+          "timestamp": "2025-07-09T09:17:42.551087"
+        },
+        "data_structure": {
+          "type": "dict",
+          "path": "",
+          "value_sample": null,
+          "children": {
+            "agents": {
+              "type": "list",
+              "path": "agents",
+              "value_sample": null,
+              "children": {},
+              "length": 0,
+              "item_types": []
+            },
+            "stats": {
+              "type": "dict",
+              "path": "stats",
+              "value_sample": null,
+              "children": {
+                "active_agents": {
+                  "type": "int",
+                  "path": "stats.active_agents",
+                  "value_sample": "0",
+                  "children": {}
+                },
+                "active_by_type": {
+                  "type": "dict",
+                  "path": "stats.active_by_type",
+                  "value_sample": null,
+                  "children": {},
+                  "keys": [],
+                  "key_count": 0
+                },
+                "capacity_used": {
+                  "type": "float",
+                  "path": "stats.capacity_used",
+                  "value_sample": "0.0",
+                  "children": {}
+                },
+                "cleanup_runs": {
+                  "type": "int",
+                  "path": "stats.cleanup_runs",
+                  "value_sample": "0",
+                  "children": {}
+                },
+                "max_agents": {
+                  "type": "int",
+                  "path": "stats.max_agents",
+                  "value_sample": "8000",
+                  "children": {}
+                },
+                "queue_size": {
+                  "type": "int",
+                  "path": "stats.queue_size",
+                  "value_sample": "0",
+                  "children": {}
+                },
+                "spawn_failures": {
+                  "type": "int",
+                  "path": "stats.spawn_failures",
+                  "value_sample": "0",
+                  "children": {}
+                },
+                "spawn_requests": {
+                  "type": "int",
+                  "path": "stats.spawn_requests",
+                  "value_sample": "0",
+                  "children": {}
+                },
+                "supported_types": {
+                  "type": "list",
+                  "path": "stats.supported_types",
+                  "value_sample": null,
+                  "children": {
+                    "[0]": {
+                      "type": "str",
+                      "path": "stats.supported_types[0]",
+                      "value_sample": "general",
+                      "children": {}
+                    }
+                  },
+                  "length": 10,
+                  "item_types": [
+                    "str"
+                  ]
+                },
+                "terminated_agents": {
+                  "type": "int",
+                  "path": "stats.terminated_agents",
+                  "value_sample": "0",
+                  "children": {}
+                },
+                "total_spawned": {
+                  "type": "int",
+                  "path": "stats.total_spawned",
+                  "value_sample": "0",
+                  "children": {}
+                }
+              },
+              "keys": [
+                "active_agents",
+                "active_by_type",
+                "capacity_used",
+                "cleanup_runs",
+                "max_agents",
+                "queue_size",
+                "spawn_failures",
+                "spawn_requests",
+                "supported_types",
+                "terminated_agents",
+                "total_spawned"
+              ],
+              "key_count": 11
+            },
+            "success": {
+              "type": "bool",
+              "path": "success",
+              "value_sample": "True",
+              "children": {}
+            },
+            "timestamp": {
+              "type": "str",
+              "path": "timestamp",
+              "value_sample": "2025-07-09T09:17:42.551087",
+              "children": {}
+            }
+          },
+          "keys": [
+            "agents",
+            "stats",
+            "success",
+            "timestamp"
+          ],
+          "key_count": 4
+        },
+        "error": null,
+        "headers": {
+          "Server": "Werkzeug/3.1.3 Python/3.13.5",
+          "Date": "Wed, 09 Jul 2025 08:17:42 GMT",
+          "Content-Type": "application/json",
+          "Content-Length": "552",
+          "Access-Control-Allow-Origin": "http://localhost:3000",
+          "Vary": "Origin",
+          "Connection": "close"
+        },
+        "content_length": 552
+      },
+      {
+        "category": "ZAI_PRIME",
+        "name": "Global Context",
+        "url": "/api/zai-prime/context",
+        "method": "GET",
+        "timestamp": "2025-07-09T09:17:42.552361",
+        "success": true,
+        "status_code": 200,
+        "response_time_ms": 2.97,
+        "raw_response": {
+          "global_context": {
+            "active_agents": {},
+            "current_page": "api_request",
+            "global_metrics": {
+              "agents_spawned": 0,
+              "errors_resolved": 0,
+              "events_processed": 0,
+              "interventions_made": 0,
+              "uptime_start": "Wed, 09 Jul 2025 09:17:19 GMT"
+            },
+            "recent_events": [],
+            "recent_journey": [],
+            "session_id": null,
+            "system_health": {
+              "active_agents": 0,
+              "events_in_queue": 0,
+              "memory_usage": {
+                "percent": 0.9183613217269573,
+                "rss": 314703872,
+                "vms": 793088000
+              },
+              "total_agents": 0,
+              "uptime": "0:00:22.680369"
+            }
+          },
+          "success": true,
+          "timestamp": "2025-07-09T09:17:42.554539"
+        },
+        "data_structure": {
+          "type": "dict",
+          "path": "",
+          "value_sample": null,
+          "children": {
+            "global_context": {
+              "type": "dict",
+              "path": "global_context",
+              "value_sample": null,
+              "children": {
+                "active_agents": {
+                  "type": "dict",
+                  "path": "global_context.active_agents",
+                  "value_sample": null,
+                  "children": {},
+                  "keys": [],
+                  "key_count": 0
+                },
+                "current_page": {
+                  "type": "str",
+                  "path": "global_context.current_page",
+                  "value_sample": "api_request",
+                  "children": {}
+                },
+                "global_metrics": {
+                  "type": "dict",
+                  "path": "global_context.global_metrics",
+                  "value_sample": null,
+                  "children": {
+                    "agents_spawned": {
+                      "type": "int",
+                      "path": "global_context.global_metrics.agents_spawned",
+                      "value_sample": "0",
+                      "children": {}
+                    },
+                    "errors_resolved": {
+                      "type": "int",
+                      "path": "global_context.global_metrics.errors_resolved",
+                      "value_sample": "0",
+                      "children": {}
+                    },
+                    "events_processed": {
+                      "type": "int",
+                      "path": "global_context.global_metrics.events_processed",
+                      "value_sample": "0",
+                      "children": {}
+                    },
+                    "interventions_made": {
+                      "type": "int",
+                      "path": "global_context.global_metrics.interventions_made",
+                      "value_sample": "0",
+                      "children": {}
+                    },
+                    "uptime_start": {
+                      "type": "str",
+                      "path": "global_context.global_metrics.uptime_start",
+                      "value_sample": "Wed, 09 Jul 2025 09:17:19 GMT",
+                      "children": {}
+                    }
+                  },
+                  "keys": [
+                    "agents_spawned",
+                    "errors_resolved",
+                    "events_processed",
+                    "interventions_made",
+                    "uptime_start"
+                  ],
+                  "key_count": 5
+                },
+                "recent_events": {
+                  "type": "list",
+                  "path": "global_context.recent_events",
+                  "value_sample": null,
+                  "children": {},
+                  "length": 0,
+                  "item_types": []
+                },
+                "recent_journey": {
+                  "type": "list",
+                  "path": "global_context.recent_journey",
+                  "value_sample": null,
+                  "children": {},
+                  "length": 0,
+                  "item_types": []
+                },
+                "session_id": {
+                  "type": "NoneType",
+                  "path": "global_context.session_id",
+                  "value_sample": "None",
+                  "children": {}
+                },
+                "system_health": {
+                  "type": "dict",
+                  "path": "global_context.system_health",
+                  "value_sample": null,
+                  "children": {
+                    "active_agents": {
+                      "type": "int",
+                      "path": "global_context.system_health.active_agents",
+                      "value_sample": "0",
+                      "children": {}
+                    },
+                    "events_in_queue": {
+                      "type": "int",
+                      "path": "global_context.system_health.events_in_queue",
+                      "value_sample": "0",
+                      "children": {}
+                    },
+                    "memory_usage": {
+                      "type": "dict",
+                      "path": "global_context.system_health.memory_usage",
+                      "value_sample": null,
+                      "children": {
+                        "percent": {
+                          "type": "float",
+                          "path": "global_context.system_health.memory_usage.percent",
+                          "value_sample": "0.9183613217269573",
+                          "children": {}
+                        },
+                        "rss": {
+                          "type": "int",
+                          "path": "global_context.system_health.memory_usage.rss",
+                          "value_sample": "314703872",
+                          "children": {}
+                        },
+                        "vms": {
+                          "type": "int",
+                          "path": "global_context.system_health.memory_usage.vms",
+                          "value_sample": "793088000",
+                          "children": {}
+                        }
+                      },
+                      "keys": [
+                        "percent",
+                        "rss",
+                        "vms"
+                      ],
+                      "key_count": 3
+                    },
+                    "total_agents": {
+                      "type": "int",
+                      "path": "global_context.system_health.total_agents",
+                      "value_sample": "0",
+                      "children": {}
+                    },
+                    "uptime": {
+                      "type": "str",
+                      "path": "global_context.system_health.uptime",
+                      "value_sample": "0:00:22.680369",
+                      "children": {}
+                    }
+                  },
+                  "keys": [
+                    "active_agents",
+                    "events_in_queue",
+                    "memory_usage",
+                    "total_agents",
+                    "uptime"
+                  ],
+                  "key_count": 5
+                }
+              },
+              "keys": [
+                "active_agents",
+                "current_page",
+                "global_metrics",
+                "recent_events",
+                "recent_journey",
+                "session_id",
+                "system_health"
+              ],
+              "key_count": 7
+            },
+            "success": {
+              "type": "bool",
+              "path": "success",
+              "value_sample": "True",
+              "children": {}
+            },
+            "timestamp": {
+              "type": "str",
+              "path": "timestamp",
+              "value_sample": "2025-07-09T09:17:42.554539",
+              "children": {}
+            }
+          },
+          "keys": [
+            "global_context",
+            "success",
+            "timestamp"
+          ],
+          "key_count": 3
+        },
+        "error": null,
+        "headers": {
+          "Server": "Werkzeug/3.1.3 Python/3.13.5",
+          "Date": "Wed, 09 Jul 2025 08:17:42 GMT",
+          "Content-Type": "application/json",
+          "Content-Length": "693",
+          "Access-Control-Allow-Origin": "http://localhost:3000",
+          "Vary": "Origin",
+          "Connection": "close"
+        },
+        "content_length": 693
+      }
+    ],
+    "MCP_INTEGRATION": [
+      {
+        "category": "MCP_INTEGRATION",
+        "name": "MCP Tools",
+        "url": "/api/mcp/tools",
+        "method": "GET",
+        "timestamp": "2025-07-09T09:17:42.555632",
+        "success": true,
+        "status_code": 200,
+        "response_time_ms": 2.88,
+        "raw_response": {
+          "tools": [
+            {
+              "description": "Talk to any AI family member with full capabilities",
+              "inputSchema": {
+                "properties": {
+                  "context": {
+                    "description": "Additional context",
+                    "type": "string"
+                  },
+                  "model": {
+                    "description": "AI model to use",
+                    "type": "string"
+                  },
+                  "prompt": {
+                    "description": "Your message to the AI",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "model",
+                  "prompt"
+                ],
+                "type": "object"
+              },
+              "name": "orchestrate_ai"
+            },
+            {
+              "description": "Search and manage memories",
+              "inputSchema": {
+                "properties": {
+                  "action": {
+                    "enum": [
+                      "search",
+                      "add",
+                      "list"
+                    ],
+                    "type": "string"
+                  },
+                  "query": {
+                    "description": "Search query or content",
+                    "type": "string"
+                  },
+                  "user_id": {
+                    "description": "User ID",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "action"
+                ],
+                "type": "object"
+              },
+              "name": "access_memory"
+            }
+          ],
+          "version": "1.0"
+        },
+        "data_structure": {
+          "type": "dict",
+          "path": "",
+          "value_sample": null,
+          "children": {
+            "tools": {
+              "type": "list",
+              "path": "tools",
+              "value_sample": null,
+              "children": {
+                "[0]": {
+                  "type": "dict",
+                  "path": "tools[0]",
+                  "value_sample": null,
+                  "children": {
+                    "description": {
+                      "type": "str",
+                      "path": "tools[0].description",
+                      "value_sample": "Talk to any AI family member with full capabilities",
+                      "children": {}
+                    },
+                    "inputSchema": {
+                      "type": "dict",
+                      "path": "tools[0].inputSchema",
+                      "value_sample": null,
+                      "children": {
+                        "properties": {
+                          "type": "dict",
+                          "path": "tools[0].inputSchema.properties",
+                          "value_sample": null,
+                          "children": {
+                            "context": {
+                              "type": "dict",
+                              "path": "tools[0].inputSchema.properties.context",
+                              "value_sample": null,
+                              "children": {
+                                "description": {
+                                  "type": "str",
+                                  "path": "tools[0].inputSchema.properties.context.description",
+                                  "value_sample": "Additional context",
+                                  "children": {}
+                                },
+                                "type": {
+                                  "type": "str",
+                                  "path": "tools[0].inputSchema.properties.context.type",
+                                  "value_sample": "string",
+                                  "children": {}
+                                }
+                              },
+                              "keys": [
+                                "description",
+                                "type"
+                              ],
+                              "key_count": 2
+                            },
+                            "model": {
+                              "type": "dict",
+                              "path": "tools[0].inputSchema.properties.model",
+                              "value_sample": null,
+                              "children": {
+                                "description": {
+                                  "type": "str",
+                                  "path": "tools[0].inputSchema.properties.model.description",
+                                  "value_sample": "AI model to use",
+                                  "children": {}
+                                },
+                                "type": {
+                                  "type": "str",
+                                  "path": "tools[0].inputSchema.properties.model.type",
+                                  "value_sample": "string",
+                                  "children": {}
+                                }
+                              },
+                              "keys": [
+                                "description",
+                                "type"
+                              ],
+                              "key_count": 2
+                            },
+                            "prompt": {
+                              "type": "dict",
+                              "path": "tools[0].inputSchema.properties.prompt",
+                              "value_sample": null,
+                              "children": {
+                                "description": {
+                                  "type": "str",
+                                  "path": "tools[0].inputSchema.properties.prompt.description",
+                                  "value_sample": "Your message to the AI",
+                                  "children": {}
+                                },
+                                "type": {
+                                  "type": "str",
+                                  "path": "tools[0].inputSchema.properties.prompt.type",
+                                  "value_sample": "string",
+                                  "children": {}
+                                }
+                              },
+                              "keys": [
+                                "description",
+                                "type"
+                              ],
+                              "key_count": 2
+                            }
+                          },
+                          "keys": [
+                            "context",
+                            "model",
+                            "prompt"
+                          ],
+                          "key_count": 3
+                        },
+                        "required": {
+                          "type": "list",
+                          "path": "tools[0].inputSchema.required",
+                          "value_sample": null,
+                          "children": {
+                            "[0]": {
+                              "type": "str",
+                              "path": "tools[0].inputSchema.required[0]",
+                              "value_sample": "model",
+                              "children": {}
+                            }
+                          },
+                          "length": 2,
+                          "item_types": [
+                            "str"
+                          ]
+                        },
+                        "type": {
+                          "type": "str",
+                          "path": "tools[0].inputSchema.type",
+                          "value_sample": "object",
+                          "children": {}
+                        }
+                      },
+                      "keys": [
+                        "properties",
+                        "required",
+                        "type"
+                      ],
+                      "key_count": 3
+                    },
+                    "name": {
+                      "type": "str",
+                      "path": "tools[0].name",
+                      "value_sample": "orchestrate_ai",
+                      "children": {}
+                    }
+                  },
+                  "keys": [
+                    "description",
+                    "inputSchema",
+                    "name"
+                  ],
+                  "key_count": 3
+                }
+              },
+              "length": 2,
+              "item_types": [
+                "dict"
+              ]
+            },
+            "version": {
+              "type": "str",
+              "path": "version",
+              "value_sample": "1.0",
+              "children": {}
+            }
+          },
+          "keys": [
+            "tools",
+            "version"
+          ],
+          "key_count": 2
+        },
+        "error": null,
+        "headers": {
+          "Server": "Werkzeug/3.1.3 Python/3.13.5",
+          "Date": "Wed, 09 Jul 2025 08:17:42 GMT",
+          "Content-Type": "application/json",
+          "Content-Length": "1286",
+          "Access-Control-Allow-Origin": "http://localhost:3000",
+          "Vary": "Origin",
+          "Connection": "close"
+        },
+        "content_length": 1286
+      },
+      {
+        "category": "MCP_INTEGRATION",
+        "name": "MCP Execute",
+        "url": "/api/mcp/execute",
+        "method": "POST",
+        "timestamp": "2025-07-09T09:17:42.558694",
+        "success": true,
+        "status_code": 200,
+        "response_time_ms": 2.91,
+        "raw_response": {
+          "result": {
+            "model": "test",
+            "response": "AI orchestration for Mapping test - Backend ready",
+            "status": "ready"
+          },
+          "success": true
+        },
+        "data_structure": {
+          "type": "dict",
+          "path": "",
+          "value_sample": null,
+          "children": {
+            "result": {
+              "type": "dict",
+              "path": "result",
+              "value_sample": null,
+              "children": {
+                "model": {
+                  "type": "str",
+                  "path": "result.model",
+                  "value_sample": "test",
+                  "children": {}
+                },
+                "response": {
+                  "type": "str",
+                  "path": "result.response",
+                  "value_sample": "AI orchestration for Mapping test - Backend ready",
+                  "children": {}
+                },
+                "status": {
+                  "type": "str",
+                  "path": "result.status",
+                  "value_sample": "ready",
+                  "children": {}
+                }
+              },
+              "keys": [
+                "model",
+                "response",
+                "status"
+              ],
+              "key_count": 3
+            },
+            "success": {
+              "type": "bool",
+              "path": "success",
+              "value_sample": "True",
+              "children": {}
+            }
+          },
+          "keys": [
+            "result",
+            "success"
+          ],
+          "key_count": 2
+        },
+        "error": null,
+        "headers": {
+          "Server": "Werkzeug/3.1.3 Python/3.13.5",
+          "Date": "Wed, 09 Jul 2025 08:17:42 GMT",
+          "Content-Type": "application/json",
+          "Content-Length": "153",
+          "Access-Control-Allow-Origin": "http://localhost:3000",
+          "Vary": "Origin",
+          "Connection": "close"
+        },
+        "content_length": 153
+      }
+    ],
+    "MEMORY_SYSTEM": [
+      {
+        "category": "MEMORY_SYSTEM",
+        "name": "Memory Health",
+        "url": "/api/memory/health",
+        "method": "GET",
+        "timestamp": "2025-07-09T09:17:42.561844",
+        "success": true,
+        "status_code": 200,
+        "response_time_ms": 23.04,
+        "raw_response": {
+          "context_count": 0,
+          "service": "memory",
+          "status": "healthy",
+          "store_count": 0,
+          "success": true,
+          "timestamp": "2025-07-09T08:17:42.583706"
+        },
+        "data_structure": {
+          "type": "dict",
+          "path": "",
+          "value_sample": null,
+          "children": {
+            "context_count": {
+              "type": "int",
+              "path": "context_count",
+              "value_sample": "0",
+              "children": {}
+            },
+            "service": {
+              "type": "str",
+              "path": "service",
+              "value_sample": "memory",
+              "children": {}
+            },
+            "status": {
+              "type": "str",
+              "path": "status",
+              "value_sample": "healthy",
+              "children": {}
+            },
+            "store_count": {
+              "type": "int",
+              "path": "store_count",
+              "value_sample": "0",
+              "children": {}
+            },
+            "success": {
+              "type": "bool",
+              "path": "success",
+              "value_sample": "True",
+              "children": {}
+            },
+            "timestamp": {
+              "type": "str",
+              "path": "timestamp",
+              "value_sample": "2025-07-09T08:17:42.583706",
+              "children": {}
+            }
+          },
+          "keys": [
+            "context_count",
+            "service",
+            "status",
+            "store_count",
+            "success",
+            "timestamp"
+          ],
+          "key_count": 6
+        },
+        "error": null,
+        "headers": {
+          "Server": "Werkzeug/3.1.3 Python/3.13.5",
+          "Date": "Wed, 09 Jul 2025 08:17:42 GMT",
+          "Content-Type": "application/json",
+          "Content-Length": "155",
+          "Access-Control-Allow-Origin": "http://localhost:3000",
+          "Vary": "Origin",
+          "Connection": "close"
+        },
+        "content_length": 155
+      },
+      {
+        "category": "MEMORY_SYSTEM",
+        "name": "Memory Search",
+        "url": "/api/memory/search",
+        "method": "POST",
+        "timestamp": "2025-07-09T09:17:42.585113",
+        "success": true,
+        "status_code": 200,
+        "response_time_ms": 3.65,
+        "raw_response": {
+          "results": [],
+          "success": true
+        },
+        "data_structure": {
+          "type": "dict",
+          "path": "",
+          "value_sample": null,
+          "children": {
+            "results": {
+              "type": "list",
+              "path": "results",
+              "value_sample": null,
+              "children": {},
+              "length": 0,
+              "item_types": []
+            },
+            "success": {
+              "type": "bool",
+              "path": "success",
+              "value_sample": "True",
+              "children": {}
+            }
+          },
+          "keys": [
+            "results",
+            "success"
+          ],
+          "key_count": 2
+        },
+        "error": null,
+        "headers": {
+          "Server": "Werkzeug/3.1.3 Python/3.13.5",
+          "Date": "Wed, 09 Jul 2025 08:17:42 GMT",
+          "Content-Type": "application/json",
+          "Content-Length": "39",
+          "Access-Control-Allow-Origin": "http://localhost:3000",
+          "Vary": "Origin",
+          "Connection": "close"
+        },
+        "content_length": 39
+      }
+    ],
+    "AI_ORCHESTRATION": [
+      {
+        "category": "AI_ORCHESTRATION",
+        "name": "Simple Chat",
+        "url": "/api/chat/simple",
+        "method": "POST",
+        "timestamp": "2025-07-09T09:17:42.589023",
+        "success": true,
+        "status_code": 200,
+        "response_time_ms": 3.05,
+        "raw_response": {
+          "message": "Chat system operational",
+          "model": "gemini",
+          "response": "Chat response for: Backend mapping test",
+          "status": "ready",
+          "success": true
+        },
+        "data_structure": {
+          "type": "dict",
+          "path": "",
+          "value_sample": null,
+          "children": {
+            "message": {
+              "type": "str",
+              "path": "message",
+              "value_sample": "Chat system operational",
+              "children": {}
+            },
+            "model": {
+              "type": "str",
+              "path": "model",
+              "value_sample": "gemini",
+              "children": {}
+            },
+            "response": {
+              "type": "str",
+              "path": "response",
+              "value_sample": "Chat response for: Backend mapping test",
+              "children": {}
+            },
+            "status": {
+              "type": "str",
+              "path": "status",
+              "value_sample": "ready",
+              "children": {}
+            },
+            "success": {
+              "type": "bool",
+              "path": "success",
+              "value_sample": "True",
+              "children": {}
+            }
+          },
+          "keys": [
+            "message",
+            "model",
+            "response",
+            "status",
+            "success"
+          ],
+          "key_count": 5
+        },
+        "error": null,
+        "headers": {
+          "Server": "Werkzeug/3.1.3 Python/3.13.5",
+          "Date": "Wed, 09 Jul 2025 08:17:42 GMT",
+          "Content-Type": "application/json",
+          "Content-Length": "161",
+          "Access-Control-Allow-Origin": "http://localhost:3000",
+          "Vary": "Origin",
+          "Connection": "close"
+        },
+        "content_length": 161
+      },
+      {
+        "category": "AI_ORCHESTRATION",
+        "name": "Multi-Model",
+        "url": "/api/multi-model/status",
+        "method": "GET",
+        "timestamp": "2025-07-09T09:17:42.592215",
+        "success": true,
+        "status_code": 200,
+        "response_time_ms": 2.51,
+        "raw_response": {
+          "available_models": 15,
+          "message": "Multi-model orchestration ready",
+          "service": "multi_model",
+          "status": "operational",
+          "success": true
+        },
+        "data_structure": {
+          "type": "dict",
+          "path": "",
+          "value_sample": null,
+          "children": {
+            "available_models": {
+              "type": "int",
+              "path": "available_models",
+              "value_sample": "15",
+              "children": {}
+            },
+            "message": {
+              "type": "str",
+              "path": "message",
+              "value_sample": "Multi-model orchestration ready",
+              "children": {}
+            },
+            "service": {
+              "type": "str",
+              "path": "service",
+              "value_sample": "multi_model",
+              "children": {}
+            },
+            "status": {
+              "type": "str",
+              "path": "status",
+              "value_sample": "operational",
+              "children": {}
+            },
+            "success": {
+              "type": "bool",
+              "path": "success",
+              "value_sample": "True",
+              "children": {}
+            }
+          },
+          "keys": [
+            "available_models",
+            "message",
+            "service",
+            "status",
+            "success"
+          ],
+          "key_count": 5
+        },
+        "error": null,
+        "headers": {
+          "Server": "Werkzeug/3.1.3 Python/3.13.5",
+          "Date": "Wed, 09 Jul 2025 08:17:42 GMT",
+          "Content-Type": "application/json",
+          "Content-Length": "151",
+          "Access-Control-Allow-Origin": "http://localhost:3000",
+          "Vary": "Origin",
+          "Connection": "close"
+        },
+        "content_length": 151
+      }
+    ],
+    "ADVANCED_FEATURES": [
+      {
+        "category": "ADVANCED_FEATURES",
+        "name": "Agent Registry",
+        "url": "/api/agent-registry/status",
+        "method": "GET",
+        "timestamp": "2025-07-09T09:17:42.594987",
+        "success": true,
+        "status_code": 200,
+        "response_time_ms": 20.78,
+        "raw_response": {
+          "registry_status": {
+            "active_agents": 23,
+            "categories": {
+              "ai_provider": 5,
+              "communication": 1,
+              "development": 3,
+              "integration": 2,
+              "memory": 2,
+              "monitoring": 1,
+              "orchestration": 5,
+              "research": 2,
+              "security": 1,
+              "utility": 1
+            },
+            "health_summary": {
+              "active": 23,
+              "degraded": 0,
+              "error": 0,
+              "inactive": 0,
+              "initializing": 0
+            },
+            "top_capabilities": [
+              [
+                "route_request",
+                1
+              ],
+              [
+                "manage_context",
+                1
+              ],
+              [
+                "fallback_handling",
+                1
+              ],
+              [
+                "workflow_orchestration",
+                1
+              ],
+              [
+                "quota_management",
+                1
+              ],
+              [
+                "model_routing",
+                1
+              ],
+              [
+                "express_chat",
+                1
+              ],
+              [
+                "batch_processing",
+                1
+              ],
+              [
+                "model_switching",
+                1
+              ],
+              [
+                "deep_reasoning",
+                1
+              ]
+            ],
+            "total_agents": 23,
+            "total_capabilities": 66
+          },
+          "success": true
+        },
+        "data_structure": {
+          "type": "dict",
+          "path": "",
+          "value_sample": null,
+          "children": {
+            "registry_status": {
+              "type": "dict",
+              "path": "registry_status",
+              "value_sample": null,
+              "children": {
+                "active_agents": {
+                  "type": "int",
+                  "path": "registry_status.active_agents",
+                  "value_sample": "23",
+                  "children": {}
+                },
+                "categories": {
+                  "type": "dict",
+                  "path": "registry_status.categories",
+                  "value_sample": null,
+                  "children": {
+                    "ai_provider": {
+                      "type": "int",
+                      "path": "registry_status.categories.ai_provider",
+                      "value_sample": "5",
+                      "children": {}
+                    },
+                    "communication": {
+                      "type": "int",
+                      "path": "registry_status.categories.communication",
+                      "value_sample": "1",
+                      "children": {}
+                    },
+                    "development": {
+                      "type": "int",
+                      "path": "registry_status.categories.development",
+                      "value_sample": "3",
+                      "children": {}
+                    },
+                    "integration": {
+                      "type": "int",
+                      "path": "registry_status.categories.integration",
+                      "value_sample": "2",
+                      "children": {}
+                    },
+                    "memory": {
+                      "type": "int",
+                      "path": "registry_status.categories.memory",
+                      "value_sample": "2",
+                      "children": {}
+                    },
+                    "monitoring": {
+                      "type": "int",
+                      "path": "registry_status.categories.monitoring",
+                      "value_sample": "1",
+                      "children": {}
+                    },
+                    "orchestration": {
+                      "type": "int",
+                      "path": "registry_status.categories.orchestration",
+                      "value_sample": "5",
+                      "children": {}
+                    },
+                    "research": {
+                      "type": "int",
+                      "path": "registry_status.categories.research",
+                      "value_sample": "2",
+                      "children": {}
+                    },
+                    "security": {
+                      "type": "int",
+                      "path": "registry_status.categories.security",
+                      "value_sample": "1",
+                      "children": {}
+                    },
+                    "utility": {
+                      "type": "int",
+                      "path": "registry_status.categories.utility",
+                      "value_sample": "1",
+                      "children": {}
+                    }
+                  },
+                  "keys": [
+                    "ai_provider",
+                    "communication",
+                    "development",
+                    "integration",
+                    "memory",
+                    "monitoring",
+                    "orchestration",
+                    "research",
+                    "security",
+                    "utility"
+                  ],
+                  "key_count": 10
+                },
+                "health_summary": {
+                  "type": "dict",
+                  "path": "registry_status.health_summary",
+                  "value_sample": null,
+                  "children": {
+                    "active": {
+                      "type": "int",
+                      "path": "registry_status.health_summary.active",
+                      "value_sample": "23",
+                      "children": {}
+                    },
+                    "degraded": {
+                      "type": "int",
+                      "path": "registry_status.health_summary.degraded",
+                      "value_sample": "0",
+                      "children": {}
+                    },
+                    "error": {
+                      "type": "int",
+                      "path": "registry_status.health_summary.error",
+                      "value_sample": "0",
+                      "children": {}
+                    },
+                    "inactive": {
+                      "type": "int",
+                      "path": "registry_status.health_summary.inactive",
+                      "value_sample": "0",
+                      "children": {}
+                    },
+                    "initializing": {
+                      "type": "int",
+                      "path": "registry_status.health_summary.initializing",
+                      "value_sample": "0",
+                      "children": {}
+                    }
+                  },
+                  "keys": [
+                    "active",
+                    "degraded",
+                    "error",
+                    "inactive",
+                    "initializing"
+                  ],
+                  "key_count": 5
+                },
+                "top_capabilities": {
+                  "type": "list",
+                  "path": "registry_status.top_capabilities",
+                  "value_sample": null,
+                  "children": {
+                    "[0]": {
+                      "type": "list",
+                      "path": "registry_status.top_capabilities[0]",
+                      "value_sample": null,
+                      "children": {
+                        "[0]": {
+                          "type": "str",
+                          "path": "registry_status.top_capabilities[0][0]",
+                          "value_sample": "route_request",
+                          "children": {}
+                        }
+                      },
+                      "length": 2,
+                      "item_types": [
+                        "str",
+                        "int"
+                      ]
+                    }
+                  },
+                  "length": 10,
+                  "item_types": [
+                    "list"
+                  ]
+                },
+                "total_agents": {
+                  "type": "int",
+                  "path": "registry_status.total_agents",
+                  "value_sample": "23",
+                  "children": {}
+                },
+                "total_capabilities": {
+                  "type": "int",
+                  "path": "registry_status.total_capabilities",
+                  "value_sample": "66",
+                  "children": {}
+                }
+              },
+              "keys": [
+                "active_agents",
+                "categories",
+                "health_summary",
+                "top_capabilities",
+                "total_agents",
+                "total_capabilities"
+              ],
+              "key_count": 6
+            },
+            "success": {
+              "type": "bool",
+              "path": "success",
+              "value_sample": "True",
+              "children": {}
+            }
+          },
+          "keys": [
+            "registry_status",
+            "success"
+          ],
+          "key_count": 2
+        },
+        "error": null,
+        "headers": {
+          "Server": "Werkzeug/3.1.3 Python/3.13.5",
+          "Date": "Wed, 09 Jul 2025 08:17:42 GMT",
+          "Content-Type": "application/json",
+          "Content-Length": "1091",
+          "Access-Control-Allow-Origin": "http://localhost:3000",
+          "Vary": "Origin",
+          "Connection": "close"
+        },
+        "content_length": 1091
+      },
+      {
+        "category": "ADVANCED_FEATURES",
+        "name": "Task Orchestrator",
+        "url": "/api/task-orchestrator/status",
+        "method": "GET",
+        "timestamp": "2025-07-09T09:17:42.616093",
+        "success": true,
+        "status_code": 200,
+        "response_time_ms": 14.83,
+        "raw_response": {
+          "active_tasks": 0,
+          "message": "Task orchestrator ready for intelligent routing",
+          "service": "task_orchestrator",
+          "status": "operational",
+          "success": true,
+          "worker_count": 20
+        },
+        "data_structure": {
+          "type": "dict",
+          "path": "",
+          "value_sample": null,
+          "children": {
+            "active_tasks": {
+              "type": "int",
+              "path": "active_tasks",
+              "value_sample": "0",
+              "children": {}
+            },
+            "message": {
+              "type": "str",
+              "path": "message",
+              "value_sample": "Task orchestrator ready for intelligent routing",
+              "children": {}
+            },
+            "service": {
+              "type": "str",
+              "path": "service",
+              "value_sample": "task_orchestrator",
+              "children": {}
+            },
+            "status": {
+              "type": "str",
+              "path": "status",
+              "value_sample": "operational",
+              "children": {}
+            },
+            "success": {
+              "type": "bool",
+              "path": "success",
+              "value_sample": "True",
+              "children": {}
+            },
+            "worker_count": {
+              "type": "int",
+              "path": "worker_count",
+              "value_sample": "20",
+              "children": {}
+            }
+          },
+          "keys": [
+            "active_tasks",
+            "message",
+            "service",
+            "status",
+            "success",
+            "worker_count"
+          ],
+          "key_count": 6
+        },
+        "error": null,
+        "headers": {
+          "Server": "Werkzeug/3.1.3 Python/3.13.5",
+          "Date": "Wed, 09 Jul 2025 08:17:42 GMT",
+          "Content-Type": "application/json",
+          "Content-Length": "190",
+          "Access-Control-Allow-Origin": "http://localhost:3000",
+          "Vary": "Origin",
+          "Connection": "close"
+        },
+        "content_length": 190
+      },
+      {
+        "category": "ADVANCED_FEATURES",
+        "name": "WebSocket Coordinator",
+        "url": "/api/websocket-coordinator/status",
+        "method": "GET",
+        "timestamp": "2025-07-09T09:17:42.631072",
+        "success": true,
+        "status_code": 200,
+        "response_time_ms": 15.82,
+        "raw_response": {
+          "active_channels": 0,
+          "connections": 0,
+          "message": "Real-time agent communication ready",
+          "service": "websocket_coordinator",
+          "status": "operational",
+          "success": true
+        },
+        "data_structure": {
+          "type": "dict",
+          "path": "",
+          "value_sample": null,
+          "children": {
+            "active_channels": {
+              "type": "int",
+              "path": "active_channels",
+              "value_sample": "0",
+              "children": {}
+            },
+            "connections": {
+              "type": "int",
+              "path": "connections",
+              "value_sample": "0",
+              "children": {}
+            },
+            "message": {
+              "type": "str",
+              "path": "message",
+              "value_sample": "Real-time agent communication ready",
+              "children": {}
+            },
+            "service": {
+              "type": "str",
+              "path": "service",
+              "value_sample": "websocket_coordinator",
+              "children": {}
+            },
+            "status": {
+              "type": "str",
+              "path": "status",
+              "value_sample": "operational",
+              "children": {}
+            },
+            "success": {
+              "type": "bool",
+              "path": "success",
+              "value_sample": "True",
+              "children": {}
+            }
+          },
+          "keys": [
+            "active_channels",
+            "connections",
+            "message",
+            "service",
+            "status",
+            "success"
+          ],
+          "key_count": 6
+        },
+        "error": null,
+        "headers": {
+          "Server": "Werkzeug/3.1.3 Python/3.13.5",
+          "Date": "Wed, 09 Jul 2025 08:17:42 GMT",
+          "Content-Type": "application/json",
+          "Content-Length": "183",
+          "Access-Control-Allow-Origin": "http://localhost:3000",
+          "Vary": "Origin",
+          "Connection": "close"
+        },
+        "content_length": 183
+      }
+    ],
+    "SCRAPYBARA": [
+      {
+        "category": "SCRAPYBARA",
+        "name": "Scrapybara Status",
+        "url": "/api/scrape/status",
+        "method": "GET",
+        "timestamp": "2025-07-09T09:17:42.647199",
+        "success": true,
+        "status_code": 200,
+        "response_time_ms": 15.65,
+        "raw_response": {
+          "active_jobs": 0,
+          "message": "Scraping service ready",
+          "service": "scrape",
+          "status": "operational",
+          "success": true
+        },
+        "data_structure": {
+          "type": "dict",
+          "path": "",
+          "value_sample": null,
+          "children": {
+            "active_jobs": {
+              "type": "int",
+              "path": "active_jobs",
+              "value_sample": "0",
+              "children": {}
+            },
+            "message": {
+              "type": "str",
+              "path": "message",
+              "value_sample": "Scraping service ready",
+              "children": {}
+            },
+            "service": {
+              "type": "str",
+              "path": "service",
+              "value_sample": "scrape",
+              "children": {}
+            },
+            "status": {
+              "type": "str",
+              "path": "status",
+              "value_sample": "operational",
+              "children": {}
+            },
+            "success": {
+              "type": "bool",
+              "path": "success",
+              "value_sample": "True",
+              "children": {}
+            }
+          },
+          "keys": [
+            "active_jobs",
+            "message",
+            "service",
+            "status",
+            "success"
+          ],
+          "key_count": 5
+        },
+        "error": null,
+        "headers": {
+          "Server": "Werkzeug/3.1.3 Python/3.13.5",
+          "Date": "Wed, 09 Jul 2025 08:17:42 GMT",
+          "Content-Type": "application/json",
+          "Content-Length": "131",
+          "Access-Control-Allow-Origin": "http://localhost:3000",
+          "Vary": "Origin",
+          "Connection": "close"
+        },
+        "content_length": 131
+      }
+    ]
+  },
+  "scrapybara_analysis": {
+    "service_online": true,
+    "active_jobs": 0,
+    "service_message": "Scraping service ready",
+    "service_name": "scrape",
+    "capabilities": [
+      "Service Status Available",
+      "Job Monitoring",
+      "Status Messages"
+    ],
+    "ready_for_ui": true
+  },
+  "ui_development_insights": {
+    "available_data_sources": [
+      {
+        "name": "Root",
+        "category": "CORE",
+        "data_keys": [
+          "endpoints",
+          "message",
+          "service",
+          "status",
+          "timestamp",
+          "version"
+        ],
+        "url": "/"
+      },
+      {
+        "name": "Health Check",
+        "category": "CORE",
+        "data_keys": [
+          "message",
+          "status",
+          "success",
+          "timestamp"
+        ],
+        "url": "/api/health"
+      },
+      {
+        "name": "ZAI Prime Status",
+        "category": "ZAI_PRIME",
+        "data_keys": [
+          "success",
+          "timestamp",
+          "zai_prime_status"
+        ],
+        "url": "/api/zai-prime/status"
+      },
+      {
+        "name": "Agents List",
+        "category": "ZAI_PRIME",
+        "data_keys": [
+          "agents",
+          "stats",
+          "success",
+          "timestamp"
+        ],
+        "url": "/api/zai-prime/agents"
+      },
+      {
+        "name": "Global Context",
+        "category": "ZAI_PRIME",
+        "data_keys": [
+          "global_context",
+          "success",
+          "timestamp"
+        ],
+        "url": "/api/zai-prime/context"
+      },
+      {
+        "name": "MCP Tools",
+        "category": "MCP_INTEGRATION",
+        "data_keys": [
+          "tools",
+          "version"
+        ],
+        "url": "/api/mcp/tools"
+      },
+      {
+        "name": "MCP Execute",
+        "category": "MCP_INTEGRATION",
+        "data_keys": [
+          "result",
+          "success"
+        ],
+        "url": "/api/mcp/execute"
+      },
+      {
+        "name": "Memory Health",
+        "category": "MEMORY_SYSTEM",
+        "data_keys": [
+          "context_count",
+          "service",
+          "status",
+          "store_count",
+          "success",
+          "timestamp"
+        ],
+        "url": "/api/memory/health"
+      },
+      {
+        "name": "Memory Search",
+        "category": "MEMORY_SYSTEM",
+        "data_keys": [
+          "results",
+          "success"
+        ],
+        "url": "/api/memory/search"
+      },
+      {
+        "name": "Simple Chat",
+        "category": "AI_ORCHESTRATION",
+        "data_keys": [
+          "message",
+          "model",
+          "response",
+          "status",
+          "success"
+        ],
+        "url": "/api/chat/simple"
+      },
+      {
+        "name": "Multi-Model",
+        "category": "AI_ORCHESTRATION",
+        "data_keys": [
+          "available_models",
+          "message",
+          "service",
+          "status",
+          "success"
+        ],
+        "url": "/api/multi-model/status"
+      },
+      {
+        "name": "Agent Registry",
+        "category": "ADVANCED_FEATURES",
+        "data_keys": [
+          "registry_status",
+          "success"
+        ],
+        "url": "/api/agent-registry/status"
+      },
+      {
+        "name": "Task Orchestrator",
+        "category": "ADVANCED_FEATURES",
+        "data_keys": [
+          "active_tasks",
+          "message",
+          "service",
+          "status",
+          "success",
+          "worker_count"
+        ],
+        "url": "/api/task-orchestrator/status"
+      },
+      {
+        "name": "WebSocket Coordinator",
+        "category": "ADVANCED_FEATURES",
+        "data_keys": [
+          "active_channels",
+          "connections",
+          "message",
+          "service",
+          "status",
+          "success"
+        ],
+        "url": "/api/websocket-coordinator/status"
+      },
+      {
+        "name": "Scrapybara Status",
+        "category": "SCRAPYBARA",
+        "data_keys": [
+          "active_jobs",
+          "message",
+          "service",
+          "status",
+          "success"
+        ],
+        "url": "/api/scrape/status"
+      }
+    ],
+    "ui_components_needed": [
+      "Chat Interface",
+      "Model Selection",
+      "Response Display",
+      "Memory Search",
+      "Context Display",
+      "Memory Health Monitor",
+      "Job Monitor",
+      "Scraping Controls",
+      "Results Display"
+    ],
+    "integration_priorities": [],
+    "data_visualization_opportunities": []
+  }
+}

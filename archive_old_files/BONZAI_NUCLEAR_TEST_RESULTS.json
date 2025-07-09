@@ -1,0 +1,1494 @@
+{
+  "test_metadata": {
+    "start_time": "2025-07-09T09:33:13.348606",
+    "backend_url": "http://127.0.0.1:5001",
+    "test_type": "NUCLEAR_STRESS_TEST",
+    "estimated_duration": "15-20 minutes"
+  },
+  "api_key_failover_tests": {
+    "key_1_key1": {
+      "key_tested": "key1",
+      "status_code": 200,
+      "success": true,
+      "response_time_ms": 3.4259999999999997,
+      "failover_triggered": false,
+      "response_data": {
+        "result": {
+          "model": "gemini-pro",
+          "response": "AI orchestration for Test with API key key1 - Backend ready",
+          "status": "ready"
+        },
+        "success": true
+      },
+      "timestamp": "2025-07-09T09:33:13.353315"
+    },
+    "key_2_key2": {
+      "key_tested": "key2",
+      "status_code": 200,
+      "success": true,
+      "response_time_ms": 1.845,
+      "failover_triggered": false,
+      "response_data": {
+        "result": {
+          "model": "gemini-pro",
+          "response": "AI orchestration for Test with API key key2 - Backend ready",
+          "status": "ready"
+        },
+        "success": true
+      },
+      "timestamp": "2025-07-09T09:33:13.356019"
+    },
+    "key_3_key3": {
+      "key_tested": "key3",
+      "status_code": 200,
+      "success": true,
+      "response_time_ms": 26.362,
+      "failover_triggered": false,
+      "response_data": {
+        "result": {
+          "model": "gemini-pro",
+          "response": "AI orchestration for Test with API key key3 - Backend ready",
+          "status": "ready"
+        },
+        "success": true
+      },
+      "timestamp": "2025-07-09T09:33:13.383206"
+    }
+  },
+  "endpoint_variant_tests": {
+    "standard_chat": {
+      "endpoint": "Standard Chat",
+      "url": "/api/chat/simple",
+      "method": "POST",
+      "total_requests": 20,
+      "successful_requests": 20,
+      "success_rate": 100.0,
+      "avg_response_time_ms": 4.23,
+      "min_response_time_ms": 1.99,
+      "max_response_time_ms": 28.71,
+      "performance_grade": "A",
+      "timestamp": "2025-07-09T09:33:20.553093"
+    },
+    "mcp_execute": {
+      "endpoint": "MCP Execute",
+      "url": "/api/mcp/execute",
+      "method": "POST",
+      "total_requests": 20,
+      "successful_requests": 20,
+      "success_rate": 100.0,
+      "avg_response_time_ms": 7.39,
+      "min_response_time_ms": 2.0,
+      "max_response_time_ms": 25.64,
+      "performance_grade": "A",
+      "timestamp": "2025-07-09T09:33:20.701224"
+    },
+    "multi-model_status": {
+      "endpoint": "Multi-Model Status",
+      "url": "/api/multi-model/status",
+      "method": "GET",
+      "total_requests": 20,
+      "successful_requests": 20,
+      "success_rate": 100.0,
+      "avg_response_time_ms": 4.07,
+      "min_response_time_ms": 1.94,
+      "max_response_time_ms": 23.02,
+      "performance_grade": "A",
+      "timestamp": "2025-07-09T09:33:20.782790"
+    },
+    "agent_registry": {
+      "endpoint": "Agent Registry",
+      "url": "/api/agent-registry/status",
+      "method": "GET",
+      "total_requests": 20,
+      "successful_requests": 20,
+      "success_rate": 100.0,
+      "avg_response_time_ms": 3.12,
+      "min_response_time_ms": 1.97,
+      "max_response_time_ms": 21.62,
+      "performance_grade": "A",
+      "timestamp": "2025-07-09T09:33:20.845364"
+    },
+    "memory_health": {
+      "endpoint": "Memory Health",
+      "url": "/api/memory/health",
+      "method": "GET",
+      "total_requests": 20,
+      "successful_requests": 20,
+      "success_rate": 100.0,
+      "avg_response_time_ms": 6.77,
+      "min_response_time_ms": 1.99,
+      "max_response_time_ms": 24.5,
+      "performance_grade": "A",
+      "timestamp": "2025-07-09T09:33:20.981079"
+    }
+  },
+  "ai_orchestration_stress": {
+    "gemini-pro": {
+      "model": "gemini-pro",
+      "total_requests": 10,
+      "successful": 10,
+      "failed": 0,
+      "success_rate": 100.0,
+      "avg_response_time_ms": 5.67,
+      "detailed_results": [
+        {
+          "request_id": 1,
+          "success": true,
+          "status_code": 200,
+          "response_time_ms": 3.92,
+          "model": "gemini-pro"
+        },
+        {
+          "request_id": 2,
+          "success": true,
+          "status_code": 200,
+          "response_time_ms": 6.14,
+          "model": "gemini-pro"
+        },
+        {
+          "request_id": 3,
+          "success": true,
+          "status_code": 200,
+          "response_time_ms": 5.34,
+          "model": "gemini-pro"
+        },
+        {
+          "request_id": 4,
+          "success": true,
+          "status_code": 200,
+          "response_time_ms": 5.88,
+          "model": "gemini-pro"
+        },
+        {
+          "request_id": 5,
+          "success": true,
+          "status_code": 200,
+          "response_time_ms": 6.65,
+          "model": "gemini-pro"
+        },
+        {
+          "request_id": 6,
+          "success": true,
+          "status_code": 200,
+          "response_time_ms": 4.96,
+          "model": "gemini-pro"
+        },
+        {
+          "request_id": 7,
+          "success": true,
+          "status_code": 200,
+          "response_time_ms": 6.03,
+          "model": "gemini-pro"
+        },
+        {
+          "request_id": 8,
+          "success": true,
+          "status_code": 200,
+          "response_time_ms": 5.99,
+          "model": "gemini-pro"
+        },
+        {
+          "request_id": 9,
+          "success": true,
+          "status_code": 200,
+          "response_time_ms": 5.26,
+          "model": "gemini-pro"
+        },
+        {
+          "request_id": 10,
+          "success": true,
+          "status_code": 200,
+          "response_time_ms": 6.55,
+          "model": "gemini-pro"
+        }
+      ],
+      "timestamp": "2025-07-09T09:33:20.000514"
+    },
+    "claude-3-sonnet": {
+      "model": "claude-3-sonnet",
+      "total_requests": 10,
+      "successful": 10,
+      "failed": 0,
+      "success_rate": 100.0,
+      "avg_response_time_ms": 5.73,
+      "detailed_results": [
+        {
+          "request_id": 1,
+          "success": true,
+          "status_code": 200,
+          "response_time_ms": 5.29,
+          "model": "claude-3-sonnet"
+        },
+        {
+          "request_id": 2,
+          "success": true,
+          "status_code": 200,
+          "response_time_ms": 4.36,
+          "model": "claude-3-sonnet"
+        },
+        {
+          "request_id": 3,
+          "success": true,
+          "status_code": 200,
+          "response_time_ms": 6.07,
+          "model": "claude-3-sonnet"
+        },
+        {
+          "request_id": 4,
+          "success": true,
+          "status_code": 200,
+          "response_time_ms": 5.8,
+          "model": "claude-3-sonnet"
+        },
+        {
+          "request_id": 5,
+          "success": true,
+          "status_code": 200,
+          "response_time_ms": 6.25,
+          "model": "claude-3-sonnet"
+        },
+        {
+          "request_id": 6,
+          "success": true,
+          "status_code": 200,
+          "response_time_ms": 5.42,
+          "model": "claude-3-sonnet"
+        },
+        {
+          "request_id": 7,
+          "success": true,
+          "status_code": 200,
+          "response_time_ms": 6.06,
+          "model": "claude-3-sonnet"
+        },
+        {
+          "request_id": 8,
+          "success": true,
+          "status_code": 200,
+          "response_time_ms": 5.88,
+          "model": "claude-3-sonnet"
+        },
+        {
+          "request_id": 9,
+          "success": true,
+          "status_code": 200,
+          "response_time_ms": 5.35,
+          "model": "claude-3-sonnet"
+        },
+        {
+          "request_id": 10,
+          "success": true,
+          "status_code": 200,
+          "response_time_ms": 6.84,
+          "model": "claude-3-sonnet"
+        }
+      ],
+      "timestamp": "2025-07-09T09:33:20.001897"
+    },
+    "claude-3-haiku": {
+      "model": "claude-3-haiku",
+      "total_requests": 10,
+      "successful": 10,
+      "failed": 0,
+      "success_rate": 100.0,
+      "avg_response_time_ms": 5.66,
+      "detailed_results": [
+        {
+          "request_id": 1,
+          "success": true,
+          "status_code": 200,
+          "response_time_ms": 4.78,
+          "model": "claude-3-haiku"
+        },
+        {
+          "request_id": 2,
+          "success": true,
+          "status_code": 200,
+          "response_time_ms": 5.48,
+          "model": "claude-3-haiku"
+        },
+        {
+          "request_id": 3,
+          "success": true,
+          "status_code": 200,
+          "response_time_ms": 5.77,
+          "model": "claude-3-haiku"
+        },
+        {
+          "request_id": 4,
+          "success": true,
+          "status_code": 200,
+          "response_time_ms": 6.28,
+          "model": "claude-3-haiku"
+        },
+        {
+          "request_id": 5,
+          "success": true,
+          "status_code": 200,
+          "response_time_ms": 5.46,
+          "model": "claude-3-haiku"
+        },
+        {
+          "request_id": 6,
+          "success": true,
+          "status_code": 200,
+          "response_time_ms": 5.28,
+          "model": "claude-3-haiku"
+        },
+        {
+          "request_id": 7,
+          "success": true,
+          "status_code": 200,
+          "response_time_ms": 5.96,
+          "model": "claude-3-haiku"
+        },
+        {
+          "request_id": 8,
+          "success": true,
+          "status_code": 200,
+          "response_time_ms": 5.92,
+          "model": "claude-3-haiku"
+        },
+        {
+          "request_id": 9,
+          "success": true,
+          "status_code": 200,
+          "response_time_ms": 5.55,
+          "model": "claude-3-haiku"
+        },
+        {
+          "request_id": 10,
+          "success": true,
+          "status_code": 200,
+          "response_time_ms": 6.15,
+          "model": "claude-3-haiku"
+        }
+      ],
+      "timestamp": "2025-07-09T09:33:20.002366"
+    },
+    "gemini-flash": {
+      "model": "gemini-flash",
+      "total_requests": 10,
+      "successful": 10,
+      "failed": 0,
+      "success_rate": 100.0,
+      "avg_response_time_ms": 5.96,
+      "detailed_results": [
+        {
+          "request_id": 1,
+          "success": true,
+          "status_code": 200,
+          "response_time_ms": 6.6,
+          "model": "gemini-flash"
+        },
+        {
+          "request_id": 2,
+          "success": true,
+          "status_code": 200,
+          "response_time_ms": 5.77,
+          "model": "gemini-flash"
+        },
+        {
+          "request_id": 3,
+          "success": true,
+          "status_code": 200,
+          "response_time_ms": 6.34,
+          "model": "gemini-flash"
+        },
+        {
+          "request_id": 4,
+          "success": true,
+          "status_code": 200,
+          "response_time_ms": 5.75,
+          "model": "gemini-flash"
+        },
+        {
+          "request_id": 5,
+          "success": true,
+          "status_code": 200,
+          "response_time_ms": 6.0,
+          "model": "gemini-flash"
+        },
+        {
+          "request_id": 6,
+          "success": true,
+          "status_code": 200,
+          "response_time_ms": 5.88,
+          "model": "gemini-flash"
+        },
+        {
+          "request_id": 7,
+          "success": true,
+          "status_code": 200,
+          "response_time_ms": 6.61,
+          "model": "gemini-flash"
+        },
+        {
+          "request_id": 8,
+          "success": true,
+          "status_code": 200,
+          "response_time_ms": 4.73,
+          "model": "gemini-flash"
+        },
+        {
+          "request_id": 9,
+          "success": true,
+          "status_code": 200,
+          "response_time_ms": 5.82,
+          "model": "gemini-flash"
+        },
+        {
+          "request_id": 10,
+          "success": true,
+          "status_code": 200,
+          "response_time_ms": 6.07,
+          "model": "gemini-flash"
+        }
+      ],
+      "timestamp": "2025-07-09T09:33:20.003655"
+    },
+    "gpt-4": {
+      "model": "gpt-4",
+      "total_requests": 10,
+      "successful": 10,
+      "failed": 0,
+      "success_rate": 100.0,
+      "avg_response_time_ms": 5.82,
+      "detailed_results": [
+        {
+          "request_id": 1,
+          "success": true,
+          "status_code": 200,
+          "response_time_ms": 6.18,
+          "model": "gpt-4"
+        },
+        {
+          "request_id": 2,
+          "success": true,
+          "status_code": 200,
+          "response_time_ms": 5.29,
+          "model": "gpt-4"
+        },
+        {
+          "request_id": 3,
+          "success": true,
+          "status_code": 200,
+          "response_time_ms": 6.17,
+          "model": "gpt-4"
+        },
+        {
+          "request_id": 4,
+          "success": true,
+          "status_code": 200,
+          "response_time_ms": 5.87,
+          "model": "gpt-4"
+        },
+        {
+          "request_id": 5,
+          "success": true,
+          "status_code": 200,
+          "response_time_ms": 5.62,
+          "model": "gpt-4"
+        },
+        {
+          "request_id": 6,
+          "success": true,
+          "status_code": 200,
+          "response_time_ms": 6.02,
+          "model": "gpt-4"
+        },
+        {
+          "request_id": 7,
+          "success": true,
+          "status_code": 200,
+          "response_time_ms": 5.77,
+          "model": "gpt-4"
+        },
+        {
+          "request_id": 8,
+          "success": true,
+          "status_code": 200,
+          "response_time_ms": 5.49,
+          "model": "gpt-4"
+        },
+        {
+          "request_id": 9,
+          "success": true,
+          "status_code": 200,
+          "response_time_ms": 6.58,
+          "model": "gpt-4"
+        },
+        {
+          "request_id": 10,
+          "success": true,
+          "status_code": 200,
+          "response_time_ms": 5.2,
+          "model": "gpt-4"
+        }
+      ],
+      "timestamp": "2025-07-09T09:33:20.004561"
+    },
+    "gpt-3.5-turbo": {
+      "model": "gpt-3.5-turbo",
+      "total_requests": 10,
+      "successful": 10,
+      "failed": 0,
+      "success_rate": 100.0,
+      "avg_response_time_ms": 4.9,
+      "detailed_results": [
+        {
+          "request_id": 1,
+          "success": true,
+          "status_code": 200,
+          "response_time_ms": 5.23,
+          "model": "gpt-3.5-turbo"
+        },
+        {
+          "request_id": 2,
+          "success": true,
+          "status_code": 200,
+          "response_time_ms": 2.66,
+          "model": "gpt-3.5-turbo"
+        },
+        {
+          "request_id": 3,
+          "success": true,
+          "status_code": 200,
+          "response_time_ms": 2.79,
+          "model": "gpt-3.5-turbo"
+        },
+        {
+          "request_id": 4,
+          "success": true,
+          "status_code": 200,
+          "response_time_ms": 3.89,
+          "model": "gpt-3.5-turbo"
+        },
+        {
+          "request_id": 5,
+          "success": true,
+          "status_code": 200,
+          "response_time_ms": 5.61,
+          "model": "gpt-3.5-turbo"
+        },
+        {
+          "request_id": 6,
+          "success": true,
+          "status_code": 200,
+          "response_time_ms": 6.57,
+          "model": "gpt-3.5-turbo"
+        },
+        {
+          "request_id": 7,
+          "success": true,
+          "status_code": 200,
+          "response_time_ms": 5.7,
+          "model": "gpt-3.5-turbo"
+        },
+        {
+          "request_id": 8,
+          "success": true,
+          "status_code": 200,
+          "response_time_ms": 5.42,
+          "model": "gpt-3.5-turbo"
+        },
+        {
+          "request_id": 9,
+          "success": true,
+          "status_code": 200,
+          "response_time_ms": 5.03,
+          "model": "gpt-3.5-turbo"
+        },
+        {
+          "request_id": 10,
+          "success": true,
+          "status_code": 200,
+          "response_time_ms": 6.13,
+          "model": "gpt-3.5-turbo"
+        }
+      ],
+      "timestamp": "2025-07-09T09:33:20.049689"
+    },
+    "vertex-express": {
+      "model": "vertex-express",
+      "total_requests": 10,
+      "successful": 10,
+      "failed": 0,
+      "success_rate": 100.0,
+      "avg_response_time_ms": 4.94,
+      "detailed_results": [
+        {
+          "request_id": 1,
+          "success": true,
+          "status_code": 200,
+          "response_time_ms": 4.88,
+          "model": "vertex-express"
+        },
+        {
+          "request_id": 2,
+          "success": true,
+          "status_code": 200,
+          "response_time_ms": 2.62,
+          "model": "vertex-express"
+        },
+        {
+          "request_id": 3,
+          "success": true,
+          "status_code": 200,
+          "response_time_ms": 2.78,
+          "model": "vertex-express"
+        },
+        {
+          "request_id": 4,
+          "success": true,
+          "status_code": 200,
+          "response_time_ms": 4.87,
+          "model": "vertex-express"
+        },
+        {
+          "request_id": 5,
+          "success": true,
+          "status_code": 200,
+          "response_time_ms": 6.68,
+          "model": "vertex-express"
+        },
+        {
+          "request_id": 6,
+          "success": true,
+          "status_code": 200,
+          "response_time_ms": 5.26,
+          "model": "vertex-express"
+        },
+        {
+          "request_id": 7,
+          "success": true,
+          "status_code": 200,
+          "response_time_ms": 5.79,
+          "model": "vertex-express"
+        },
+        {
+          "request_id": 8,
+          "success": true,
+          "status_code": 200,
+          "response_time_ms": 5.48,
+          "model": "vertex-express"
+        },
+        {
+          "request_id": 9,
+          "success": true,
+          "status_code": 200,
+          "response_time_ms": 5.67,
+          "model": "vertex-express"
+        },
+        {
+          "request_id": 10,
+          "success": true,
+          "status_code": 200,
+          "response_time_ms": 5.34,
+          "model": "vertex-express"
+        }
+      ],
+      "timestamp": "2025-07-09T09:33:20.051391"
+    },
+    "palm-2": {
+      "model": "palm-2",
+      "total_requests": 10,
+      "successful": 10,
+      "failed": 0,
+      "success_rate": 100.0,
+      "avg_response_time_ms": 6.11,
+      "detailed_results": [
+        {
+          "request_id": 1,
+          "success": true,
+          "status_code": 200,
+          "response_time_ms": 16.47,
+          "model": "palm-2"
+        },
+        {
+          "request_id": 2,
+          "success": true,
+          "status_code": 200,
+          "response_time_ms": 6.61,
+          "model": "palm-2"
+        },
+        {
+          "request_id": 3,
+          "success": true,
+          "status_code": 200,
+          "response_time_ms": 5.84,
+          "model": "palm-2"
+        },
+        {
+          "request_id": 4,
+          "success": true,
+          "status_code": 200,
+          "response_time_ms": 5.37,
+          "model": "palm-2"
+        },
+        {
+          "request_id": 5,
+          "success": true,
+          "status_code": 200,
+          "response_time_ms": 5.74,
+          "model": "palm-2"
+        },
+        {
+          "request_id": 6,
+          "success": true,
+          "status_code": 200,
+          "response_time_ms": 5.09,
+          "model": "palm-2"
+        },
+        {
+          "request_id": 7,
+          "success": true,
+          "status_code": 200,
+          "response_time_ms": 6.12,
+          "model": "palm-2"
+        },
+        {
+          "request_id": 8,
+          "success": true,
+          "status_code": 200,
+          "response_time_ms": 3.8,
+          "model": "palm-2"
+        },
+        {
+          "request_id": 9,
+          "success": true,
+          "status_code": 200,
+          "response_time_ms": 3.72,
+          "model": "palm-2"
+        },
+        {
+          "request_id": 10,
+          "success": true,
+          "status_code": 200,
+          "response_time_ms": 2.3,
+          "model": "palm-2"
+        }
+      ],
+      "timestamp": "2025-07-09T09:33:20.063551"
+    }
+  },
+  "memory_system_pressure": {
+    "comprehensive_test": {
+      "add_operations": {
+        "total": 100,
+        "successful": 100,
+        "failed": 0,
+        "success_rate": 100.0,
+        "avg_response_time_ms": 3.38
+      },
+      "search_operations": {
+        "total": 50,
+        "successful": 50,
+        "failed": 0,
+        "success_rate": 100.0,
+        "avg_response_time_ms": 11.06
+      },
+      "overall_memory_health": "PASSED",
+      "timestamp": "2025-07-09T09:33:20.467860"
+    }
+  },
+  "agent_registry_capacity": {},
+  "websocket_load_tests": {
+    "coordinator_stress_test": {
+      "total_connection_tests": 50,
+      "successful_connections": 50,
+      "failed_connections": 0,
+      "success_rate": 100.0,
+      "avg_response_time_ms": 3.68,
+      "websocket_stability": "STABLE",
+      "detailed_results": [
+        {
+          "connection_test": 1,
+          "success": true,
+          "response_time_ms": 3.5,
+          "active_channels": 0,
+          "connections": 0
+        },
+        {
+          "connection_test": 2,
+          "success": true,
+          "response_time_ms": 3.41,
+          "active_channels": 0,
+          "connections": 0
+        },
+        {
+          "connection_test": 3,
+          "success": true,
+          "response_time_ms": 3.33,
+          "active_channels": 0,
+          "connections": 0
+        },
+        {
+          "connection_test": 4,
+          "success": true,
+          "response_time_ms": 3.63,
+          "active_channels": 0,
+          "connections": 0
+        },
+        {
+          "connection_test": 5,
+          "success": true,
+          "response_time_ms": 3.36,
+          "active_channels": 0,
+          "connections": 0
+        },
+        {
+          "connection_test": 6,
+          "success": true,
+          "response_time_ms": 3.16,
+          "active_channels": 0,
+          "connections": 0
+        },
+        {
+          "connection_test": 7,
+          "success": true,
+          "response_time_ms": 3.45,
+          "active_channels": 0,
+          "connections": 0
+        },
+        {
+          "connection_test": 8,
+          "success": true,
+          "response_time_ms": 3.17,
+          "active_channels": 0,
+          "connections": 0
+        },
+        {
+          "connection_test": 9,
+          "success": true,
+          "response_time_ms": 3.03,
+          "active_channels": 0,
+          "connections": 0
+        },
+        {
+          "connection_test": 10,
+          "success": true,
+          "response_time_ms": 2.06,
+          "active_channels": 0,
+          "connections": 0
+        },
+        {
+          "connection_test": 11,
+          "success": true,
+          "response_time_ms": 11.41,
+          "active_channels": 0,
+          "connections": 0
+        },
+        {
+          "connection_test": 12,
+          "success": true,
+          "response_time_ms": 2.22,
+          "active_channels": 0,
+          "connections": 0
+        },
+        {
+          "connection_test": 13,
+          "success": true,
+          "response_time_ms": 2.06,
+          "active_channels": 0,
+          "connections": 0
+        },
+        {
+          "connection_test": 14,
+          "success": true,
+          "response_time_ms": 2.24,
+          "active_channels": 0,
+          "connections": 0
+        },
+        {
+          "connection_test": 15,
+          "success": true,
+          "response_time_ms": 2.15,
+          "active_channels": 0,
+          "connections": 0
+        },
+        {
+          "connection_test": 16,
+          "success": true,
+          "response_time_ms": 2.06,
+          "active_channels": 0,
+          "connections": 0
+        },
+        {
+          "connection_test": 17,
+          "success": true,
+          "response_time_ms": 2.14,
+          "active_channels": 0,
+          "connections": 0
+        },
+        {
+          "connection_test": 18,
+          "success": true,
+          "response_time_ms": 2.13,
+          "active_channels": 0,
+          "connections": 0
+        },
+        {
+          "connection_test": 19,
+          "success": true,
+          "response_time_ms": 2.38,
+          "active_channels": 0,
+          "connections": 0
+        },
+        {
+          "connection_test": 20,
+          "success": true,
+          "response_time_ms": 2.23,
+          "active_channels": 0,
+          "connections": 0
+        },
+        {
+          "connection_test": 21,
+          "success": true,
+          "response_time_ms": 2.17,
+          "active_channels": 0,
+          "connections": 0
+        },
+        {
+          "connection_test": 22,
+          "success": true,
+          "response_time_ms": 24.95,
+          "active_channels": 0,
+          "connections": 0
+        },
+        {
+          "connection_test": 23,
+          "success": true,
+          "response_time_ms": 2.62,
+          "active_channels": 0,
+          "connections": 0
+        },
+        {
+          "connection_test": 24,
+          "success": true,
+          "response_time_ms": 2.46,
+          "active_channels": 0,
+          "connections": 0
+        },
+        {
+          "connection_test": 25,
+          "success": true,
+          "response_time_ms": 2.22,
+          "active_channels": 0,
+          "connections": 0
+        },
+        {
+          "connection_test": 26,
+          "success": true,
+          "response_time_ms": 2.63,
+          "active_channels": 0,
+          "connections": 0
+        },
+        {
+          "connection_test": 27,
+          "success": true,
+          "response_time_ms": 2.15,
+          "active_channels": 0,
+          "connections": 0
+        },
+        {
+          "connection_test": 28,
+          "success": true,
+          "response_time_ms": 2.14,
+          "active_channels": 0,
+          "connections": 0
+        },
+        {
+          "connection_test": 29,
+          "success": true,
+          "response_time_ms": 2.12,
+          "active_channels": 0,
+          "connections": 0
+        },
+        {
+          "connection_test": 30,
+          "success": true,
+          "response_time_ms": 1.96,
+          "active_channels": 0,
+          "connections": 0
+        },
+        {
+          "connection_test": 31,
+          "success": true,
+          "response_time_ms": 2.04,
+          "active_channels": 0,
+          "connections": 0
+        },
+        {
+          "connection_test": 32,
+          "success": true,
+          "response_time_ms": 2.12,
+          "active_channels": 0,
+          "connections": 0
+        },
+        {
+          "connection_test": 33,
+          "success": true,
+          "response_time_ms": 1.98,
+          "active_channels": 0,
+          "connections": 0
+        },
+        {
+          "connection_test": 34,
+          "success": true,
+          "response_time_ms": 2.03,
+          "active_channels": 0,
+          "connections": 0
+        },
+        {
+          "connection_test": 35,
+          "success": true,
+          "response_time_ms": 1.95,
+          "active_channels": 0,
+          "connections": 0
+        },
+        {
+          "connection_test": 36,
+          "success": true,
+          "response_time_ms": 18.75,
+          "active_channels": 0,
+          "connections": 0
+        },
+        {
+          "connection_test": 37,
+          "success": true,
+          "response_time_ms": 2.8,
+          "active_channels": 0,
+          "connections": 0
+        },
+        {
+          "connection_test": 38,
+          "success": true,
+          "response_time_ms": 2.02,
+          "active_channels": 0,
+          "connections": 0
+        },
+        {
+          "connection_test": 39,
+          "success": true,
+          "response_time_ms": 2.0,
+          "active_channels": 0,
+          "connections": 0
+        },
+        {
+          "connection_test": 40,
+          "success": true,
+          "response_time_ms": 1.98,
+          "active_channels": 0,
+          "connections": 0
+        },
+        {
+          "connection_test": 41,
+          "success": true,
+          "response_time_ms": 1.92,
+          "active_channels": 0,
+          "connections": 0
+        },
+        {
+          "connection_test": 42,
+          "success": true,
+          "response_time_ms": 2.1,
+          "active_channels": 0,
+          "connections": 0
+        },
+        {
+          "connection_test": 43,
+          "success": true,
+          "response_time_ms": 2.02,
+          "active_channels": 0,
+          "connections": 0
+        },
+        {
+          "connection_test": 44,
+          "success": true,
+          "response_time_ms": 2.05,
+          "active_channels": 0,
+          "connections": 0
+        },
+        {
+          "connection_test": 45,
+          "success": true,
+          "response_time_ms": 2.01,
+          "active_channels": 0,
+          "connections": 0
+        },
+        {
+          "connection_test": 46,
+          "success": true,
+          "response_time_ms": 1.97,
+          "active_channels": 0,
+          "connections": 0
+        },
+        {
+          "connection_test": 47,
+          "success": true,
+          "response_time_ms": 1.98,
+          "active_channels": 0,
+          "connections": 0
+        },
+        {
+          "connection_test": 48,
+          "success": true,
+          "response_time_ms": 1.97,
+          "active_channels": 0,
+          "connections": 0
+        },
+        {
+          "connection_test": 49,
+          "success": true,
+          "response_time_ms": 1.9,
+          "active_channels": 0,
+          "connections": 0
+        },
+        {
+          "connection_test": 50,
+          "success": true,
+          "response_time_ms": 20.09,
+          "active_channels": 0,
+          "connections": 0
+        }
+      ],
+      "timestamp": "2025-07-09T09:33:21.167327"
+    }
+  },
+  "scrapybara_job_tests": {
+    "job_management_stress": {
+      "total_job_checks": 30,
+      "successful_checks": 30,
+      "failed_checks": 0,
+      "success_rate": 100.0,
+      "avg_response_time_ms": 2.53,
+      "scrapybara_health": "HEALTHY",
+      "job_monitoring_capability": "OPERATIONAL",
+      "detailed_results": [
+        {
+          "job_check": 1,
+          "success": true,
+          "response_time_ms": 14.61,
+          "active_jobs": 0,
+          "service_status": "operational",
+          "service_message": "Scraping service ready"
+        },
+        {
+          "job_check": 2,
+          "success": true,
+          "response_time_ms": 2.23,
+          "active_jobs": 0,
+          "service_status": "operational",
+          "service_message": "Scraping service ready"
+        },
+        {
+          "job_check": 3,
+          "success": true,
+          "response_time_ms": 2.11,
+          "active_jobs": 0,
+          "service_status": "operational",
+          "service_message": "Scraping service ready"
+        },
+        {
+          "job_check": 4,
+          "success": true,
+          "response_time_ms": 2.06,
+          "active_jobs": 0,
+          "service_status": "operational",
+          "service_message": "Scraping service ready"
+        },
+        {
+          "job_check": 5,
+          "success": true,
+          "response_time_ms": 1.95,
+          "active_jobs": 0,
+          "service_status": "operational",
+          "service_message": "Scraping service ready"
+        },
+        {
+          "job_check": 6,
+          "success": true,
+          "response_time_ms": 1.97,
+          "active_jobs": 0,
+          "service_status": "operational",
+          "service_message": "Scraping service ready"
+        },
+        {
+          "job_check": 7,
+          "success": true,
+          "response_time_ms": 2.31,
+          "active_jobs": 0,
+          "service_status": "operational",
+          "service_message": "Scraping service ready"
+        },
+        {
+          "job_check": 8,
+          "success": true,
+          "response_time_ms": 2.51,
+          "active_jobs": 0,
+          "service_status": "operational",
+          "service_message": "Scraping service ready"
+        },
+        {
+          "job_check": 9,
+          "success": true,
+          "response_time_ms": 2.2,
+          "active_jobs": 0,
+          "service_status": "operational",
+          "service_message": "Scraping service ready"
+        },
+        {
+          "job_check": 10,
+          "success": true,
+          "response_time_ms": 2.13,
+          "active_jobs": 0,
+          "service_status": "operational",
+          "service_message": "Scraping service ready"
+        },
+        {
+          "job_check": 11,
+          "success": true,
+          "response_time_ms": 2.1,
+          "active_jobs": 0,
+          "service_status": "operational",
+          "service_message": "Scraping service ready"
+        },
+        {
+          "job_check": 12,
+          "success": true,
+          "response_time_ms": 1.96,
+          "active_jobs": 0,
+          "service_status": "operational",
+          "service_message": "Scraping service ready"
+        },
+        {
+          "job_check": 13,
+          "success": true,
+          "response_time_ms": 1.97,
+          "active_jobs": 0,
+          "service_status": "operational",
+          "service_message": "Scraping service ready"
+        },
+        {
+          "job_check": 14,
+          "success": true,
+          "response_time_ms": 2.0,
+          "active_jobs": 0,
+          "service_status": "operational",
+          "service_message": "Scraping service ready"
+        },
+        {
+          "job_check": 15,
+          "success": true,
+          "response_time_ms": 1.96,
+          "active_jobs": 0,
+          "service_status": "operational",
+          "service_message": "Scraping service ready"
+        },
+        {
+          "job_check": 16,
+          "success": true,
+          "response_time_ms": 2.44,
+          "active_jobs": 0,
+          "service_status": "operational",
+          "service_message": "Scraping service ready"
+        },
+        {
+          "job_check": 17,
+          "success": true,
+          "response_time_ms": 1.99,
+          "active_jobs": 0,
+          "service_status": "operational",
+          "service_message": "Scraping service ready"
+        },
+        {
+          "job_check": 18,
+          "success": true,
+          "response_time_ms": 1.91,
+          "active_jobs": 0,
+          "service_status": "operational",
+          "service_message": "Scraping service ready"
+        },
+        {
+          "job_check": 19,
+          "success": true,
+          "response_time_ms": 2.02,
+          "active_jobs": 0,
+          "service_status": "operational",
+          "service_message": "Scraping service ready"
+        },
+        {
+          "job_check": 20,
+          "success": true,
+          "response_time_ms": 1.96,
+          "active_jobs": 0,
+          "service_status": "operational",
+          "service_message": "Scraping service ready"
+        },
+        {
+          "job_check": 21,
+          "success": true,
+          "response_time_ms": 1.94,
+          "active_jobs": 0,
+          "service_status": "operational",
+          "service_message": "Scraping service ready"
+        },
+        {
+          "job_check": 22,
+          "success": true,
+          "response_time_ms": 2.0,
+          "active_jobs": 0,
+          "service_status": "operational",
+          "service_message": "Scraping service ready"
+        },
+        {
+          "job_check": 23,
+          "success": true,
+          "response_time_ms": 1.92,
+          "active_jobs": 0,
+          "service_status": "operational",
+          "service_message": "Scraping service ready"
+        },
+        {
+          "job_check": 24,
+          "success": true,
+          "response_time_ms": 2.78,
+          "active_jobs": 0,
+          "service_status": "operational",
+          "service_message": "Scraping service ready"
+        },
+        {
+          "job_check": 25,
+          "success": true,
+          "response_time_ms": 2.0,
+          "active_jobs": 0,
+          "service_status": "operational",
+          "service_message": "Scraping service ready"
+        },
+        {
+          "job_check": 26,
+          "success": true,
+          "response_time_ms": 1.91,
+          "active_jobs": 0,
+          "service_status": "operational",
+          "service_message": "Scraping service ready"
+        },
+        {
+          "job_check": 27,
+          "success": true,
+          "response_time_ms": 2.0,
+          "active_jobs": 0,
+          "service_status": "operational",
+          "service_message": "Scraping service ready"
+        },
+        {
+          "job_check": 28,
+          "success": true,
+          "response_time_ms": 1.93,
+          "active_jobs": 0,
+          "service_status": "operational",
+          "service_message": "Scraping service ready"
+        },
+        {
+          "job_check": 29,
+          "success": true,
+          "response_time_ms": 1.91,
+          "active_jobs": 0,
+          "service_status": "operational",
+          "service_message": "Scraping service ready"
+        },
+        {
+          "job_check": 30,
+          "success": true,
+          "response_time_ms": 3.21,
+          "active_jobs": 0,
+          "service_status": "operational",
+          "service_message": "Scraping service ready"
+        }
+      ],
+      "timestamp": "2025-07-09T09:33:21.244356"
+    }
+  },
+  "quota_simulation_results": {
+    "normal_load": {
+      "scenario": "normal_load",
+      "total_requests": 50,
+      "successful_requests": 50,
+      "failed_requests": 0,
+      "failover_events": 0,
+      "total_duration_sec": 0.71,
+      "requests_per_second": 70.26,
+      "avg_response_time_ms": 4.17,
+      "max_response_time_ms": 26.83,
+      "success_rate": 100.0,
+      "timestamp": "2025-07-09T09:33:14.095489"
+    },
+    "quota_hit_key1": {
+      "scenario": "quota_hit_key1",
+      "total_requests": 100,
+      "successful_requests": 100,
+      "failed_requests": 0,
+      "failover_events": 0,
+      "total_duration_sec": 1.42,
+      "requests_per_second": 70.57,
+      "avg_response_time_ms": 4.12,
+      "max_response_time_ms": 27.26,
+      "success_rate": 100.0,
+      "timestamp": "2025-07-09T09:33:15.512742"
+    },
+    "quota_hit_key2": {
+      "scenario": "quota_hit_key2",
+      "total_requests": 100,
+      "successful_requests": 100,
+      "failed_requests": 0,
+      "failover_events": 0,
+      "total_duration_sec": 1.3,
+      "requests_per_second": 77.14,
+      "avg_response_time_ms": 2.92,
+      "max_response_time_ms": 25.61,
+      "success_rate": 100.0,
+      "timestamp": "2025-07-09T09:33:16.809335"
+    },
+    "cascade_failure": {
+      "scenario": "cascade_failure",
+      "total_requests": 150,
+      "successful_requests": 150,
+      "failed_requests": 0,
+      "failover_events": 0,
+      "total_duration_sec": 2.06,
+      "requests_per_second": 72.83,
+      "avg_response_time_ms": 3.68,
+      "max_response_time_ms": 25.92,
+      "success_rate": 100.0,
+      "timestamp": "2025-07-09T09:33:18.869281"
+    },
+    "recovery_test": {
+      "scenario": "recovery_test",
+      "total_requests": 75,
+      "successful_requests": 75,
+      "failed_requests": 0,
+      "failover_events": 0,
+      "total_duration_sec": 1.07,
+      "requests_per_second": 69.88,
+      "avg_response_time_ms": 3.59,
+      "max_response_time_ms": 26.74,
+      "success_rate": 100.0,
+      "timestamp": "2025-07-09T09:33:19.942773"
+    }
+  },
+  "failure_recovery_tests": {},
+  "performance_metrics": {},
+  "nuclear_summary": {
+    "total_test_duration_sec": 7.9,
+    "total_test_duration_min": 0.1,
+    "tests_completed": 7,
+    "overall_performance_score": 100,
+    "backend_stress_rating": "NUCLEAR RESISTANT \u2622\ufe0f",
+    "recommendations": [
+      "API key failover not working in quota_hit_key1",
+      "API key failover not working in quota_hit_key2"
+    ],
+    "end_time": "2025-07-09T09:33:21.244763"
+  }
+}
