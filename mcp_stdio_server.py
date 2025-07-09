@@ -17,8 +17,7 @@ try:
     from mcp.types import Resource, Tool, TextContent
     MCP_AVAILABLE = True
 except ImportError:
-    print("MCP SDK not available. Install with: pip install 'mcp[cli]'")
-    MCP_AVAILABLE = False
+    # Silent exit - no print statements allowed in MCP stdio
     sys.exit(1)
 
 # Import our memory system
@@ -32,9 +31,7 @@ except ImportError:
 from dotenv import load_dotenv
 load_dotenv()
 
-# Initialize logging
-logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger("bonzai-mcp-stdio")
+# No logging for stdio - must be silent except for JSON
 
 # Initialize the MCP server
 mcp = FastMCP("BonzaiFamily")
@@ -44,9 +41,8 @@ memory_client = None
 if MEM0_AVAILABLE and os.getenv('MEM0_API_KEY'):
     try:
         memory_client = MemoryClient(api_key=os.getenv('MEM0_API_KEY'))
-        logger.info("✅ Mem0 memory client initialized")
     except Exception as e:
-        logger.warning(f"Failed to initialize Mem0 client: {e}")
+        pass  # Silent failure for stdio
 
 @mcp.tool()
 def get_family_status() -> Dict[str, Any]:
@@ -120,7 +116,7 @@ def add_family_memory(content: str, agent_type: str = "claude-code", importance:
         }
         
     except Exception as e:
-        logger.error(f"Failed to add family memory: {e}")
+        # logger.error(f"Failed to add family memory: {e}")
         return {
             "success": False,
             "error": str(e),
@@ -163,7 +159,7 @@ def search_family_memories(query: str, agent_type: str = "claude-code") -> Dict[
         }
         
     except Exception as e:
-        logger.error(f"Failed to search family memories: {e}")
+        # logger.error(f"Failed to search family memories: {e}")
         return {
             "success": False,
             "error": str(e),
@@ -274,11 +270,7 @@ def get_backend_services_resource() -> str:
 
 # Run the server
 if __name__ == "__main__":
-    logger.info("🤖 Starting Bonzai Family MCP Server (stdio)")
-    logger.info("This server provides Claude Desktop access to:")
-    logger.info("- Family memory system coordination") 
-    logger.info("- Backend services status")
-    logger.info("- Cross-family communication")
+    # Startup messages suppressed for stdio - Claude Desktop needs pure JSON
     
     # Run the MCP server using stdio transport
     mcp.run()
