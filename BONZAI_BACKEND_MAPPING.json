@@ -1,0 +1,608 @@
+{
+  "metadata": {
+    "backend_url": "http://127.0.0.1:5001",
+    "test_timestamp": "2025-07-09T09:15:11.427582",
+    "total_endpoints": 15,
+    "categories": [
+      "CORE",
+      "ZAI_PRIME",
+      "MCP_INTEGRATION",
+      "MEMORY_SYSTEM",
+      "AI_ORCHESTRATION",
+      "ADVANCED_FEATURES",
+      "SCRAPYBARA"
+    ]
+  },
+  "summary": {
+    "total_tested": 15,
+    "total_successful": 1,
+    "total_failed": 14,
+    "success_rate": 6.7,
+    "category_stats": {
+      "CORE": {
+        "tested": 2,
+        "successful": 1,
+        "success_rate": 50.0
+      },
+      "ZAI_PRIME": {
+        "tested": 3,
+        "successful": 0,
+        "success_rate": 0.0
+      },
+      "MCP_INTEGRATION": {
+        "tested": 2,
+        "successful": 0,
+        "success_rate": 0.0
+      },
+      "MEMORY_SYSTEM": {
+        "tested": 2,
+        "successful": 0,
+        "success_rate": 0.0
+      },
+      "AI_ORCHESTRATION": {
+        "tested": 2,
+        "successful": 0,
+        "success_rate": 0.0
+      },
+      "ADVANCED_FEATURES": {
+        "tested": 3,
+        "successful": 0,
+        "success_rate": 0.0
+      },
+      "SCRAPYBARA": {
+        "tested": 1,
+        "successful": 0,
+        "success_rate": 0.0
+      }
+    }
+  },
+  "detailed_results": {
+    "CORE": [
+      {
+        "category": "CORE",
+        "name": "Root",
+        "url": "/",
+        "method": "GET",
+        "timestamp": "2025-07-09T09:15:11.427731",
+        "success": true,
+        "status_code": 200,
+        "response_time_ms": 5.66,
+        "raw_response": {
+          "endpoints": {
+            "agents": "/api/agents",
+            "chat": "/api/chat",
+            "health": "/api/health",
+            "mcp_execute": "/api/mcp/execute",
+            "mcp_tools": "/api/mcp/tools",
+            "memory": "/api/memory"
+          },
+          "message": "ZAI Prime Supervisor and AI Family ready",
+          "service": "Bonzai Backend",
+          "status": "operational",
+          "timestamp": "2025-07-09T09:15:11.431517",
+          "version": "2.0"
+        },
+        "data_structure": {
+          "type": "dict",
+          "path": "",
+          "value_sample": null,
+          "children": {
+            "endpoints": {
+              "type": "dict",
+              "path": "endpoints",
+              "value_sample": null,
+              "children": {
+                "agents": {
+                  "type": "str",
+                  "path": "endpoints.agents",
+                  "value_sample": "/api/agents",
+                  "children": {}
+                },
+                "chat": {
+                  "type": "str",
+                  "path": "endpoints.chat",
+                  "value_sample": "/api/chat",
+                  "children": {}
+                },
+                "health": {
+                  "type": "str",
+                  "path": "endpoints.health",
+                  "value_sample": "/api/health",
+                  "children": {}
+                },
+                "mcp_execute": {
+                  "type": "str",
+                  "path": "endpoints.mcp_execute",
+                  "value_sample": "/api/mcp/execute",
+                  "children": {}
+                },
+                "mcp_tools": {
+                  "type": "str",
+                  "path": "endpoints.mcp_tools",
+                  "value_sample": "/api/mcp/tools",
+                  "children": {}
+                },
+                "memory": {
+                  "type": "str",
+                  "path": "endpoints.memory",
+                  "value_sample": "/api/memory",
+                  "children": {}
+                }
+              },
+              "keys": [
+                "agents",
+                "chat",
+                "health",
+                "mcp_execute",
+                "mcp_tools",
+                "memory"
+              ],
+              "key_count": 6
+            },
+            "message": {
+              "type": "str",
+              "path": "message",
+              "value_sample": "ZAI Prime Supervisor and AI Family ready",
+              "children": {}
+            },
+            "service": {
+              "type": "str",
+              "path": "service",
+              "value_sample": "Bonzai Backend",
+              "children": {}
+            },
+            "status": {
+              "type": "str",
+              "path": "status",
+              "value_sample": "operational",
+              "children": {}
+            },
+            "timestamp": {
+              "type": "str",
+              "path": "timestamp",
+              "value_sample": "2025-07-09T09:15:11.431517",
+              "children": {}
+            },
+            "version": {
+              "type": "str",
+              "path": "version",
+              "value_sample": "2.0",
+              "children": {}
+            }
+          },
+          "keys": [
+            "endpoints",
+            "message",
+            "service",
+            "status",
+            "timestamp",
+            "version"
+          ],
+          "key_count": 6
+        },
+        "error": null,
+        "headers": {
+          "Server": "Werkzeug/3.1.3 Python/3.13.5",
+          "Date": "Wed, 09 Jul 2025 08:15:11 GMT",
+          "Content-Type": "application/json",
+          "Content-Length": "390",
+          "Access-Control-Allow-Origin": "http://localhost:3000",
+          "Vary": "Origin",
+          "Connection": "close"
+        },
+        "content_length": 390
+      },
+      {
+        "category": "CORE",
+        "name": "Health Check",
+        "url": "/health",
+        "method": "GET",
+        "timestamp": "2025-07-09T09:15:11.433566",
+        "success": false,
+        "status_code": 404,
+        "response_time_ms": 2.93,
+        "raw_response": {
+          "bonzai_message": "[BEAR] Mama Bear couldn't find that path. Try a different route!",
+          "error": "Endpoint not found",
+          "success": false
+        },
+        "data_structure": null,
+        "error": "HTTP 404: NOT FOUND",
+        "headers": {
+          "Server": "Werkzeug/3.1.3 Python/3.13.5",
+          "Date": "Wed, 09 Jul 2025 08:15:11 GMT",
+          "Content-Type": "application/json",
+          "Content-Length": "144",
+          "Access-Control-Allow-Origin": "http://localhost:3000",
+          "Vary": "Origin",
+          "Connection": "close"
+        },
+        "content_length": 144
+      }
+    ],
+    "ZAI_PRIME": [
+      {
+        "category": "ZAI_PRIME",
+        "name": "ZAI Prime Status",
+        "url": "/zai-prime/status",
+        "method": "GET",
+        "timestamp": "2025-07-09T09:15:11.436758",
+        "success": false,
+        "status_code": 404,
+        "response_time_ms": 2.26,
+        "raw_response": {
+          "bonzai_message": "[BEAR] Mama Bear couldn't find that path. Try a different route!",
+          "error": "Endpoint not found",
+          "success": false
+        },
+        "data_structure": null,
+        "error": "HTTP 404: NOT FOUND",
+        "headers": {
+          "Server": "Werkzeug/3.1.3 Python/3.13.5",
+          "Date": "Wed, 09 Jul 2025 08:15:11 GMT",
+          "Content-Type": "application/json",
+          "Content-Length": "144",
+          "Access-Control-Allow-Origin": "http://localhost:3000",
+          "Vary": "Origin",
+          "Connection": "close"
+        },
+        "content_length": 144
+      },
+      {
+        "category": "ZAI_PRIME",
+        "name": "Agents List",
+        "url": "/zai-prime/agents",
+        "method": "GET",
+        "timestamp": "2025-07-09T09:15:11.439143",
+        "success": false,
+        "status_code": 404,
+        "response_time_ms": 2.38,
+        "raw_response": {
+          "bonzai_message": "[BEAR] Mama Bear couldn't find that path. Try a different route!",
+          "error": "Endpoint not found",
+          "success": false
+        },
+        "data_structure": null,
+        "error": "HTTP 404: NOT FOUND",
+        "headers": {
+          "Server": "Werkzeug/3.1.3 Python/3.13.5",
+          "Date": "Wed, 09 Jul 2025 08:15:11 GMT",
+          "Content-Type": "application/json",
+          "Content-Length": "144",
+          "Access-Control-Allow-Origin": "http://localhost:3000",
+          "Vary": "Origin",
+          "Connection": "close"
+        },
+        "content_length": 144
+      },
+      {
+        "category": "ZAI_PRIME",
+        "name": "Global Context",
+        "url": "/zai-prime/context",
+        "method": "GET",
+        "timestamp": "2025-07-09T09:15:11.441640",
+        "success": false,
+        "status_code": 404,
+        "response_time_ms": 2.36,
+        "raw_response": {
+          "bonzai_message": "[BEAR] Mama Bear couldn't find that path. Try a different route!",
+          "error": "Endpoint not found",
+          "success": false
+        },
+        "data_structure": null,
+        "error": "HTTP 404: NOT FOUND",
+        "headers": {
+          "Server": "Werkzeug/3.1.3 Python/3.13.5",
+          "Date": "Wed, 09 Jul 2025 08:15:11 GMT",
+          "Content-Type": "application/json",
+          "Content-Length": "144",
+          "Access-Control-Allow-Origin": "http://localhost:3000",
+          "Vary": "Origin",
+          "Connection": "close"
+        },
+        "content_length": 144
+      }
+    ],
+    "MCP_INTEGRATION": [
+      {
+        "category": "MCP_INTEGRATION",
+        "name": "MCP Tools",
+        "url": "/mcp/tools",
+        "method": "GET",
+        "timestamp": "2025-07-09T09:15:11.444276",
+        "success": false,
+        "status_code": 404,
+        "response_time_ms": 2.77,
+        "raw_response": {
+          "bonzai_message": "[BEAR] Mama Bear couldn't find that path. Try a different route!",
+          "error": "Endpoint not found",
+          "success": false
+        },
+        "data_structure": null,
+        "error": "HTTP 404: NOT FOUND",
+        "headers": {
+          "Server": "Werkzeug/3.1.3 Python/3.13.5",
+          "Date": "Wed, 09 Jul 2025 08:15:11 GMT",
+          "Content-Type": "application/json",
+          "Content-Length": "144",
+          "Access-Control-Allow-Origin": "http://localhost:3000",
+          "Vary": "Origin",
+          "Connection": "close"
+        },
+        "content_length": 144
+      },
+      {
+        "category": "MCP_INTEGRATION",
+        "name": "MCP Execute",
+        "url": "/mcp/execute",
+        "method": "GET",
+        "timestamp": "2025-07-09T09:15:11.447164",
+        "success": false,
+        "status_code": 404,
+        "response_time_ms": 2.56,
+        "raw_response": {
+          "bonzai_message": "[BEAR] Mama Bear couldn't find that path. Try a different route!",
+          "error": "Endpoint not found",
+          "success": false
+        },
+        "data_structure": null,
+        "error": "HTTP 404: NOT FOUND",
+        "headers": {
+          "Server": "Werkzeug/3.1.3 Python/3.13.5",
+          "Date": "Wed, 09 Jul 2025 08:15:11 GMT",
+          "Content-Type": "application/json",
+          "Content-Length": "144",
+          "Access-Control-Allow-Origin": "http://localhost:3000",
+          "Vary": "Origin",
+          "Connection": "close"
+        },
+        "content_length": 144
+      }
+    ],
+    "MEMORY_SYSTEM": [
+      {
+        "category": "MEMORY_SYSTEM",
+        "name": "Memory Health",
+        "url": "/memory/health",
+        "method": "GET",
+        "timestamp": "2025-07-09T09:15:11.450014",
+        "success": false,
+        "status_code": 404,
+        "response_time_ms": 2.65,
+        "raw_response": {
+          "bonzai_message": "[BEAR] Mama Bear couldn't find that path. Try a different route!",
+          "error": "Endpoint not found",
+          "success": false
+        },
+        "data_structure": null,
+        "error": "HTTP 404: NOT FOUND",
+        "headers": {
+          "Server": "Werkzeug/3.1.3 Python/3.13.5",
+          "Date": "Wed, 09 Jul 2025 08:15:11 GMT",
+          "Content-Type": "application/json",
+          "Content-Length": "144",
+          "Access-Control-Allow-Origin": "http://localhost:3000",
+          "Vary": "Origin",
+          "Connection": "close"
+        },
+        "content_length": 144
+      },
+      {
+        "category": "MEMORY_SYSTEM",
+        "name": "Memory Search",
+        "url": "/memory/search",
+        "method": "GET",
+        "timestamp": "2025-07-09T09:15:11.452797",
+        "success": false,
+        "status_code": 404,
+        "response_time_ms": 2.65,
+        "raw_response": {
+          "bonzai_message": "[BEAR] Mama Bear couldn't find that path. Try a different route!",
+          "error": "Endpoint not found",
+          "success": false
+        },
+        "data_structure": null,
+        "error": "HTTP 404: NOT FOUND",
+        "headers": {
+          "Server": "Werkzeug/3.1.3 Python/3.13.5",
+          "Date": "Wed, 09 Jul 2025 08:15:11 GMT",
+          "Content-Type": "application/json",
+          "Content-Length": "144",
+          "Access-Control-Allow-Origin": "http://localhost:3000",
+          "Vary": "Origin",
+          "Connection": "close"
+        },
+        "content_length": 144
+      }
+    ],
+    "AI_ORCHESTRATION": [
+      {
+        "category": "AI_ORCHESTRATION",
+        "name": "Simple Chat",
+        "url": "/ai/chat",
+        "method": "GET",
+        "timestamp": "2025-07-09T09:15:11.455716",
+        "success": false,
+        "status_code": 404,
+        "response_time_ms": 2.54,
+        "raw_response": {
+          "bonzai_message": "[BEAR] Mama Bear couldn't find that path. Try a different route!",
+          "error": "Endpoint not found",
+          "success": false
+        },
+        "data_structure": null,
+        "error": "HTTP 404: NOT FOUND",
+        "headers": {
+          "Server": "Werkzeug/3.1.3 Python/3.13.5",
+          "Date": "Wed, 09 Jul 2025 08:15:11 GMT",
+          "Content-Type": "application/json",
+          "Content-Length": "144",
+          "Access-Control-Allow-Origin": "http://localhost:3000",
+          "Vary": "Origin",
+          "Connection": "close"
+        },
+        "content_length": 144
+      },
+      {
+        "category": "AI_ORCHESTRATION",
+        "name": "Multi-Model",
+        "url": "/ai/multi-model",
+        "method": "GET",
+        "timestamp": "2025-07-09T09:15:11.458387",
+        "success": false,
+        "status_code": 404,
+        "response_time_ms": 2.6,
+        "raw_response": {
+          "bonzai_message": "[BEAR] Mama Bear couldn't find that path. Try a different route!",
+          "error": "Endpoint not found",
+          "success": false
+        },
+        "data_structure": null,
+        "error": "HTTP 404: NOT FOUND",
+        "headers": {
+          "Server": "Werkzeug/3.1.3 Python/3.13.5",
+          "Date": "Wed, 09 Jul 2025 08:15:11 GMT",
+          "Content-Type": "application/json",
+          "Content-Length": "144",
+          "Access-Control-Allow-Origin": "http://localhost:3000",
+          "Vary": "Origin",
+          "Connection": "close"
+        },
+        "content_length": 144
+      }
+    ],
+    "ADVANCED_FEATURES": [
+      {
+        "category": "ADVANCED_FEATURES",
+        "name": "Agent Registry",
+        "url": "/agent-registry",
+        "method": "GET",
+        "timestamp": "2025-07-09T09:15:11.461254",
+        "success": false,
+        "status_code": 404,
+        "response_time_ms": 2.43,
+        "raw_response": {
+          "bonzai_message": "[BEAR] Mama Bear couldn't find that path. Try a different route!",
+          "error": "Endpoint not found",
+          "success": false
+        },
+        "data_structure": null,
+        "error": "HTTP 404: NOT FOUND",
+        "headers": {
+          "Server": "Werkzeug/3.1.3 Python/3.13.5",
+          "Date": "Wed, 09 Jul 2025 08:15:11 GMT",
+          "Content-Type": "application/json",
+          "Content-Length": "144",
+          "Access-Control-Allow-Origin": "http://localhost:3000",
+          "Vary": "Origin",
+          "Connection": "close"
+        },
+        "content_length": 144
+      },
+      {
+        "category": "ADVANCED_FEATURES",
+        "name": "Task Orchestrator",
+        "url": "/task-orchestrator",
+        "method": "GET",
+        "timestamp": "2025-07-09T09:15:11.463799",
+        "success": false,
+        "status_code": 404,
+        "response_time_ms": 2.42,
+        "raw_response": {
+          "bonzai_message": "[BEAR] Mama Bear couldn't find that path. Try a different route!",
+          "error": "Endpoint not found",
+          "success": false
+        },
+        "data_structure": null,
+        "error": "HTTP 404: NOT FOUND",
+        "headers": {
+          "Server": "Werkzeug/3.1.3 Python/3.13.5",
+          "Date": "Wed, 09 Jul 2025 08:15:11 GMT",
+          "Content-Type": "application/json",
+          "Content-Length": "144",
+          "Access-Control-Allow-Origin": "http://localhost:3000",
+          "Vary": "Origin",
+          "Connection": "close"
+        },
+        "content_length": 144
+      },
+      {
+        "category": "ADVANCED_FEATURES",
+        "name": "WebSocket Coordinator",
+        "url": "/websocket-coordinator",
+        "method": "GET",
+        "timestamp": "2025-07-09T09:15:11.466349",
+        "success": false,
+        "status_code": 404,
+        "response_time_ms": 2.48,
+        "raw_response": {
+          "bonzai_message": "[BEAR] Mama Bear couldn't find that path. Try a different route!",
+          "error": "Endpoint not found",
+          "success": false
+        },
+        "data_structure": null,
+        "error": "HTTP 404: NOT FOUND",
+        "headers": {
+          "Server": "Werkzeug/3.1.3 Python/3.13.5",
+          "Date": "Wed, 09 Jul 2025 08:15:11 GMT",
+          "Content-Type": "application/json",
+          "Content-Length": "144",
+          "Access-Control-Allow-Origin": "http://localhost:3000",
+          "Vary": "Origin",
+          "Connection": "close"
+        },
+        "content_length": 144
+      }
+    ],
+    "SCRAPYBARA": [
+      {
+        "category": "SCRAPYBARA",
+        "name": "Scrapybara Status",
+        "url": "/scrapybara/status",
+        "method": "GET",
+        "timestamp": "2025-07-09T09:15:11.469078",
+        "success": false,
+        "status_code": 404,
+        "response_time_ms": 2.38,
+        "raw_response": {
+          "bonzai_message": "[BEAR] Mama Bear couldn't find that path. Try a different route!",
+          "error": "Endpoint not found",
+          "success": false
+        },
+        "data_structure": null,
+        "error": "HTTP 404: NOT FOUND",
+        "headers": {
+          "Server": "Werkzeug/3.1.3 Python/3.13.5",
+          "Date": "Wed, 09 Jul 2025 08:15:11 GMT",
+          "Content-Type": "application/json",
+          "Content-Length": "144",
+          "Access-Control-Allow-Origin": "http://localhost:3000",
+          "Vary": "Origin",
+          "Connection": "close"
+        },
+        "content_length": 144
+      }
+    ]
+  },
+  "scrapybara_analysis": {},
+  "ui_development_insights": {
+    "available_data_sources": [
+      {
+        "name": "Root",
+        "category": "CORE",
+        "data_keys": [
+          "endpoints",
+          "message",
+          "service",
+          "status",
+          "timestamp",
+          "version"
+        ],
+        "url": "/"
+      }
+    ],
+    "ui_components_needed": [],
+    "integration_priorities": [],
+    "data_visualization_opportunities": []
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "timestamp": "2025-07-09T08:09:14.740797",
+  "total_failures": 4,
+  "critical_failures": [
+    "Backend imports: No module named 'dotenv'"
+  ],
+  "working_systems": [
+    "Railway health endpoint"
+  ],
+  "broken_systems": [
+    "MCP tools endpoint: 404",
+    "Memory add: 404",
+    "AI orchestration: 404"
+  ],
+  "partially_working": []
+}
