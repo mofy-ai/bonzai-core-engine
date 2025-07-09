@@ -1,5 +1,5 @@
 """
-🚀 Express Mode Vertex Integration - 6x Speed Enhancement
+ Express Mode Vertex Integration - 6x Speed Enhancement
 High-performance Vertex AI integration with express mode optimization
 """
 

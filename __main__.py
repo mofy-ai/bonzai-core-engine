@@ -1,5 +1,5 @@
 """
-🎯 ZAI Backend - Main Entry Point
+ ZAI Backend - Main Entry Point
 Entry point for running the ZAI Backend service
 """
 

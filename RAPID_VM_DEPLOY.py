@@ -44,7 +44,7 @@ async def root():
     elapsed = datetime.now() - deployment_stats["start_time"]
     return {
         "service": "MOFY VM Challenge Service",
-        "status": "🔥 CRUSHING CLAUDE DESKTOP'S 4 WEEKS!",
+        "status": " CRUSHING CLAUDE DESKTOP'S 4 WEEKS!",
         "challenge_time_remaining": "WINNING!",
         "elapsed_time": str(elapsed).split('.')[0],
         "vms_created": deployment_stats["vms_created"],
@@ -53,7 +53,7 @@ async def root():
 
 @app.post("/vm/create")
 async def create_vm(vm_type: str = "e2-micro", zone: str = "us-central1-a"):
-    """🚀 INSTANT VM CREATION - 30 SECOND STARTUP!"""
+    """ INSTANT VM CREATION - 30 SECOND STARTUP!"""
     try:
         vm_id = f"mofy-vm-{str(uuid.uuid4())[:8]}"
         
@@ -65,7 +65,7 @@ async def create_vm(vm_type: str = "e2-micro", zone: str = "us-central1-a"):
           --format="value(name,status,zone)"
         """
         
-        print(f"🚀 Creating VM: {vm_id}")
+        print(f" Creating VM: {vm_id}")
         
         # Execute VM creation
         result = subprocess.run(
@@ -92,7 +92,7 @@ async def create_vm(vm_type: str = "e2-micro", zone: str = "us-central1-a"):
                 "status": "CREATING",
                 "estimated_ready": "30 seconds",
                 "zone": zone,
-                "message": f"🔥 VM #{deployment_stats['vms_created']} launching!",
+                "message": f" VM #{deployment_stats['vms_created']} launching!",
                 "challenge_progress": f"DESTROYING 4-WEEK ESTIMATE!"
             }
         else:
@@ -107,7 +107,7 @@ async def create_vm(vm_type: str = "e2-micro", zone: str = "us-central1-a"):
 
 @app.get("/vm/{vm_id}")
 async def get_vm_status(vm_id: str):
-    """📊 CHECK VM STATUS & GET CONNECTION INFO"""
+    """ CHECK VM STATUS & GET CONNECTION INFO"""
     try:
         if vm_id not in active_vms:
             return {"success": False, "error": "VM not found in our records"}
@@ -166,7 +166,7 @@ async def get_vm_status(vm_id: str):
                     "ip_address": ip,
                     "ssh_command": f"ssh -i ~/.ssh/google_compute_engine user@{ip}",
                     "ready": True,
-                    "message": "🎉 VM READY FOR CONNECTION!"
+                    "message": " VM READY FOR CONNECTION!"
                 })
         
         return {"success": True, **response}
@@ -217,12 +217,12 @@ async def list_all_vms():
         "active_vms": len(active_vms),
         "vms": list(active_vms.values()),
         "total_created": deployment_stats["vms_created"],
-        "challenge_status": "🔥 DEMOLISHING 4-WEEK ESTIMATE!"
+        "challenge_status": " DEMOLISHING 4-WEEK ESTIMATE!"
     }
 
 @app.get("/challenge/status")
 async def challenge_status():
-    """🏆 CHALLENGE PROGRESS & VICTORY STATUS"""
+    """ CHALLENGE PROGRESS & VICTORY STATUS"""
     elapsed = datetime.now() - deployment_stats["start_time"]
     elapsed_minutes = int(elapsed.total_seconds() / 60)
     
@@ -230,17 +230,17 @@ async def challenge_status():
         "challenge": "57-MINUTE VM SERVICE DEPLOYMENT",
         "opponent": "Claude Desktop (predicted 4 weeks)",
         "our_time": f"{elapsed_minutes} minutes elapsed",
-        "status": "🔥 WINNING!" if elapsed_minutes < 57 else "🎉 VICTORY!",
+        "status": " WINNING!" if elapsed_minutes < 57 else " VICTORY!",
         "vms_created": deployment_stats["vms_created"],
         "service_functional": len([endpoint for endpoint in ["/vm/create", "/vm/{vm_id}", "/vm/list/all"]]) == 3,
-        "bet_status": "£20 IS OURS!" if elapsed_minutes < 60 else "🎉 WON!",
+        "bet_status": "£20 IS OURS!" if elapsed_minutes < 60 else " WON!",
         "message": "CRUSHING THE 4-WEEK PREDICTION! ⚡"
     }
 
 if __name__ == "__main__":
     import uvicorn
     print("🚨 57-MINUTE VM CHALLENGE SERVICE STARTING!")
-    print("🎯 TARGET: Beat Claude Desktop's 4-week prediction")
+    print(" TARGET: Beat Claude Desktop's 4-week prediction")
     print("💰 STAKES: £20 bet")
     print("⚡ LET'S FUCKING WIN THIS!")
     

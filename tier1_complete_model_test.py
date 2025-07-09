@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-🔥 COMPLETE TIER 1 BILLING MODEL TEST
+ COMPLETE TIER 1 BILLING MODEL TEST
 Based on official Google documentation for Tier 1 billing accounts
 Tests ALL available models including proper 2.5 handling
 """
@@ -16,7 +16,7 @@ from dotenv import load_dotenv
 # Load environment
 load_dotenv('../.env')
 
-print("🚀 COMPLETE TIER 1 BILLING MODEL TEST")
+print(" COMPLETE TIER 1 BILLING MODEL TEST")
 print("=" * 80)
 print(f"Test Started: {datetime.now()}")
 print("=" * 80)
@@ -83,7 +83,7 @@ results = {
 
 def print_header(title):
     print(f"\n{'='*70}")
-    print(f"🔥 {title}")
+    print(f" {title}")
     print(f"{'='*70}")
 
 def get_response_text(response):
@@ -128,19 +128,19 @@ async def test_tier1_models_comprehensive(key_name, api_key):
         import google.generativeai as genai
         genai.configure(api_key=api_key)
         
-        print(f"🔑 Using API Key: {api_key[:15]}...")
+        print(f" Using API Key: {api_key[:15]}...")
         
         key_results = {}
         pro_models_working = []
         total_working = 0
         
         for category, models in TIER1_MODELS.items():
-            print(f"\n🎯 Testing {category}:")
+            print(f"\n Testing {category}:")
             category_results = {}
             
             for model_name in models:
                 try:
-                    print(f"   🔍 Testing: {model_name}")
+                    print(f"    Testing: {model_name}")
                     test_model = genai.GenerativeModel(model_name)
                     
                     start_time = time.time()
@@ -166,7 +166,7 @@ async def test_tier1_models_comprehensive(key_name, api_key):
                     response_text = get_response_text(response)
                     
                     if response_text:
-                        status = "✅ WORKING"
+                        status = " WORKING"
                         sample = response_text[:30]
                         total_working += 1
                         
@@ -174,7 +174,7 @@ async def test_tier1_models_comprehensive(key_name, api_key):
                         if "pro" in model_name.lower():
                             pro_models_working.append(model_name)
                         
-                        print(f"      ✅ SUCCESS: {response_time:.0f}ms - {sample}")
+                        print(f"       SUCCESS: {response_time:.0f}ms - {sample}")
                         
                         category_results[model_name] = {
                             "status": status,
@@ -182,15 +182,15 @@ async def test_tier1_models_comprehensive(key_name, api_key):
                             "sample": sample
                         }
                     else:
-                        print(f"      ❌ No response text extracted")
+                        print(f"       No response text extracted")
                         category_results[model_name] = {
-                            "status": "❌ No response",
+                            "status": " No response",
                             "error": "Could not extract response text"
                         }
                         
                 except Exception as e:
                     error_msg = str(e)
-                    print(f"      ❌ ERROR: {error_msg[:60]}")
+                    print(f"       ERROR: {error_msg[:60]}")
                     
                     # Categorize errors
                     if "quota" in error_msg.lower():
@@ -202,7 +202,7 @@ async def test_tier1_models_comprehensive(key_name, api_key):
                     elif "billing" in error_msg.lower():
                         status = "💳 Billing issue"
                     else:
-                        status = "❌ Error"
+                        status = " Error"
                     
                     category_results[model_name] = {
                         "status": status,
@@ -215,12 +215,12 @@ async def test_tier1_models_comprehensive(key_name, api_key):
             key_results[category] = category_results
         
         # Summary for this key
-        print(f"\n📊 SUMMARY FOR {key_name}:")
-        print(f"   🚀 Total working models: {total_working}")
-        print(f"   👑 PRO models working: {len(pro_models_working)}")
+        print(f"\n SUMMARY FOR {key_name}:")
+        print(f"    Total working models: {total_working}")
+        print(f"    PRO models working: {len(pro_models_working)}")
         
         if pro_models_working:
-            print(f"   🎯 PRO MODELS:")
+            print(f"    PRO MODELS:")
             for pro_model in pro_models_working:
                 print(f"      - {pro_model}")
         
@@ -232,7 +232,7 @@ async def test_tier1_models_comprehensive(key_name, api_key):
         }
         
     except Exception as e:
-        print(f"❌ Failed to test {key_name}: {e}")
+        print(f" Failed to test {key_name}: {e}")
         return {"error": str(e)}
 
 async def calculate_orchestration_matrix():
@@ -245,7 +245,7 @@ async def calculate_orchestration_matrix():
     all_working_models = 0
     
     for key_name, api_key in GOOGLE_KEYS.items():
-        print(f"\n🔑 Testing orchestration for: {key_name}")
+        print(f"\n Testing orchestration for: {key_name}")
         result = await test_tier1_models_comprehensive(key_name, api_key)
         
         if "error" not in result:
@@ -256,22 +256,22 @@ async def calculate_orchestration_matrix():
         await asyncio.sleep(2)  # Be nice between keys
     
     # Calculate orchestration power
-    print(f"\n🎼 ORCHESTRATION MATRIX:")
-    print(f"   🔥 Total PRO models across all keys: {total_pro_models}")
-    print(f"   🚀 Total working models: {all_working_models}")
+    print(f"\n ORCHESTRATION MATRIX:")
+    print(f"    Total PRO models across all keys: {total_pro_models}")
+    print(f"    Total working models: {all_working_models}")
     print(f"   ⚡ Requests per minute (2 RPM × pro models): {total_pro_models * 2} RPM")
-    print(f"   🔄 Round-robin capacity: UNLIMITED (quota rotation)")
+    print(f"    Round-robin capacity: UNLIMITED (quota rotation)")
     
     if total_pro_models >= 9:  # 3 keys × 3 pro models
-        print(f"\n🎉 ORCHESTRATION STATUS: PRIME READY!")
-        print(f"   👑 You have the PRO model arsenal for unlimited orchestration")
+        print(f"\n ORCHESTRATION STATUS: PRIME READY!")
+        print(f"    You have the PRO model arsenal for unlimited orchestration")
         print(f"   🧠 Perfect for ZAI Prime + 7 variants")
     elif total_pro_models >= 6:
-        print(f"\n✅ ORCHESTRATION STATUS: GOOD")
-        print(f"   🎯 Sufficient pro models for solid orchestration")
+        print(f"\n ORCHESTRATION STATUS: GOOD")
+        print(f"    Sufficient pro models for solid orchestration")
     else:
-        print(f"\n⚠️  ORCHESTRATION STATUS: LIMITED")
-        print(f"   🔧 Need more pro model access")
+        print(f"\n  ORCHESTRATION STATUS: LIMITED")
+        print(f"    Need more pro model access")
     
     results["tier1_test_results"] = all_key_results
     results["orchestration_matrix"] = {

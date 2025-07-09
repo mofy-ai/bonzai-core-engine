@@ -1,5 +1,5 @@
 """
-🌟 Multi-Model API for Podplay Sanctuary
+ Multi-Model API for Podplay Sanctuary
 Exposes the multi-model orchestrator through REST endpoints
 Supports Claude 3.5, Gemini, and OpenAI with intelligent routing
 """
@@ -65,7 +65,7 @@ def get_available_models():
         return jsonify({
             "success": True,
             "data": result,
-            "sanctuary_note": "🌟 All models configured for neurodivergent-friendly development"
+            "sanctuary_note": " All models configured for neurodivergent-friendly development"
         })
         
     except Exception as e:
@@ -131,7 +131,7 @@ def multi_model_chat():
         return jsonify({
             "success": True,
             "data": result,
-            "sanctuary_note": "🐻 Response generated with care for neurodivergent users"
+            "sanctuary_note": " Response generated with care for neurodivergent users"
         })
         
     except Exception as e:
@@ -139,7 +139,7 @@ def multi_model_chat():
         return jsonify({
             "success": False,
             "error": str(e),
-            "sanctuary_note": "💜 We're here to help - please try again"
+            "sanctuary_note": " We're here to help - please try again"
         }), 500
 
 @multi_model_bp.route('/gemini/function-call', methods=['POST'])
@@ -184,7 +184,7 @@ def gemini_function_call():
             "success": True,
             "data": result,
             "provider": "gemini",
-            "sanctuary_note": "🌟 Gemini function calling optimized for Sanctuary"
+            "sanctuary_note": " Gemini function calling optimized for Sanctuary"
         })
         
     except Exception as e:
@@ -300,4 +300,4 @@ def get_capabilities():
 def register_multi_model_api(app):
     """Register the multi-model API blueprint"""
     app.register_blueprint(multi_model_bp, url_prefix='/api/multi-model')
-    logger.info("🌟 Multi-Model API registered for Podplay Sanctuary")
+    logger.info(" Multi-Model API registered for Podplay Sanctuary")

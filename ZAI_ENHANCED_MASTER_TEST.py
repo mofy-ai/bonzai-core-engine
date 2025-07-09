@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-🔥 ZAI ENHANCED ORCHESTRATION MASTER TEST SUITE
+ ZAI ENHANCED ORCHESTRATION MASTER TEST SUITE
 Complete validation of all enhanced capabilities before deployment
 """
 
@@ -36,14 +36,14 @@ class ZAIEnhancedOrchestrationTest:
             "speed_improvement": 6.0   # vs standard API
         }
         
-        print("🚀 ZAI ENHANCED ORCHESTRATION MASTER TEST")
+        print(" ZAI ENHANCED ORCHESTRATION MASTER TEST")
         print("=" * 70)
         print(f"Test Started: {datetime.now()}")
         print("=" * 70)
 
     async def test_enhanced_orchestration(self):
         """Test the enhanced orchestration capabilities"""
-        print("\n🎼 TESTING ENHANCED ORCHESTRATION")
+        print("\n TESTING ENHANCED ORCHESTRATION")
         print("-" * 50)
         
         tests = [
@@ -132,7 +132,7 @@ class ZAIEnhancedOrchestrationTest:
 
     async def test_grounding_system(self):
         """Test Google Search grounding integration"""
-        print("\n🔍 TESTING GROUNDING SYSTEM")
+        print("\n TESTING GROUNDING SYSTEM")
         print("-" * 50)
         
         test_queries = [
@@ -168,7 +168,7 @@ class ZAIEnhancedOrchestrationTest:
 
     async def test_code_execution(self):
         """Test code execution capabilities"""
-        print("\n💻 TESTING CODE EXECUTION")
+        print("\n TESTING CODE EXECUTION")
         print("-" * 50)
         
         test_code_snippets = [
@@ -239,7 +239,7 @@ class ZAIEnhancedOrchestrationTest:
 
     async def run_master_validation(self):
         """Run complete system validation"""
-        print("\n👑 MASTER SYSTEM VALIDATION")
+        print("\n MASTER SYSTEM VALIDATION")
         print("-" * 50)
         
         validation_checks = [
@@ -261,9 +261,9 @@ class ZAIEnhancedOrchestrationTest:
                 master_results[check_name] = result
                 if result.get("status") == "passed":
                     passed_checks += 1
-                    print(f"✅ {check_name}: PASSED")
+                    print(f" {check_name}: PASSED")
                 else:
-                    print(f"❌ {check_name}: FAILED")
+                    print(f" {check_name}: FAILED")
             except Exception as e:
                 master_results[check_name] = {"status": "failed", "error": str(e)}
                 print(f"💥 {check_name}: ERROR - {str(e)}")
@@ -282,7 +282,7 @@ class ZAIEnhancedOrchestrationTest:
 
     async def generate_test_report(self):
         """Generate comprehensive test report"""
-        print("\n📊 GENERATING COMPREHENSIVE TEST REPORT")
+        print("\n GENERATING COMPREHENSIVE TEST REPORT")
         print("=" * 70)
         
         # Calculate overall metrics
@@ -323,14 +323,14 @@ class ZAIEnhancedOrchestrationTest:
         
         # Analyze results and provide recommendations
         if self.results.get("performance_metrics", {}).get("response_time", {}).get("meets_target", False):
-            recommendations.append("✅ Performance targets met - ready for production")
+            recommendations.append(" Performance targets met - ready for production")
         else:
-            recommendations.append("⚠️ Response time optimization needed")
+            recommendations.append(" Response time optimization needed")
         
         if self.results.get("master_validation", {}).get("success_rate", 0) >= 90:
-            recommendations.append("✅ System validation passed - deployment ready")
+            recommendations.append(" System validation passed - deployment ready")
         else:
-            recommendations.append("❌ System validation failed - address critical issues")
+            recommendations.append(" System validation failed - address critical issues")
         
         return recommendations
 
@@ -478,7 +478,7 @@ async def main():
         report = await tester.generate_test_report()
         
         print("\n" + "=" * 70)
-        print("🏆 FINAL TEST RESULTS")
+        print(" FINAL TEST RESULTS")
         print("=" * 70)
         print(f"Overall Success Rate: {report['test_summary']['success_rate']:.1f}%")
         print(f"System Status: {report['test_summary']['status']}")

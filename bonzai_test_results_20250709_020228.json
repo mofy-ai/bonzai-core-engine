@@ -1,0 +1,58 @@
+{
+  "timestamp": "2025-07-09T02:01:32.469875",
+  "test_location": "LOCAL",
+  "environment_variables": {
+    "MEM0_API_KEY": "PRESENT",
+    "ANTHROPIC_API_KEY": "PRESENT",
+    "OPENAI_API_KEY": "PRESENT",
+    "GEMINI_API_KEY": "PRESENT",
+    "DEEPSEEK_API_KEY": "PRESENT",
+    "SCRAPYBARA_API_KEY": "PRESENT",
+    "E2B_API_KEY": "PRESENT",
+    "PIPEDREAM_API_TOKEN": "PRESENT",
+    "GITHUB_PAT": "PRESENT"
+  },
+  "api_connections": {
+    "mem0": "CONNECTED",
+    "openai": "FAILED: Error code: 401 - {'error': {'message': 'Incorrect API key provided: sk-proj-********************************************************************************************************************************************************QokA. You can find your API key at https://platform.openai.com/account/api-keys.', 'type': 'invalid_request_error', 'param': None, 'code': 'invalid_api_key'}}",
+    "anthropic": "CONNECTED",
+    "gemini": "CONNECTED"
+  },
+  "service_functionality": {
+    "Agent Registry": "IMPORT_ERROR: No module named 'services/bonzai_agent_registry'",
+    "Memory Manager": "IMPORT_ERROR: No module named 'services/zai_memory_system'",
+    "Multi-Provider System": "IMPORT_ERROR: No module named 'services/zai_multi_provider_system'",
+    "Task Orchestrator": "IMPORT_ERROR: No module named 'services/bonzai_task_orchestrator'",
+    "Scrapybara Integration": "IMPORT_ERROR: No module named 'services/zai_scrapybara_integration'",
+    "Pipedream Integration": "IMPORT_ERROR: No module named 'services/pipedream_integration_service'",
+    "Gemini Orchestra": "IMPORT_ERROR: No module named 'services/orchestration/orchestra_manager'",
+    "Express Mode": "IMPORT_ERROR: No module named 'services/zai_express_vertex_supercharger'"
+  },
+  "model_availability": {
+    "gpt-3.5-turbo": "FAILED: Error code: 401 - {'error': {'message': 'Incorrect API key provided: sk-proj-********************************************************************************************************************************************************QokA. You can find your API key at https://platform.openai.com/account/api-keys.', 'type': 'invalid_request_error', 'param': None, 'code': 'invalid_api_key'}}",
+    "gemini-pro": "FAILED: 401 API keys are not supported by this API. Expected OAuth2 access token or other authentication credentials that assert a principal. See https://cloud.google.com/docs/authentication [reason: \"CREDENTIALS_MISSING\"\ndomain: \"googleapis.com\"\nmetadata {\n  key: \"service\"\n  value: \"generativelanguage.googleapis.com\"\n}\nmetadata {\n  key: \"method\"\n  value: \"google.ai.generativelanguage.v1beta.GenerativeService.GenerateContent\"\n}\n]"
+  },
+  "integration_tests": {
+    "e2b": "NOT_INSTALLED",
+    "scrapybara": "HTTP_ERROR: 404"
+  },
+  "family_coordination": {
+    "papa-bear": "WORKING",
+    "mama-bear": "WORKING",
+    "claude-code": "WORKING",
+    "nathan-prime": "WORKING",
+    "claude-web": "WORKING"
+  },
+  "summary": {
+    "total_tests": 35,
+    "passed": 20,
+    "failed": 15,
+    "success_rate": "57.1%",
+    "duration_seconds": 55.78
+  },
+  "railway_backend": {
+    "health_check": "PASS",
+    "services_reported": 15,
+    "status": "healthy"
+  }
+}

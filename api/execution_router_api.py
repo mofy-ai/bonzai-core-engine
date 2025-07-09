@@ -18,7 +18,7 @@ logger = logging.getLogger(__name__)
 @execution_router_bp.route('/analyze', methods=['POST'])
 async def analyze_task():
     """
-    🔍 Analyze task complexity and get routing recommendation
+     Analyze task complexity and get routing recommendation
     """
     try:
         data = request.get_json()
@@ -56,7 +56,7 @@ async def analyze_task():
 @execution_router_bp.route('/route', methods=['POST'])
 async def route_execution():
     """
-    🚀 Route code execution to optimal platform (E2B or Scrapybara)
+     Route code execution to optimal platform (E2B or Scrapybara)
     """
     try:
         data = request.get_json()
@@ -149,7 +149,7 @@ async def execute_on_e2b():
 @execution_router_bp.route('/scrapybara/execute', methods=['POST'])
 async def execute_on_scrapybara():
     """
-    🔧 Direct Scrapybara execution for complex VM tasks
+     Direct Scrapybara execution for complex VM tasks
     """
     try:
         data = request.get_json()
@@ -178,7 +178,7 @@ async def execute_on_scrapybara():
 @execution_router_bp.route('/sessions', methods=['GET'])
 async def get_active_sessions():
     """
-    📊 Get information about active execution sessions
+     Get information about active execution sessions
     """
     try:
         user_id = request.args.get('user_id')

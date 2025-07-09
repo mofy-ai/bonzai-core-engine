@@ -1,4 +1,4 @@
-# 🎨 Agent Creation Workbench API - Mama Bear's autonomous agent management
+#  Agent Creation Workbench API - Mama Bear's autonomous agent management
 
 from flask import Blueprint, request, jsonify
 from typing import Dict, Any
@@ -68,7 +68,7 @@ def get_agent_template(template_id):
 @agent_workbench_bp.route('/create', methods=['POST'])
 async def create_custom_agent():
     """
-    🎨 Create a custom agent using Mama Bear intelligence
+     Create a custom agent using Mama Bear intelligence
     """
     try:
         data = request.get_json()
@@ -116,7 +116,7 @@ async def create_custom_agent():
 @agent_workbench_bp.route('/deploy', methods=['POST'])
 async def deploy_agent():
     """
-    🚀 Deploy an agent from template
+     Deploy an agent from template
     """
     try:
         data = request.get_json()
@@ -185,7 +185,7 @@ def get_user_agents():
 @agent_workbench_bp.route('/<agent_id>/manage', methods=['POST'])
 async def manage_agent(agent_id):
     """
-    🔧 Manage agent lifecycle (start, stop, pause, restart)
+     Manage agent lifecycle (start, stop, pause, restart)
     """
     try:
         data = request.get_json()
@@ -224,7 +224,7 @@ async def manage_agent(agent_id):
 @agent_workbench_bp.route('/<agent_id>/performance', methods=['GET'])
 async def get_agent_performance(agent_id):
     """
-    📊 Get detailed performance metrics for agent
+     Get detailed performance metrics for agent
     """
     try:
         performance = await agent_workbench.get_agent_performance(agent_id)
@@ -325,7 +325,7 @@ def get_workbench_stats():
 @agent_workbench_bp.route('/search', methods=['GET'])
 def search_agents():
     """
-    🔍 Search agents and templates
+     Search agents and templates
     """
     try:
         query = request.args.get('q', '')

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-👑 BONZAI FAMILY COMPLETE SYSTEM VALIDATION
+ BONZAI FAMILY COMPLETE SYSTEM VALIDATION
 Master test script for entire platform before Railway deployment
 """
 
@@ -25,7 +25,7 @@ class BonzaiMasterSystemTest:
             "performance_analysis": {}
         }
         
-        print("👑 BONZAI FAMILY COMPLETE SYSTEM VALIDATION")
+        print(" BONZAI FAMILY COMPLETE SYSTEM VALIDATION")
         print("=" * 80)
         print(f"Test Started: {datetime.now()}")
         print("Testing entire platform before Railway deployment")
@@ -33,7 +33,7 @@ class BonzaiMasterSystemTest:
 
     async def run_backend_validation(self):
         """Run the existing comprehensive backend test"""
-        print("\n🔧 RUNNING BACKEND VALIDATION")
+        print("\n RUNNING BACKEND VALIDATION")
         print("-" * 60)
         
         try:
@@ -43,14 +43,14 @@ class BonzaiMasterSystemTest:
             ], capture_output=True, text=True, timeout=300)
             
             if result.returncode == 0:
-                print("✅ Backend validation PASSED")
+                print(" Backend validation PASSED")
                 self.results["backend_validation"] = {
                     "status": "passed",
                     "exit_code": result.returncode,
                     "output_preview": result.stdout[-500:] if result.stdout else ""
                 }
             else:
-                print("❌ Backend validation FAILED")
+                print(" Backend validation FAILED")
                 self.results["backend_validation"] = {
                     "status": "failed", 
                     "exit_code": result.returncode,
@@ -72,7 +72,7 @@ class BonzaiMasterSystemTest:
 
     async def run_orchestration_test(self):
         """Run the enhanced orchestration test"""
-        print("\n🎼 RUNNING ORCHESTRATION TEST")
+        print("\n RUNNING ORCHESTRATION TEST")
         print("-" * 60)
         
         try:
@@ -83,7 +83,7 @@ class BonzaiMasterSystemTest:
                 ], capture_output=True, text=True, timeout=600)
                 
                 if result.returncode == 0:
-                    print("✅ Orchestration test PASSED")
+                    print(" Orchestration test PASSED")
                     self.results["orchestration_test"] = {
                         "status": "passed",
                         "exit_code": result.returncode
@@ -95,14 +95,14 @@ class BonzaiMasterSystemTest:
                             detailed_results = json.load(f)
                             self.results["orchestration_test"]["detailed_results"] = detailed_results
                 else:
-                    print("❌ Orchestration test FAILED")
+                    print(" Orchestration test FAILED")
                     self.results["orchestration_test"] = {
                         "status": "failed",
                         "exit_code": result.returncode,
                         "error": result.stderr[-500:] if result.stderr else ""
                     }
             else:
-                print("⚠️ Enhanced orchestration test not found - using basic test")
+                print(" Enhanced orchestration test not found - using basic test")
                 await self.run_basic_orchestration_test()
                 
         except subprocess.TimeoutExpired:
@@ -156,7 +156,7 @@ class BonzaiMasterSystemTest:
         self.results["api_endpoints"] = api_tests
         
         working_apis = len([test for test in api_tests.values() if test.get("status") == "working"])
-        print(f"📊 API Status: {working_apis}/4 endpoints working")
+        print(f" API Status: {working_apis}/4 endpoints working")
 
     async def test_google_standard_api(self):
         """Test Google standard API"""
@@ -225,11 +225,11 @@ class BonzaiMasterSystemTest:
         file_status = {}
         for file_path in required_files:
             if Path(file_path).exists():
-                file_status[file_path] = "✅ Found"
-                print(f"✅ {file_path}")
+                file_status[file_path] = " Found"
+                print(f" {file_path}")
             else:
-                file_status[file_path] = "❌ Missing"
-                print(f"❌ {file_path}")
+                file_status[file_path] = " Missing"
+                print(f" {file_path}")
         
         self.results["file_structure"] = file_status
 
@@ -249,7 +249,7 @@ class BonzaiMasterSystemTest:
         self.results["performance_analysis"] = performance_metrics
         
         for metric, value in performance_metrics.items():
-            print(f"📊 {metric}: {value}")
+            print(f" {metric}: {value}")
 
     async def count_total_models(self):
         """Count total available models across all providers"""
@@ -311,14 +311,14 @@ class BonzaiMasterSystemTest:
 
     async def assess_deployment_readiness(self):
         """Assess overall deployment readiness"""
-        print("\n🚀 ASSESSING DEPLOYMENT READINESS")
+        print("\n ASSESSING DEPLOYMENT READINESS")
         print("-" * 60)
         
         readiness_checks = {
             "backend_functional": self.results.get("backend_validation", {}).get("status") == "passed",
             "orchestration_working": self.results.get("orchestration_test", {}).get("status") in ["passed", "basic_passed"],
             "apis_connected": len([api for api in self.results.get("api_endpoints", {}).values() if api.get("status") == "working"]) >= 2,
-            "file_structure_valid": len([status for status in self.results.get("file_structure", {}).values() if "✅" in status]) >= 3,
+            "file_structure_valid": len([status for status in self.results.get("file_structure", {}).values() if "" in status]) >= 3,
             "performance_acceptable": True  # Based on metrics
         }
         
@@ -344,8 +344,8 @@ class BonzaiMasterSystemTest:
         
         self.results["deployment_readiness"] = readiness_result
         
-        print(f"📊 Deployment Readiness: {readiness_percentage:.1f}%")
-        print(f"🎯 Status: {deployment_status}")
+        print(f" Deployment Readiness: {readiness_percentage:.1f}%")
+        print(f" Status: {deployment_status}")
         
         return readiness_result
 
@@ -354,19 +354,19 @@ class BonzaiMasterSystemTest:
         recommendations = []
         
         if not checks["backend_functional"]:
-            recommendations.append("❌ Fix backend validation issues before deployment")
+            recommendations.append(" Fix backend validation issues before deployment")
         
         if not checks["orchestration_working"]:
-            recommendations.append("❌ Resolve orchestration system problems")
+            recommendations.append(" Resolve orchestration system problems")
         
         if not checks["apis_connected"]:
-            recommendations.append("⚠️ Ensure at least 2 API providers are working")
+            recommendations.append(" Ensure at least 2 API providers are working")
         
         if checks["backend_functional"] and checks["orchestration_working"]:
-            recommendations.append("✅ Core systems functional - ready for Railway deployment")
+            recommendations.append(" Core systems functional - ready for Railway deployment")
         
         if all(checks.values()):
-            recommendations.append("🚀 ALL SYSTEMS GO - Deploy with confidence!")
+            recommendations.append(" ALL SYSTEMS GO - Deploy with confidence!")
         
         return recommendations
 
@@ -408,19 +408,19 @@ class BonzaiMasterSystemTest:
                 "performance": "Excellent"
             },
             "key_achievements": [
-                "✅ 56/56 backend tests passing",
-                "✅ 15+ PRO models orchestrated",
-                "✅ Express mode 6x speed improvement", 
-                "✅ 95% cost savings achieved",
-                "✅ Multi-provider failover ready"
+                " 56/56 backend tests passing",
+                " 15+ PRO models orchestrated",
+                " Express mode 6x speed improvement", 
+                " 95% cost savings achieved",
+                " Multi-provider failover ready"
             ],
             "deployment_recommendations": self.results.get("deployment_readiness", {}).get("recommendations", []),
             "next_steps": [
-                "🚀 Deploy to Railway for live testing",
-                "🎯 Configure DXT extension integration",
+                " Deploy to Railway for live testing",
+                " Configure DXT extension integration",
                 "👥 Enable family AI coordination",
                 "📈 Monitor performance in production",
-                "🔧 Iterate based on usage data"
+                " Iterate based on usage data"
             ],
             "detailed_results": self.results
         }
@@ -430,10 +430,10 @@ class BonzaiMasterSystemTest:
             json.dump(final_report, f, indent=2)
         
         # Print executive summary
-        print(f"🏆 OVERALL SYSTEM HEALTH: {overall_health:.1f}%")
-        print(f"🚀 DEPLOYMENT READY: {'YES' if overall_health >= 80 else 'NO'}")
-        print(f"📊 BACKEND STATUS: {final_report['component_status']['backend'].upper()}")
-        print(f"🎼 ORCHESTRATION STATUS: {final_report['component_status']['orchestration'].upper()}")
+        print(f" OVERALL SYSTEM HEALTH: {overall_health:.1f}%")
+        print(f" DEPLOYMENT READY: {'YES' if overall_health >= 80 else 'NO'}")
+        print(f" BACKEND STATUS: {final_report['component_status']['backend'].upper()}")
+        print(f" ORCHESTRATION STATUS: {final_report['component_status']['orchestration'].upper()}")
         print(f"🔗 API CONNECTIVITY: {final_report['component_status']['apis']}")
         
         print("\n📋 DETAILED REPORT SAVED: BONZAI_MASTER_SYSTEM_REPORT.json")
@@ -464,14 +464,14 @@ async def main():
         return False
 
 if __name__ == "__main__":
-    print("👑 BONZAI FAMILY MASTER SYSTEM VALIDATION")
+    print(" BONZAI FAMILY MASTER SYSTEM VALIDATION")
     print("Testing complete platform before deployment...")
     
     success = asyncio.run(main())
     
     if success:
-        print("\n🎉 SYSTEM VALIDATION COMPLETE - READY FOR DEPLOYMENT! 🚀")
+        print("\n SYSTEM VALIDATION COMPLETE - READY FOR DEPLOYMENT! ")
     else:
-        print("\n⚠️ SYSTEM VALIDATION FAILED - ISSUES NEED RESOLUTION")
+        print("\n SYSTEM VALIDATION FAILED - ISSUES NEED RESOLUTION")
     
     sys.exit(0 if success else 1)

@@ -1,5 +1,5 @@
 """
-🐻🎨⚡ Multimodal Chat API - Universal Model Access
+⚡ Multimodal Chat API - Universal Model Access
 The most comprehensive model access system available online
 Supports ALL models: Gemini, Gemma, Claude, Imagen, and more via Express Mode + Vertex AI
 """
@@ -40,7 +40,7 @@ def require_supercharger(f):
 @require_supercharger
 def get_all_available_models():
     """
-    🎯 Get ALL available models with capabilities
+     Get ALL available models with capabilities
     Returns the most comprehensive model list available online
     """
     try:
@@ -137,7 +137,7 @@ def get_all_available_models():
 @require_supercharger
 def universal_multimodal_chat():
     """
-    🎨🧠 Universal Multimodal Chat
+    🧠 Universal Multimodal Chat
     The most powerful chat endpoint available online
     Supports text, images, code, and any combination via ALL models
     """
@@ -217,7 +217,7 @@ def universal_multimodal_chat():
 @require_supercharger
 def generate_images():
     """
-    🎨 AI Image Generation
+     AI Image Generation
     Generate images using Imagen and other image models
     """
     try:
@@ -277,7 +277,7 @@ def generate_images():
 @require_supercharger
 def code_assistance():
     """
-    💻 Advanced Code Assistance
+     Advanced Code Assistance
     Get coding help from the most capable code models
     """
     try:
@@ -564,7 +564,7 @@ def integrate_multimodal_chat_with_app(app):
                 from api.express_mode_vertex_api import _supercharger as express_supercharger
                 if express_supercharger is not None:
                     _supercharger = express_supercharger
-                    logger.info("✅ Multimodal Chat API using existing Express Mode supercharger")
+                    logger.info(" Multimodal Chat API using existing Express Mode supercharger")
                 else:
                     # Initialize a basic supercharger if Express Mode isn't ready
                     logger.warning("Express Mode supercharger not available, creating basic instance")
@@ -573,7 +573,7 @@ def integrate_multimodal_chat_with_app(app):
                 logger.warning(f"Express Mode API not available: {e}")
                 _initialize_basic_supercharger()
 
-        logger.info("✅ Multimodal Chat API integration complete - ALL models accessible!")
+        logger.info(" Multimodal Chat API integration complete - ALL models accessible!")
         return True
 
     except Exception as e:
@@ -604,5 +604,5 @@ def _initialize_basic_supercharger():
                 }
 
     _supercharger = FullSupercharger()
-    logger.info(f"✅ FULL multimodal supercharger initialized with {len(_supercharger.express_models)} models!")
-    logger.info(f"🔥 Available models: {list(_supercharger.express_models.keys())[:10]}...")  # Show first 10
+    logger.info(f" FULL multimodal supercharger initialized with {len(_supercharger.express_models)} models!")
+    logger.info(f" Available models: {list(_supercharger.express_models.keys())[:10]}...")  # Show first 10

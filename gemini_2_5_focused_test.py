@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-🔥 FOCUSED GEMINI 2.5 & EXPRESS MODE TEST
+ FOCUSED GEMINI 2.5 & EXPRESS MODE TEST
 Test both standard API and Vertex AI Express endpoints for 2.5 models
 """
 
@@ -15,7 +15,7 @@ from dotenv import load_dotenv
 # Load environment
 load_dotenv('../.env')
 
-print("🚀 FOCUSED GEMINI 2.5 & EXPRESS MODE TESTING")
+print(" FOCUSED GEMINI 2.5 & EXPRESS MODE TESTING")
 print("=" * 80)
 print(f"Test Started: {datetime.now()}")
 print("=" * 80)
@@ -38,7 +38,7 @@ results = {
 
 def print_header(title):
     print(f"\n{'='*60}")
-    print(f"🔥 {title}")
+    print(f" {title}")
     print(f"{'='*60}")
 
 async def test_standard_google_ai_comprehensive(key_name, api_key):
@@ -49,7 +49,7 @@ async def test_standard_google_ai_comprehensive(key_name, api_key):
         import google.generativeai as genai
         genai.configure(api_key=api_key)
         
-        print(f"🔑 Using API Key: {api_key[:15]}...")
+        print(f" Using API Key: {api_key[:15]}...")
         
         # Get ALL available models
         all_models = []
@@ -67,7 +67,7 @@ async def test_standard_google_ai_comprehensive(key_name, api_key):
                 # Focus on 2.5 models
                 if "2.5" in model_name:
                     gemini_2_5_models.append(model_name)
-                    print(f"   🎯 FOUND 2.5 MODEL: {model_name}")
+                    print(f"    FOUND 2.5 MODEL: {model_name}")
                     
                     # Test this 2.5 model specifically
                     if 'generateContent' in model.supported_generation_methods:
@@ -83,7 +83,7 @@ async def test_standard_google_ai_comprehensive(key_name, api_key):
                             
                             for i, config in enumerate(configs_to_try):
                                 try:
-                                    print(f"      🔍 Testing config {i+1}: {config}")
+                                    print(f"       Testing config {i+1}: {config}")
                                     response = test_model.generate_content(
                                         "Hello, please respond briefly", 
                                         generation_config=config
@@ -102,17 +102,17 @@ async def test_standard_google_ai_comprehensive(key_name, api_key):
                                         working_models.append({
                                             "name": model_name,
                                             "config": config,
-                                            "status": "✅ WORKING",
+                                            "status": " WORKING",
                                             "sample": response_text[:30]
                                         })
-                                        print(f"         ✅ SUCCESS: {response_text[:30]}")
+                                        print(f"          SUCCESS: {response_text[:30]}")
                                         break
                                     else:
-                                        print(f"         ❌ No response text")
+                                        print(f"          No response text")
                                         
                                 except Exception as e:
                                     error_msg = str(e)
-                                    print(f"         ❌ Config {i+1} failed: {error_msg[:50]}")
+                                    print(f"          Config {i+1} failed: {error_msg[:50]}")
                                     if "quota" in error_msg.lower():
                                         print(f"         💰 Quota issue")
                                         break
@@ -120,22 +120,22 @@ async def test_standard_google_ai_comprehensive(key_name, api_key):
                                         print(f"         🤔 Thinking mode issue - trying standard mode")
                                         continue
                                     elif "text" in error_msg.lower() and "quick" in error_msg.lower():
-                                        print(f"         🔄 Text access issue - trying alternative")
+                                        print(f"          Text access issue - trying alternative")
                                         continue
                                         
                         except Exception as e:
-                            print(f"      ❌ Model setup failed: {str(e)[:50]}")
+                            print(f"       Model setup failed: {str(e)[:50]}")
                             
         except Exception as e:
-            print(f"❌ Failed to list models: {e}")
+            print(f" Failed to list models: {e}")
             
-        print(f"\n📊 STANDARD API SUMMARY ({key_name}):")
+        print(f"\n STANDARD API SUMMARY ({key_name}):")
         print(f"   📋 Total models: {len(all_models)}")
-        print(f"   🎯 Gemini 2.5 models found: {len(gemini_2_5_models)}")
-        print(f"   ✅ Working 2.5 models: {len(working_models)}")
+        print(f"    Gemini 2.5 models found: {len(gemini_2_5_models)}")
+        print(f"    Working 2.5 models: {len(working_models)}")
         
         if gemini_2_5_models:
-            print(f"\n🎯 ALL 2.5 MODELS FOUND:")
+            print(f"\n ALL 2.5 MODELS FOUND:")
             for model in gemini_2_5_models:
                 print(f"      - {model}")
         
@@ -147,7 +147,7 @@ async def test_standard_google_ai_comprehensive(key_name, api_key):
         }
         
     except Exception as e:
-        print(f"❌ Standard API test failed: {e}")
+        print(f" Standard API test failed: {e}")
         return {"error": str(e)}
 
 async def test_vertex_ai_express_mode():
@@ -166,7 +166,7 @@ async def test_vertex_ai_express_mode():
     
     print("📋 Express Configuration:")
     for key, value in express_config.items():
-        status = "✅" if value else "❌"
+        status = "" if value else ""
         print(f"   {status} {key}: {value}")
     
     # Try Vertex AI SDK if available
@@ -178,7 +178,7 @@ async def test_vertex_ai_express_mode():
         region = express_config["VERTEX_AI_REGION"]
         
         if project_id and region:
-            print(f"\n🔍 Testing Vertex AI with project: {project_id}")
+            print(f"\n Testing Vertex AI with project: {project_id}")
             
             try:
                 vertexai.init(project=project_id, location=region)
@@ -201,7 +201,7 @@ async def test_vertex_ai_express_mode():
                 
                 for model_name in vertex_2_5_models:
                     try:
-                        print(f"   🔍 Testing Vertex model: {model_name}")
+                        print(f"    Testing Vertex model: {model_name}")
                         model = GenerativeModel(model_name)
                         
                         start_time = time.time()
@@ -214,17 +214,17 @@ async def test_vertex_ai_express_mode():
                         if response.text:
                             working_vertex_models.append({
                                 "name": model_name,
-                                "status": "✅ WORKING",
+                                "status": " WORKING",
                                 "response_time_ms": round(response_time, 2),
                                 "sample": response.text[:30]
                             })
-                            print(f"      ✅ VERTEX SUCCESS: {model_name} ({response_time:.0f}ms)")
+                            print(f"       VERTEX SUCCESS: {model_name} ({response_time:.0f}ms)")
                         else:
-                            print(f"      ❌ No response text")
+                            print(f"       No response text")
                             
                     except Exception as e:
                         error_msg = str(e)
-                        print(f"      ❌ {model_name}: {error_msg[:50]}")
+                        print(f"       {model_name}: {error_msg[:50]}")
                         if "404" in error_msg:
                             print(f"         📅 Model not available on Vertex")
                         elif "403" in error_msg:
@@ -232,8 +232,8 @@ async def test_vertex_ai_express_mode():
                         elif "quota" in error_msg.lower():
                             print(f"         💰 Quota exceeded")
                 
-                print(f"\n📊 VERTEX AI RESULTS:")
-                print(f"   ✅ Working Vertex 2.5 models: {len(working_vertex_models)}")
+                print(f"\n VERTEX AI RESULTS:")
+                print(f"    Working Vertex 2.5 models: {len(working_vertex_models)}")
                 
                 return {
                     "vertex_models_tested": vertex_2_5_models,
@@ -242,14 +242,14 @@ async def test_vertex_ai_express_mode():
                 }
                 
             except Exception as e:
-                print(f"❌ Vertex AI initialization failed: {e}")
+                print(f" Vertex AI initialization failed: {e}")
                 return {"error": f"Vertex init failed: {e}"}
         else:
-            print("⚠️  Missing project ID or region for Vertex AI")
+            print("  Missing project ID or region for Vertex AI")
             return {"error": "Missing Vertex AI configuration"}
             
     except ImportError:
-        print("❌ Vertex AI SDK not available")
+        print(" Vertex AI SDK not available")
         return {"error": "Vertex AI SDK not installed"}
 
 async def compare_endpoints():
@@ -271,11 +271,11 @@ async def compare_endpoints():
         if isinstance(data, dict) and "gemini_2_5_models" in data:
             all_2_5_models.update(data["gemini_2_5_models"])
     
-    print(f"\n🎯 COMPREHENSIVE 2.5 MODEL ANALYSIS:")
+    print(f"\n COMPREHENSIVE 2.5 MODEL ANALYSIS:")
     print(f"   📋 Unique 2.5 models found across all keys: {len(all_2_5_models)}")
     
     if all_2_5_models:
-        print(f"\n📝 ALL DISCOVERED 2.5 MODELS:")
+        print(f"\n ALL DISCOVERED 2.5 MODELS:")
         for model in sorted(all_2_5_models):
             print(f"      - {model}")
     
@@ -295,13 +295,13 @@ async def compare_endpoints():
             for model in not_working_for_key:
                 not_working_2_5.append(f"{model} (via {key_name})")
     
-    print(f"\n✅ WORKING 2.5 MODELS ({len(working_2_5)}):")
+    print(f"\n WORKING 2.5 MODELS ({len(working_2_5)}):")
     for model in working_2_5:
-        print(f"      ✅ {model}")
+        print(f"       {model}")
     
-    print(f"\n❌ NOT WORKING 2.5 MODELS ({len(not_working_2_5)}):")
+    print(f"\n NOT WORKING 2.5 MODELS ({len(not_working_2_5)}):")
     for model in not_working_2_5:
-        print(f"      ❌ {model}")
+        print(f"       {model}")
     
     results["standard_api_results"] = standard_results
     results["vertex_ai_results"] = vertex_results

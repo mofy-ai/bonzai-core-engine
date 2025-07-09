@@ -13,7 +13,7 @@ import json
 # Add current directory to path
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
-print("🎯 BONZAI FAMILY INTEGRATION TEST")
+print(" BONZAI FAMILY INTEGRATION TEST")
 print("=" * 50)
 print(f"Test Started: {datetime.now()}")
 print("=" * 50)
@@ -31,14 +31,14 @@ async def test_vertex_express():
         from services.express_mode_vertex_integration import VertexExpressService
         service = VertexExpressService()
         # Simple connectivity test
-        test_results["services"]["vertex_express"] = "✅ READY"
+        test_results["services"]["vertex_express"] = " READY"
         test_results["summary"]["passed"] += 1
-        print("   ✅ Vertex Express: CONNECTED")
+        print("    Vertex Express: CONNECTED")
         return True
     except Exception as e:
-        test_results["services"]["vertex_express"] = f"❌ FAILED: {str(e)}"
+        test_results["services"]["vertex_express"] = f" FAILED: {str(e)}"
         test_results["summary"]["failed"] += 1
-        print(f"   ❌ Vertex Express: {str(e)}")
+        print(f"    Vertex Express: {str(e)}")
         return False
 
 async def test_zai_variants():
@@ -54,16 +54,16 @@ async def test_zai_variants():
         for variant in variant_names:
             print(f"   Testing {variant}...", end=" ")
             # Simple check - in real test would ping each
-            print("✅")
+            print("")
         
-        test_results["services"]["zai_variants"] = "✅ ALL 7 READY"
+        test_results["services"]["zai_variants"] = " ALL 7 READY"
         test_results["summary"]["passed"] += 1
-        print("   ✅ All 7 Variants: READY")
+        print("    All 7 Variants: READY")
         return True
     except Exception as e:
-        test_results["services"]["zai_variants"] = f"❌ FAILED: {str(e)}"
+        test_results["services"]["zai_variants"] = f" FAILED: {str(e)}"
         test_results["summary"]["failed"] += 1
-        print(f"   ❌ ZAI Variants: {str(e)}")
+        print(f"    ZAI Variants: {str(e)}")
         return False
 
 async def test_websocket_bridge():
@@ -72,14 +72,14 @@ async def test_websocket_bridge():
     try:
         from services.bonzai_websocket_coordinator import BonzaiWebSocketCoordinator
         # Check if service can be initialized
-        test_results["services"]["websocket_bridge"] = "✅ READY"
+        test_results["services"]["websocket_bridge"] = " READY"
         test_results["summary"]["passed"] += 1
-        print("   ✅ WebSocket Bridge: READY")
+        print("    WebSocket Bridge: READY")
         return True
     except Exception as e:
-        test_results["services"]["websocket_bridge"] = f"❌ FAILED: {str(e)}"
+        test_results["services"]["websocket_bridge"] = f" FAILED: {str(e)}"
         test_results["summary"]["failed"] += 1
-        print(f"   ❌ WebSocket Bridge: {str(e)}")
+        print(f"    WebSocket Bridge: {str(e)}")
         return False
 
 async def test_orchestration():
@@ -88,14 +88,14 @@ async def test_orchestration():
     try:
         from services.zai_orchestration import ZAIOrchestration
         # Check core orchestration
-        test_results["services"]["orchestration"] = "✅ READY"
+        test_results["services"]["orchestration"] = " READY"
         test_results["summary"]["passed"] += 1
-        print("   ✅ Orchestration Core: READY")
+        print("    Orchestration Core: READY")
         return True
     except Exception as e:
-        test_results["services"]["orchestration"] = f"❌ FAILED: {str(e)}"
+        test_results["services"]["orchestration"] = f" FAILED: {str(e)}"
         test_results["summary"]["failed"] += 1
-        print(f"   ❌ Orchestration Core: {str(e)}")
+        print(f"    Orchestration Core: {str(e)}")
         return False
 
 async def test_memory_system():
@@ -104,14 +104,14 @@ async def test_memory_system():
     try:
         from services.zai_memory_system import ZAIMemorySystem
         # Check memory connectivity
-        test_results["services"]["memory_system"] = "✅ READY"
+        test_results["services"]["memory_system"] = " READY"
         test_results["summary"]["passed"] += 1
-        print("   ✅ Memory System: CONNECTED")
+        print("    Memory System: CONNECTED")
         return True
     except Exception as e:
-        test_results["services"]["memory_system"] = f"❌ FAILED: {str(e)}"
+        test_results["services"]["memory_system"] = f" FAILED: {str(e)}"
         test_results["summary"]["failed"] += 1
-        print(f"   ❌ Memory System: {str(e)}")
+        print(f"    Memory System: {str(e)}")
         return False
 
 async def main():
@@ -126,10 +126,10 @@ async def main():
     
     # Summary
     print("\n" + "=" * 50)
-    print("📊 TEST SUMMARY")
+    print(" TEST SUMMARY")
     print("=" * 50)
-    print(f"✅ Passed: {test_results['summary']['passed']}")
-    print(f"❌ Failed: {test_results['summary']['failed']}")
+    print(f" Passed: {test_results['summary']['passed']}")
+    print(f" Failed: {test_results['summary']['failed']}")
     
     # Save results
     with open('family_integration_test_results.json', 'w') as f:
@@ -139,9 +139,9 @@ async def main():
     
     # Overall status
     if test_results['summary']['failed'] == 0:
-        print("\n🎉 ALL SYSTEMS GO! Ready for DXT packaging!")
+        print("\n ALL SYSTEMS GO! Ready for DXT packaging!")
     else:
-        print("\n⚠️  Some services need attention before DXT packaging.")
+        print("\n  Some services need attention before DXT packaging.")
     
     return test_results['summary']['failed'] == 0
 

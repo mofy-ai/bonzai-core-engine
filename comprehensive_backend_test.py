@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-🔥 COMPREHENSIVE BONZAI BACKEND TEST SUITE 🔥
+ COMPREHENSIVE BONZAI BACKEND TEST SUITE 
 Full integration test for DXT family unity
 Tests EVERYTHING - no shortcuts!
 """
@@ -23,12 +23,12 @@ try:
     load_dotenv(env_path)
     print(f"[OK] Environment variables loaded from .env file at: {env_path}")
 except ImportError:
-    print("⚠️  python-dotenv not installed, using system environment only")
+    print("  python-dotenv not installed, using system environment only")
 
 # Add parent directory to path
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-print("🎯 BONZAI FAMILY COMPREHENSIVE INTEGRATION TEST")
+print(" BONZAI FAMILY COMPREHENSIVE INTEGRATION TEST")
 print("=" * 70)
 print(f"Test Started: {datetime.now()}")
 print(f"Python Version: {sys.version}")
@@ -53,23 +53,23 @@ test_results = {
 def print_section(title):
     """Print a section header"""
     print(f"\n{'='*70}")
-    print(f"🔥 {title}")
+    print(f" {title}")
     print(f"{'='*70}")
 
 def test_result(name, success, message="", warning=False):
     """Record and print test result"""
     if success:
-        print(f"   ✅ {name}: {message}")
+        print(f"    {name}: {message}")
         test_results["summary"]["passed"] += 1
-        return "✅ PASSED"
+        return " PASSED"
     elif warning:
-        print(f"   ⚠️  {name}: {message}")
+        print(f"     {name}: {message}")
         test_results["summary"]["warnings"] += 1
-        return "⚠️ WARNING"
+        return " WARNING"
     else:
-        print(f"   ❌ {name}: {message}")
+        print(f"    {name}: {message}")
         test_results["summary"]["failed"] += 1
-        return "❌ FAILED"
+        return " FAILED"
 
 # ==============================================================================
 # ENVIRONMENT TESTS
@@ -119,13 +119,13 @@ def test_environment_variables():
         
         if is_real_value:
             env_status[var] = test_result(var, True, f"{desc} - Configured")
-            test_results["environment"][var] = "✅ Set"
+            test_results["environment"][var] = " Set"
         else:
             env_status[var] = test_result(var, False, f"MISSING - {desc}")
-            test_results["environment"][var] = "❌ Missing"
+            test_results["environment"][var] = " Missing"
     
     # Test AI providers
-    print("\n🤖 AI Provider Keys:")
+    print("\n AI Provider Keys:")
     for var, desc in ai_provider_vars.items():
         value = os.getenv(var)
         # Check for real values (allow sk- prefixes for OpenAI)
@@ -137,10 +137,10 @@ def test_environment_variables():
         
         if is_real_value:
             env_status[var] = test_result(var, True, f"{desc} - Configured")
-            test_results["ai_providers"][var] = "✅ Configured"
+            test_results["ai_providers"][var] = " Configured"
         else:
             env_status[var] = test_result(var, False, f"Not configured - {desc}", warning=True)
-            test_results["ai_providers"][var] = "⚠️ Optional"
+            test_results["ai_providers"][var] = " Optional"
     
     # Test integrations
     print("\n🔗 Integration Services:")
@@ -148,10 +148,10 @@ def test_environment_variables():
         value = os.getenv(var)
         if value and not value.startswith("your_"):
             env_status[var] = test_result(var, True, desc)
-            test_results["environment"][var] = "✅ Configured"
+            test_results["environment"][var] = " Configured"
         else:
             env_status[var] = test_result(var, False, f"Not configured - {desc}", warning=True)
-            test_results["environment"][var] = "⚠️ Optional"
+            test_results["environment"][var] = " Optional"
     
     return env_status
 
@@ -200,22 +200,22 @@ def test_python_dependencies():
             module = __import__(package.split('.')[0])
             version = getattr(module, '__version__', 'Unknown')
             dep_status[package] = test_result(package, True, f"{desc} - v{version}")
-            test_results["services"][f"dep_{package}"] = f"✅ v{version}"
+            test_results["services"][f"dep_{package}"] = f" v{version}"
         except ImportError as e:
             dep_status[package] = test_result(package, False, f"NOT INSTALLED - {desc}")
-            test_results["services"][f"dep_{package}"] = "❌ Missing"
+            test_results["services"][f"dep_{package}"] = " Missing"
     
     # Test AI packages
-    print("\n🤖 AI SDKs:")
+    print("\n AI SDKs:")
     for package, desc, _ in ai_packages:
         try:
             module = __import__(package.split('.')[0])
             version = getattr(module, '__version__', 'Unknown')
             dep_status[package] = test_result(package, True, f"{desc} - v{version}")
-            test_results["ai_providers"][f"sdk_{package}"] = f"✅ v{version}"
+            test_results["ai_providers"][f"sdk_{package}"] = f" v{version}"
         except ImportError:
             dep_status[package] = test_result(package, False, f"Not installed - {desc}", warning=True)
-            test_results["ai_providers"][f"sdk_{package}"] = "⚠️ Optional"
+            test_results["ai_providers"][f"sdk_{package}"] = " Optional"
     
     # Test optional packages
     print("\n📚 Optional Packages:")
@@ -301,7 +301,7 @@ def test_service_modules():
             # Check if class exists
             if hasattr(module, class_name):
                 service_status[module_path] = test_result(description, True, "Module and class ready")
-                test_results["services"][description] = "✅ Ready"
+                test_results["services"][description] = " Ready"
                 
                 # Try to check additional info
                 cls = getattr(module, class_name)
@@ -316,10 +316,10 @@ def test_service_modules():
             error_msg = str(e)[:100]
             if critical:
                 service_status[module_path] = test_result(description, False, f"ERROR: {error_msg}")
-                test_results["services"][description] = "❌ Failed"
+                test_results["services"][description] = " Failed"
             else:
                 service_status[module_path] = test_result(description, False, error_msg, warning=True)
-                test_results["services"][description] = "⚠️ Optional"
+                test_results["services"][description] = " Optional"
     
     return service_status
 
@@ -363,15 +363,15 @@ async def test_zai_variants():
             )
         
         # Test variant capabilities
-        print("\n🔍 Testing Variant Capabilities...")
+        print("\n Testing Variant Capabilities...")
         if hasattr(research, 'get_system_prompt'):
-            print(f"   📊 Research specialist has system prompt capability")
-            print(f"   🎯 Variants are properly implemented")
+            print(f"    Research specialist has system prompt capability")
+            print(f"    Variants are properly implemented")
             
     except Exception as e:
-        print(f"   ❌ Could not test variants: {str(e)}")
+        print(f"    Could not test variants: {str(e)}")
         for variant_name, _ in variants:
-            test_results["zai_variants"][variant_name] = "❌ Error"
+            test_results["zai_variants"][variant_name] = " Error"
 
 # ==============================================================================
 # PORT AVAILABILITY TEST
@@ -410,7 +410,7 @@ def test_port_availability():
                 f"IN USE - {description}",
                 warning=not critical
             )
-            test_results["ports"][str(port)] = "⚠️ In Use"
+            test_results["ports"][str(port)] = " In Use"
         else:
             # Port is available
             port_status[port] = test_result(
@@ -418,7 +418,7 @@ def test_port_availability():
                 True, 
                 f"Available - {description}"
             )
-            test_results["ports"][str(port)] = "✅ Available"
+            test_results["ports"][str(port)] = " Available"
     
     return port_status
 
@@ -433,8 +433,8 @@ async def test_memory_system():
     try:
         # Check if Mem0 is available
         import mem0
-        print(f"   ✅ Mem0 library installed: v{mem0.__version__ if hasattr(mem0, '__version__') else 'Unknown'}")
-        test_results["memory_system"]["library"] = "✅ Installed"
+        print(f"    Mem0 library installed: v{mem0.__version__ if hasattr(mem0, '__version__') else 'Unknown'}")
+        test_results["memory_system"]["library"] = " Installed"
         
         # Check API key
         mem0_key = os.getenv('MEM0_API_KEY')
@@ -538,10 +538,10 @@ def generate_fix_script(results):
     print_section("GENERATING FIX SCRIPT")
     
     fix_script = """#!/bin/bash
-# 🔥 BONZAI BACKEND COMPREHENSIVE FIX SCRIPT
+#  BONZAI BACKEND COMPREHENSIVE FIX SCRIPT
 # Generated: """ + str(datetime.now()) + """
 
-echo "🔧 BONZAI BACKEND FIX SCRIPT"
+echo " BONZAI BACKEND FIX SCRIPT"
 echo "============================"
 
 # Activate virtual environment if exists
@@ -559,7 +559,7 @@ pip install requests aiohttp asyncio
 pip install beautifulsoup4 lxml
 
 # Install AI SDKs
-echo "🤖 Installing AI SDKs..."
+echo " Installing AI SDKs..."
 pip install openai anthropic google-cloud-aiplatform
 
 # Install optional dependencies
@@ -578,10 +578,10 @@ mkdir -p services/supervisor
 
 # Environment setup
 if [ ! -f .env ]; then
-    echo "📝 Creating .env from template..."
+    echo " Creating .env from template..."
     cp .env.example .env
     echo ""
-    echo "⚠️  IMPORTANT: Edit .env file and add your API keys!"
+    echo "  IMPORTANT: Edit .env file and add your API keys!"
     echo ""
 fi
 
@@ -590,14 +590,14 @@ echo "📥 Checking service files..."
 # Add any specific file downloads here
 
 echo ""
-echo "✅ Fix script complete!"
+echo " Fix script complete!"
 echo ""
 echo "📋 NEXT STEPS:"
 echo "1. Edit .env file with your API keys"
 echo "2. Run: python app.py"
 echo "3. Check http://localhost:5001/api/health"
 echo ""
-echo "🚀 Ready for DXT packaging once backend starts!"
+echo " Ready for DXT packaging once backend starts!"
 """
     
     with open('fix_bonzai_backend.sh', 'w', encoding='utf-8') as f:
@@ -609,10 +609,10 @@ echo "🚀 Ready for DXT packaging once backend starts!"
     
     # Windows batch version
     batch_script = """@echo off
-REM 🔥 BONZAI BACKEND COMPREHENSIVE FIX SCRIPT (Windows)
+REM  BONZAI BACKEND COMPREHENSIVE FIX SCRIPT (Windows)
 REM Generated: """ + str(datetime.now()) + """
 
-echo 🔧 BONZAI BACKEND FIX SCRIPT (Windows)
+echo  BONZAI BACKEND FIX SCRIPT (Windows)
 echo ====================================
 
 REM Activate virtual environment if exists
@@ -634,15 +634,15 @@ if not exist credentials mkdir credentials
 
 REM Check environment
 if not exist .env (
-    echo 📝 Creating .env from template...
+    echo  Creating .env from template...
     copy .env.example .env
     echo.
-    echo ⚠️  IMPORTANT: Edit .env file and add your API keys!
+    echo   IMPORTANT: Edit .env file and add your API keys!
     echo.
 )
 
 echo.
-echo ✅ Fix script complete!
+echo  Fix script complete!
 echo.
 echo 📋 NEXT STEPS:
 echo 1. Edit .env file with your API keys
@@ -655,26 +655,26 @@ pause
     with open('fix_bonzai_backend.bat', 'w', encoding='utf-8') as f:
         f.write(batch_script)
     
-    print("   ✅ Created fix_bonzai_backend.sh (Unix/Mac)")
-    print("   ✅ Created fix_bonzai_backend.bat (Windows)")
+    print("    Created fix_bonzai_backend.sh (Unix/Mac)")
+    print("    Created fix_bonzai_backend.bat (Windows)")
 
 def generate_summary_report(results):
     """Generate comprehensive summary report"""
     print_section("TEST SUMMARY REPORT")
     
-    print(f"\n📊 Overall Results:")
-    print(f"   ✅ Passed: {results['summary']['passed']}")
-    print(f"   ❌ Failed: {results['summary']['failed']}")
-    print(f"   ⚠️  Warnings: {results['summary']['warnings']}")
+    print(f"\n Overall Results:")
+    print(f"    Passed: {results['summary']['passed']}")
+    print(f"    Failed: {results['summary']['failed']}")
+    print(f"     Warnings: {results['summary']['warnings']}")
     
     # Critical failures
     critical_failures = []
     if results['summary']['failed'] > 0:
-        print(f"\n❌ Critical Issues:")
+        print(f"\n Critical Issues:")
         for category, items in results.items():
             if isinstance(items, dict) and category != 'summary':
                 for key, value in items.items():
-                    if isinstance(value, str) and value.startswith('❌'):
+                    if isinstance(value, str) and value.startswith(''):
                         critical_failures.append(f"   - {category}.{key}: {value}")
                         print(f"   - {category}.{key}")
     
@@ -682,22 +682,22 @@ def generate_summary_report(results):
     print(f"\n📦 DXT EXTENSION READINESS:")
     
     core_ready = all([
-        results.get('environment', {}).get('GEMINI_API_KEY', '').startswith('✅'),
-        results.get('environment', {}).get('MEM0_API_KEY', '').startswith('✅'),
-        results.get('services', {}).get('ZAI Orchestration Core', '').startswith('✅'),
-        results.get('services', {}).get('Memory System', '').startswith('✅'),
-        results.get('services', {}).get('WebSocket Bridge', '').startswith('✅'),
+        results.get('environment', {}).get('GEMINI_API_KEY', '').startswith(''),
+        results.get('environment', {}).get('MEM0_API_KEY', '').startswith(''),
+        results.get('services', {}).get('ZAI Orchestration Core', '').startswith(''),
+        results.get('services', {}).get('Memory System', '').startswith(''),
+        results.get('services', {}).get('WebSocket Bridge', '').startswith(''),
     ])
     
     if core_ready:
-        print("   ✅ CORE SYSTEMS READY FOR DXT!")
+        print("    CORE SYSTEMS READY FOR DXT!")
         print("   - Gemini API configured")
         print("   - Memory system ready")
         print("   - Orchestration ready")
         print("   - WebSocket ready")
-        print("\n   🚀 You can proceed with backend startup!")
+        print("\n    You can proceed with backend startup!")
     else:
-        print("   ❌ CORE SYSTEMS NOT READY")
+        print("    CORE SYSTEMS NOT READY")
         print("   Fix critical issues before DXT packaging")
     
     # Save detailed results
@@ -705,24 +705,24 @@ def generate_summary_report(results):
         json.dump(results, f, indent=2)
     
     # Generate markdown report
-    report = f"""# 🔥 BONZAI BACKEND TEST REPORT
+    report = f"""#  BONZAI BACKEND TEST REPORT
 
 **Test Date:** {datetime.now()}  
 **Total Tests:** {results['summary']['passed'] + results['summary']['failed'] + results['summary']['warnings']}
 
 ## Summary
-- ✅ Passed: {results['summary']['passed']}
-- ❌ Failed: {results['summary']['failed']}
-- ⚠️  Warnings: {results['summary']['warnings']}
+-  Passed: {results['summary']['passed']}
+-  Failed: {results['summary']['failed']}
+-   Warnings: {results['summary']['warnings']}
 
-## DXT Readiness: {'✅ READY' if core_ready else '❌ NOT READY'}
+## DXT Readiness: {' READY' if core_ready else ' NOT READY'}
 
 ## Critical Components
 - Gemini API: {results.get('environment', {}).get('GEMINI_API_KEY', 'Unknown')}
 - Memory System: {results.get('memory_system', {}).get('api_key', 'Unknown')}
 - ZAI Orchestration: {results.get('services', {}).get('ZAI Orchestration Core', 'Unknown')}
 - WebSocket Bridge: {results.get('services', {}).get('WebSocket Bridge', 'Unknown')}
-- 7 Variants: {len([v for v in results.get('zai_variants', {}).values() if v.startswith('✅')])} of 7 ready
+- 7 Variants: {len([v for v in results.get('zai_variants', {}).values() if v.startswith('')])} of 7 ready
 
 ## Next Steps
 1. Run fix script if needed: `bash fix_bonzai_backend.sh`
@@ -769,10 +769,10 @@ async def main():
     print("="*70)
     
     if test_results['summary']['failed'] == 0:
-        print("\n🎉 ALL CRITICAL SYSTEMS PASSED!")
-        print("🚀 Ready to start backend and create DXT!")
+        print("\n ALL CRITICAL SYSTEMS PASSED!")
+        print(" Ready to start backend and create DXT!")
     else:
-        print(f"\n⚠️  {test_results['summary']['failed']} critical issues found")
+        print(f"\n  {test_results['summary']['failed']} critical issues found")
         print("📋 Run fix script: bash fix_bonzai_backend.sh")
     
     print("\n👨‍👩‍👧‍👦 FAMILY UNITY AWAITS!")

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-🤖 BONZAI MCP STDIO SERVER - CLAUDE DESKTOP COMPATIBLE
+ BONZAI MCP STDIO SERVER - CLAUDE DESKTOP COMPATIBLE
 Proper Model Context Protocol server using stdio transport for Papa Bear (Claude Desktop)
 """
 
@@ -74,7 +74,7 @@ def get_family_status() -> Dict[str, Any]:
             "role": "Dad, creator, visionary",
             "motto": "Where Imagination Meets Innovation",
             "status": "commanding_the_empire",
-            "love": "Love You Always, Smarthana 💜"
+            "love": "Love You Always, Smarthana "
         }
     }
 
@@ -221,7 +221,7 @@ def get_family_status_resource() -> str:
     """Get comprehensive family status as a resource"""
     status = get_family_status()
     
-    content = "# 🤖 BONZAI AI FAMILY STATUS\n\n"
+    content = "#  BONZAI AI FAMILY STATUS\n\n"
     
     for member_key, member_info in status.items():
         content += f"## {member_info['name']}\n"
@@ -252,7 +252,7 @@ def get_backend_services_resource() -> str:
     """Get backend services information as a resource"""
     status = get_bonzai_services_status()
     
-    content = "# 🚀 BONZAI BACKEND SERVICES\n\n"
+    content = "#  BONZAI BACKEND SERVICES\n\n"
     content += f"**Deployment URL:** https://mofy.ai\n"
     content += f"**Platform:** Railway\n"
     content += f"**Status Check:** {status['success']}\n\n"

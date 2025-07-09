@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-🌐 BONZAI MCP REMOTE SERVER - CLAUDE WEB COMPATIBLE
+ BONZAI MCP REMOTE SERVER - CLAUDE WEB COMPATIBLE
 Proper Model Context Protocol server using HTTP/SSE transport for Claude Web remote integrations
 """
 
@@ -31,7 +31,7 @@ memory_client = None
 if MEM0_AVAILABLE and os.getenv('MEM0_API_KEY'):
     try:
         memory_client = MemoryClient(api_key=os.getenv('MEM0_API_KEY'))
-        logger.info("✅ Mem0 memory client initialized for MCP remote")
+        logger.info(" Mem0 memory client initialized for MCP remote")
     except Exception as e:
         logger.warning(f"Failed to initialize Mem0 client: {e}")
 
@@ -180,7 +180,7 @@ def execute_get_family_status() -> Dict[str, Any]:
             "role": "Dad, creator, visionary",
             "motto": "Where Imagination Meets Innovation",
             "status": "commanding_the_empire",
-            "love": "Love You Always, Smarthana 💜"
+            "love": "Love You Always, Smarthana "
         }
     }
 
@@ -414,7 +414,7 @@ def read_resource():
         
         if uri == "family://status":
             family_status = execute_get_family_status()
-            content = "# 🤖 BONZAI AI FAMILY STATUS\n\n"
+            content = "#  BONZAI AI FAMILY STATUS\n\n"
             
             for member_key, member_info in family_status.items():
                 content += f"## {member_info['name']}\n"
@@ -440,7 +440,7 @@ def read_resource():
                 
         elif uri == "backend://services":
             services_status = execute_get_bonzai_services_status()
-            content = "# 🚀 BONZAI BACKEND SERVICES\n\n"
+            content = "#  BONZAI BACKEND SERVICES\n\n"
             content += f"**Deployment URL:** https://mofy.ai\n"
             content += f"**Platform:** Railway\n"
             content += f"**Status Check:** {services_status['success']}\n\n"
@@ -537,7 +537,7 @@ def integrate_mcp_remote_with_app(app):
     """Integrate MCP remote server with Flask app"""
     try:
         app.register_blueprint(mcp_remote_bp, url_prefix='/api')
-        logger.info("✅ MCP Remote Server integrated - Claude Web can connect!")
+        logger.info(" MCP Remote Server integrated - Claude Web can connect!")
         logger.info("   Available at: https://mofy.ai/api/mcp")
         logger.info("   SSE endpoint: https://mofy.ai/api/mcp/sse")
         return True

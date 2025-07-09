@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-🔧 BONZAI MCP SERVER INSTALLER FOR CLAUDE DESKTOP
+ BONZAI MCP SERVER INSTALLER FOR CLAUDE DESKTOP
 Automatically configures Claude Desktop to use our proper stdio MCP server
 """
 
@@ -31,7 +31,7 @@ def install_bonzai_mcp_server():
     server_path = current_dir / "mcp_stdio_server.py"
     
     if not server_path.exists():
-        print(f"❌ Server file not found: {server_path}")
+        print(f" Server file not found: {server_path}")
         return False
     
     # Get Claude config path
@@ -39,7 +39,7 @@ def install_bonzai_mcp_server():
         config_path = get_claude_config_path()
         print(f"📁 Claude config path: {config_path}")
     except ValueError as e:
-        print(f"❌ {e}")
+        print(f" {e}")
         return False
     
     # Create config directory if it doesn't exist
@@ -52,10 +52,10 @@ def install_bonzai_mcp_server():
                 config = json.load(f)
                 print("📖 Loaded existing Claude Desktop configuration")
         except json.JSONDecodeError:
-            print("⚠️  Invalid JSON in existing config, creating new one")
+            print("  Invalid JSON in existing config, creating new one")
             config = {}
     else:
-        print("📝 Creating new Claude Desktop configuration")
+        print(" Creating new Claude Desktop configuration")
         config = {}
     
     # Ensure mcpServers section exists
@@ -79,10 +79,10 @@ def install_bonzai_mcp_server():
         with open(config_path, 'w') as f:
             json.dump(config, f, indent=2)
         
-        print("✅ Successfully installed Bonzai MCP server in Claude Desktop!")
+        print(" Successfully installed Bonzai MCP server in Claude Desktop!")
         print(f"   Server name: bonzai-family")
         print(f"   Server path: {server_path}")
-        print("\n🔄 Please restart Claude Desktop to activate the MCP server")
+        print("\n Please restart Claude Desktop to activate the MCP server")
         print("\n🛠️  Available tools in Claude Desktop:")
         print("   - get_family_status() - Get AI family member status")
         print("   - add_family_memory() - Add memory to family system")
@@ -96,7 +96,7 @@ def install_bonzai_mcp_server():
         return True
         
     except Exception as e:
-        print(f"❌ Failed to write configuration: {e}")
+        print(f" Failed to write configuration: {e}")
         return False
 
 def check_dependencies():
@@ -105,30 +105,30 @@ def check_dependencies():
     
     try:
         import mcp
-        print("✅ MCP SDK found")
+        print(" MCP SDK found")
     except ImportError:
         missing_deps.append("mcp[cli]")
     
     try:
         import mem0
-        print("✅ Mem0 SDK found")
+        print(" Mem0 SDK found")
     except ImportError:
-        print("⚠️  Mem0 SDK not found (optional)")
+        print("  Mem0 SDK not found (optional)")
     
     try:
         import requests
-        print("✅ Requests library found")
+        print(" Requests library found")
     except ImportError:
         missing_deps.append("requests")
     
     try:
         import dotenv
-        print("✅ Python-dotenv found")
+        print(" Python-dotenv found")
     except ImportError:
         missing_deps.append("python-dotenv")
     
     if missing_deps:
-        print(f"\n❌ Missing dependencies: {', '.join(missing_deps)}")
+        print(f"\n Missing dependencies: {', '.join(missing_deps)}")
         print("Install with:")
         print(f"   pip install {' '.join(missing_deps)}")
         return False
@@ -137,33 +137,33 @@ def check_dependencies():
 
 def main():
     """Main installation function"""
-    print("🤖 BONZAI MCP SERVER INSTALLER FOR CLAUDE DESKTOP")
+    print(" BONZAI MCP SERVER INSTALLER FOR CLAUDE DESKTOP")
     print("=" * 60)
     
     # Check dependencies
-    print("\n🔍 Checking dependencies...")
+    print("\n Checking dependencies...")
     if not check_dependencies():
         sys.exit(1)
     
     # Check environment variables
     print("\n🔐 Checking environment variables...")
     if not os.getenv("MEM0_API_KEY"):
-        print("⚠️  MEM0_API_KEY not found in environment")
+        print("  MEM0_API_KEY not found in environment")
         print("   Family memory features will be limited")
     else:
-        print("✅ MEM0_API_KEY found")
+        print(" MEM0_API_KEY found")
     
     # Install the server
-    print("\n🚀 Installing Bonzai MCP server...")
+    print("\n Installing Bonzai MCP server...")
     if install_bonzai_mcp_server():
-        print("\n🎉 Installation complete!")
+        print("\n Installation complete!")
         print("\nNext steps:")
         print("1. Restart Claude Desktop")
         print("2. Ask Claude: 'What tools do you have access to?'")
         print("3. Try: 'Show me the family status'")
         print("4. Test: 'Check the backend services'")
     else:
-        print("\n❌ Installation failed")
+        print("\n Installation failed")
         sys.exit(1)
 
 if __name__ == "__main__":

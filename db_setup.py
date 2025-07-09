@@ -20,10 +20,10 @@ def setup_production_database():
     database_url = os.getenv('DATABASE_URL')
     
     if database_url and database_url.startswith('postgresql'):
-        logger.info("🔧 Setting up PostgreSQL database for production...")
+        logger.info(" Setting up PostgreSQL database for production...")
         return setup_postgresql_database(database_url)
     else:
-        logger.info("🔧 Setting up SQLite database for development/fallback...")
+        logger.info(" Setting up SQLite database for development/fallback...")
         return setup_sqlite_database()
 
 def setup_postgresql_database(database_url):
@@ -117,12 +117,12 @@ def setup_postgresql_database(database_url):
             
             conn.commit()
             
-        logger.info("✅ PostgreSQL database setup completed successfully!")
+        logger.info(" PostgreSQL database setup completed successfully!")
         return engine
         
     except SQLAlchemyError as e:
-        logger.error(f"❌ PostgreSQL setup failed: {e}")
-        logger.info("🔄 Falling back to SQLite...")
+        logger.error(f" PostgreSQL setup failed: {e}")
+        logger.info(" Falling back to SQLite...")
         return setup_sqlite_database()
 
 def setup_sqlite_database():
@@ -215,11 +215,11 @@ def setup_sqlite_database():
         conn.commit()
         conn.close()
         
-        logger.info("✅ SQLite database setup completed successfully!")
+        logger.info(" SQLite database setup completed successfully!")
         return f"sqlite:///{db_path}"
         
     except Exception as e:
-        logger.error(f"❌ SQLite setup failed: {e}")
+        logger.error(f" SQLite setup failed: {e}")
         raise
 
 def get_database_connection():
@@ -250,6 +250,6 @@ if __name__ == "__main__":
     # Test connection
     health = health_check_database()
     if health["status"] == "healthy":
-        logger.info("🎉 Database is ready for production!")
+        logger.info(" Database is ready for production!")
     else:
-        logger.error(f"❌ Database health check failed: {health}")
+        logger.error(f" Database health check failed: {health}")

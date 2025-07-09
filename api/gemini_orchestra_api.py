@@ -1,5 +1,5 @@
 """
-🎭 Gemini Orchestra API
+ Gemini Orchestra API
 Flask API endpoints for the revolutionary multi-model orchestration system
 """
 
@@ -54,7 +54,7 @@ def init_gemini_orchestra(app):
         
         task_analyzer = TaskAnalyzer()
         
-        logger.info("🎭 Gemini Orchestra API initialized successfully!")
+        logger.info(" Gemini Orchestra API initialized successfully!")
         return True
         
     except Exception as e:

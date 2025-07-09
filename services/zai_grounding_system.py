@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-🔍 ZAI GROUNDING SYSTEM
+ ZAI GROUNDING SYSTEM
 Real-time information access via Google Search integration
 Always up-to-date responses with live data
 """
@@ -80,7 +80,7 @@ class ZaiGroundingSystem:
             
             # Perform grounding searches
             if enable_search and search_queries:
-                print(f"🔍 Performing grounding searches: {search_queries}")
+                print(f" Performing grounding searches: {search_queries}")
                 
                 for query in search_queries[:3]:  # Limit to 3 searches
                     search_result = await self.perform_grounded_search(query)
@@ -174,7 +174,7 @@ class ZaiGroundingSystem:
             return []
             
         except Exception as e:
-            print(f"❌ Query extraction failed: {e}")
+            print(f" Query extraction failed: {e}")
             return []
     
     async def perform_grounded_search(self, query: str) -> Optional[GroundingResult]:
@@ -203,7 +203,7 @@ class ZaiGroundingSystem:
             return result
             
         except Exception as e:
-            print(f"❌ Search failed for '{query}': {e}")
+            print(f" Search failed for '{query}': {e}")
             return None
     
     async def google_custom_search(self, query: str) -> GroundingResult:
@@ -242,11 +242,11 @@ class ZaiGroundingSystem:
                             confidence=0.9
                         )
                     else:
-                        print(f"❌ Google Search API error: {response.status}")
+                        print(f" Google Search API error: {response.status}")
                         return await self.simulated_search(query)
                         
         except Exception as e:
-            print(f"❌ Google Custom Search failed: {e}")
+            print(f" Google Custom Search failed: {e}")
             return await self.simulated_search(query)
     
     async def simulated_search(self, query: str) -> GroundingResult:
@@ -353,7 +353,7 @@ zai_grounding = ZaiGroundingSystem()
 
 async def main():
     """Test grounding system"""
-    print("🔍 Testing ZAI Grounding System...")
+    print(" Testing ZAI Grounding System...")
     
     # Test grounded generation
     result = await zai_grounding.generate_with_grounding(
@@ -361,11 +361,11 @@ async def main():
         enable_search=True
     )
     
-    print(f"📊 Grounded Response: {json.dumps(result, indent=2)}")
+    print(f" Grounded Response: {json.dumps(result, indent=2)}")
     
     # Test status
     status = zai_grounding.get_grounding_status()
-    print(f"🔍 Status: {json.dumps(status, indent=2)}")
+    print(f" Status: {json.dumps(status, indent=2)}")
 
 if __name__ == "__main__":
     asyncio.run(main())

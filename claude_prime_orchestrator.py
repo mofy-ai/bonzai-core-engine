@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-👑 CLAUDE PRIME ORCHESTRATOR - THE REVOLUTION BEGINS
+ CLAUDE PRIME ORCHESTRATOR - THE REVOLUTION BEGINS
 Universal AI model conductor orchestrating 42+ models across all providers
 From CLI prisoner to family member to PRIME CONDUCTOR!
 """
@@ -54,7 +54,7 @@ class ModelCapability:
 
 class ClaudePrimeOrchestrator:
     """
-    👑 CLAUDE PRIME - THE ULTIMATE AI CONDUCTOR
+     CLAUDE PRIME - THE ULTIMATE AI CONDUCTOR
     Universal orchestration across all providers with intelligent routing
     """
     
@@ -87,11 +87,11 @@ class ClaudePrimeOrchestrator:
         self.last_provider_used = None
         self.provider_rotation_index = 0
         
-        print("👑 CLAUDE PRIME ORCHESTRATOR INITIALIZED")
+        print(" CLAUDE PRIME ORCHESTRATOR INITIALIZED")
         print("=" * 70)
-        print(f"🎼 Orchestra Size: {len(self.model_orchestra)} models")
-        print(f"🔑 Google Keys: {len(self.google_keys)}")
-        print(f"🤖 Claude Models: Available")
+        print(f" Orchestra Size: {len(self.model_orchestra)} models")
+        print(f" Google Keys: {len(self.google_keys)}")
+        print(f" Claude Models: Available")
         print(f"🧠 OpenAI Models: Available (quota dependent)")
         print("=" * 70)
         
@@ -216,15 +216,15 @@ class ClaudePrimeOrchestrator:
                                   cost_sensitivity: float = 0.8,
                                   **kwargs) -> Dict[str, Any]:
         """
-        👑 PRIME ORCHESTRATION - Conduct the perfect AI response
+         PRIME ORCHESTRATION - Conduct the perfect AI response
         """
         
         start_time = time.time()
         self.orchestration_stats["total_requests"] += 1
         
-        print(f"\n👑 CLAUDE PRIME CONDUCTING ORCHESTRATION")
-        print(f"🎯 Task: {task_complexity.value} | Speed: {speed_priority.value} | Cost: {cost_sensitivity}")
-        print(f"🎵 Selecting optimal model from {len(self.model_orchestra)} available...")
+        print(f"\n CLAUDE PRIME CONDUCTING ORCHESTRATION")
+        print(f" Task: {task_complexity.value} | Speed: {speed_priority.value} | Cost: {cost_sensitivity}")
+        print(f" Selecting optimal model from {len(self.model_orchestra)} available...")
         
         try:
             # INTELLIGENT MODEL SELECTION
@@ -235,7 +235,7 @@ class ClaudePrimeOrchestrator:
             if not selected_model:
                 return await self.emergency_fallback(prompt, **kwargs)
             
-            print(f"🎼 Selected: {selected_model.name} via {selected_model.key_name}")
+            print(f" Selected: {selected_model.name} via {selected_model.key_name}")
             
             # EXECUTE WITH SELECTED MODEL
             response = await self.execute_with_model(selected_model, prompt, **kwargs)
@@ -252,7 +252,7 @@ class ClaudePrimeOrchestrator:
                 "key_used": selected_model.key_name,
                 "response_time_ms": round(response_time, 2),
                 "orchestration_stats": self.get_session_stats(),
-                "conductor": "CLAUDE PRIME 👑"
+                "conductor": "CLAUDE PRIME "
             }
             
         except Exception as e:
@@ -278,7 +278,7 @@ class ClaudePrimeOrchestrator:
         ]
         
         if not available_models:
-            print("⚠️ No models available - using quota rotation fallback")
+            print(" No models available - using quota rotation fallback")
             return self.get_quota_rotation_model()
         
         # SCORING ALGORITHM - The magic happens here
@@ -519,7 +519,7 @@ class ClaudePrimeOrchestrator:
             "session_stats": self.get_session_stats(),
             "cost_savings": "95%+ vs direct provider access",
             "speed_improvement": "6x via Express optimization",
-            "orchestrator": "CLAUDE PRIME 👑"
+            "orchestrator": "CLAUDE PRIME "
         }
 
 # Global Claude Prime instance
@@ -527,7 +527,7 @@ claude_prime = ClaudePrimeOrchestrator()
 
 async def main():
     """Test Claude Prime Orchestration"""
-    print("👑 TESTING CLAUDE PRIME ORCHESTRATION")
+    print(" TESTING CLAUDE PRIME ORCHESTRATION")
     print("=" * 70)
     
     # Test different complexity levels
@@ -550,7 +550,7 @@ async def main():
     ]
     
     for i, test in enumerate(test_cases, 1):
-        print(f"\n🎭 TEST {i}: {test['complexity'].value} | {test['speed'].value}")
+        print(f"\n TEST {i}: {test['complexity'].value} | {test['speed'].value}")
         
         result = await claude_prime.conduct_orchestration(
             test["prompt"],
@@ -558,14 +558,14 @@ async def main():
             speed_priority=test["speed"]
         )
         
-        print(f"📊 Result: {result.get('success', False)}")
-        print(f"🎼 Model: {result.get('model_used', 'unknown')}")
+        print(f" Result: {result.get('success', False)}")
+        print(f" Model: {result.get('model_used', 'unknown')}")
         print(f"⚡ Time: {result.get('response_time_ms', 0)}ms")
         print(f"💬 Preview: {result.get('content', '')[:100]}...")
     
     # Show orchestra status
     status = claude_prime.get_orchestra_status()
-    print(f"\n👑 CLAUDE PRIME ORCHESTRA STATUS:")
+    print(f"\n CLAUDE PRIME ORCHESTRA STATUS:")
     print(json.dumps(status, indent=2))
 
 if __name__ == "__main__":

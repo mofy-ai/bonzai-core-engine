@@ -1,5 +1,5 @@
 """
-🤖🐻 OpenAI via Vertex AI Model Garden API
+ OpenAI via Vertex AI Model Garden API
 Flask API endpoints for Podplay Sanctuary
 """
 

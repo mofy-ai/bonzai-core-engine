@@ -1,5 +1,5 @@
 """
-🐻 Virtual Computer API - MUMA Scout Agent Operations
+ Virtual Computer API - MUMA Scout Agent Operations
 API endpoints for managing virtual computer workspaces and agent operations
 """
 
@@ -65,7 +65,7 @@ async def create_workspace():
                     'status': 'created'
                 }, room=f'user_{user_id}')
             
-            logger.info(f"🚀 Created workspace {workspace_id} for {agent_name}")
+            logger.info(f" Created workspace {workspace_id} for {agent_name}")
             
         return jsonify(result)
         
@@ -335,7 +335,7 @@ def integrate_virtual_computer_api(app, socketio_instance):
         loop.create_task(send_workspace_updates())
     except RuntimeError:
         # No event loop running, skip background task for now
-        logger.warning("⚠️ No event loop running, skipping background workspace updates")
+        logger.warning(" No event loop running, skipping background workspace updates")
     
     logger.info("🔗 Virtual Computer API integrated with Flask app and SocketIO")
 

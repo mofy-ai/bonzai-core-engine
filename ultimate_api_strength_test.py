@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-🔥 ULTIMATE API STRENGTH & MODEL AVAILABILITY TEST
+ ULTIMATE API STRENGTH & MODEL AVAILABILITY TEST
 Tests ALL API keys against ALL endpoints for maximum model access
 """
 
@@ -15,7 +15,7 @@ from dotenv import load_dotenv
 # Load environment
 load_dotenv('../.env')
 
-print("🚀 ULTIMATE API STRENGTH & MODEL AVAILABILITY TEST")
+print(" ULTIMATE API STRENGTH & MODEL AVAILABILITY TEST")
 print("=" * 80)
 print(f"Test Started: {datetime.now()}")
 print("=" * 80)
@@ -62,13 +62,13 @@ API_KEYS = {
 def print_header(title, char="=", width=80):
     """Print a styled header"""
     print(f"\n{char * width}")
-    print(f"🔥 {title}")
+    print(f" {title}")
     print(f"{char * width}")
 
 def print_subheader(title, char="-", width=60):
     """Print a styled subheader"""
     print(f"\n{char * width}")
-    print(f"🎯 {title}")
+    print(f" {title}")
     print(f"{char * width}")
 
 async def test_google_api_key(key_name, api_key):
@@ -83,7 +83,7 @@ async def test_google_api_key(key_name, api_key):
         models_working = 0
         model_details = {}
         
-        print(f"🔑 API Key: {api_key[:15]}...")
+        print(f" API Key: {api_key[:15]}...")
         
         # Get all available models
         try:
@@ -108,22 +108,22 @@ async def test_google_api_key(key_name, api_key):
                         if response.text:
                             models_working += 1
                             model_details[model_name] = {
-                                "status": "✅ Working",
+                                "status": " Working",
                                 "response_time_ms": round(response_time, 2),
                                 "sample_response": response.text[:30] + "..."
                             }
-                            print(f"   ✅ {model_name} ({response_time:.0f}ms)")
+                            print(f"    {model_name} ({response_time:.0f}ms)")
                         else:
                             model_details[model_name] = {
-                                "status": "❌ No response",
+                                "status": " No response",
                                 "error": "Empty response"
                             }
-                            print(f"   ❌ {model_name} - No response")
+                            print(f"    {model_name} - No response")
                             
                     except Exception as e:
                         error_msg = str(e)[:50]
                         model_details[model_name] = {
-                            "status": "❌ Failed",
+                            "status": " Failed",
                             "error": error_msg
                         }
                         if "quota" in error_msg.lower():
@@ -131,22 +131,22 @@ async def test_google_api_key(key_name, api_key):
                         elif "deprecated" in error_msg.lower():
                             print(f"   📅 {model_name} - Deprecated")
                         else:
-                            print(f"   ❌ {model_name} - {error_msg}")
+                            print(f"    {model_name} - {error_msg}")
                             
         except Exception as e:
-            print(f"❌ Failed to list models: {e}")
-            return {"status": "❌ Failed", "error": str(e)}
+            print(f" Failed to list models: {e}")
+            return {"status": " Failed", "error": str(e)}
         
         # Summary for this key
         success_rate = (models_working / models_tested * 100) if models_tested > 0 else 0
         
-        print(f"\n📊 SUMMARY FOR {key_name}:")
+        print(f"\n SUMMARY FOR {key_name}:")
         print(f"   📈 Success Rate: {success_rate:.1f}% ({models_working}/{models_tested})")
-        print(f"   🎯 Working Models: {models_working}")
+        print(f"    Working Models: {models_working}")
         print(f"   ⚡ Best for: {'Premium models' if models_working > 10 else 'Basic models'}")
         
         return {
-            "status": "✅ Working" if models_working > 0 else "❌ No working models",
+            "status": " Working" if models_working > 0 else " No working models",
             "models_tested": models_tested,
             "models_working": models_working,
             "success_rate": success_rate,
@@ -154,9 +154,9 @@ async def test_google_api_key(key_name, api_key):
         }
         
     except ImportError:
-        return {"status": "❌ google.generativeai not available", "error": "Missing package"}
+        return {"status": " google.generativeai not available", "error": "Missing package"}
     except Exception as e:
-        return {"status": "❌ Failed", "error": str(e)}
+        return {"status": " Failed", "error": str(e)}
 
 async def test_anthropic_key(api_key):
     """Test Anthropic API key"""
@@ -175,7 +175,7 @@ async def test_anthropic_key(api_key):
             "claude-3-sonnet-20240229"
         ]
         
-        print(f"🔑 API Key: {api_key[:15]}...")
+        print(f" API Key: {api_key[:15]}...")
         
         models_working = 0
         model_details = {}
@@ -192,31 +192,31 @@ async def test_anthropic_key(api_key):
                 
                 models_working += 1
                 model_details[model] = {
-                    "status": "✅ Working",
+                    "status": " Working",
                     "response_time_ms": round(response_time, 2),
                     "sample_response": message.content[0].text[:30] + "..."
                 }
-                print(f"   ✅ {model} ({response_time:.0f}ms)")
+                print(f"    {model} ({response_time:.0f}ms)")
                 
             except Exception as e:
                 error_msg = str(e)[:50]
                 model_details[model] = {
-                    "status": "❌ Failed", 
+                    "status": " Failed", 
                     "error": error_msg
                 }
                 if "404" in error_msg:
                     print(f"   📅 {model} - Deprecated")
                 else:
-                    print(f"   ❌ {model} - {error_msg}")
+                    print(f"    {model} - {error_msg}")
         
         success_rate = (models_working / len(claude_models) * 100)
         
-        print(f"\n📊 ANTHROPIC SUMMARY:")
+        print(f"\n ANTHROPIC SUMMARY:")
         print(f"   📈 Success Rate: {success_rate:.1f}% ({models_working}/{len(claude_models)})")
-        print(f"   🎯 Working Models: {models_working}")
+        print(f"    Working Models: {models_working}")
         
         return {
-            "status": "✅ Working" if models_working > 0 else "❌ No working models",
+            "status": " Working" if models_working > 0 else " No working models",
             "models_tested": len(claude_models),
             "models_working": models_working,
             "success_rate": success_rate,
@@ -224,9 +224,9 @@ async def test_anthropic_key(api_key):
         }
         
     except ImportError:
-        return {"status": "❌ anthropic package not available", "error": "Missing package"}
+        return {"status": " anthropic package not available", "error": "Missing package"}
     except Exception as e:
-        return {"status": "❌ Failed", "error": str(e)}
+        return {"status": " Failed", "error": str(e)}
 
 async def test_openai_key(api_key):
     """Test OpenAI API key"""
@@ -236,7 +236,7 @@ async def test_openai_key(api_key):
         import openai
         client = openai.OpenAI(api_key=api_key)
         
-        print(f"🔑 API Key: {api_key[:15]}...")
+        print(f" API Key: {api_key[:15]}...")
         
         # Get available models
         try:
@@ -263,28 +263,28 @@ async def test_openai_key(api_key):
                     
                     models_working += 1
                     model_details[model_id] = {
-                        "status": "✅ Working",
+                        "status": " Working",
                         "response_time_ms": round(response_time, 2),
                         "sample_response": response.choices[0].message.content[:30] + "..."
                     }
-                    print(f"   ✅ {model_id} ({response_time:.0f}ms)")
+                    print(f"    {model_id} ({response_time:.0f}ms)")
                     
                 except Exception as e:
                     error_msg = str(e)[:50]
                     model_details[model_id] = {
-                        "status": "❌ Failed",
+                        "status": " Failed",
                         "error": error_msg
                     }
-                    print(f"   ❌ {model_id} - {error_msg}")
+                    print(f"    {model_id} - {error_msg}")
             
             success_rate = (models_working / len(test_models) * 100)
             
-            print(f"\n📊 OPENAI SUMMARY:")
+            print(f"\n OPENAI SUMMARY:")
             print(f"   📈 Success Rate: {success_rate:.1f}% ({models_working}/{len(test_models)})")
-            print(f"   🎯 Total GPT Models Available: {len(gpt_models)}")
+            print(f"    Total GPT Models Available: {len(gpt_models)}")
             
             return {
-                "status": "✅ Working" if models_working > 0 else "❌ No working models",
+                "status": " Working" if models_working > 0 else " No working models",
                 "models_tested": len(test_models),
                 "models_working": models_working,
                 "total_models_available": len(gpt_models),
@@ -293,24 +293,24 @@ async def test_openai_key(api_key):
             }
             
         except Exception as e:
-            return {"status": "❌ Failed to list models", "error": str(e)}
+            return {"status": " Failed to list models", "error": str(e)}
             
     except ImportError:
-        return {"status": "❌ openai package not available", "error": "Missing package"}
+        return {"status": " openai package not available", "error": "Missing package"}
     except Exception as e:
-        return {"status": "❌ Failed", "error": str(e)}
+        return {"status": " Failed", "error": str(e)}
 
 def generate_beautiful_report(results):
     """Generate a beautiful visual report"""
     
-    print_header("🎉 ULTIMATE API STRENGTH REPORT", "=", 80)
+    print_header(" ULTIMATE API STRENGTH REPORT", "=", 80)
     
     # Calculate totals
     total_working = 0
     total_tested = 0
     
     # Google APIs Summary
-    print_header("🎯 GOOGLE API KEYS RANKING", "-", 70)
+    print_header(" GOOGLE API KEYS RANKING", "-", 70)
     
     google_ranking = []
     for key_name, key_results in results["api_keys"]["google_keys"].items():
@@ -322,15 +322,15 @@ def generate_beautiful_report(results):
     # Sort by working models
     google_ranking.sort(key=lambda x: x[1], reverse=True)
     
-    print("\n🏆 GOOGLE API KEY RANKINGS:")
+    print("\n GOOGLE API KEY RANKINGS:")
     for i, (key_name, working, rate) in enumerate(google_ranking, 1):
-        medal = "🥇" if i == 1 else "🥈" if i == 2 else "🥉" if i == 3 else "🎯"
+        medal = "🥇" if i == 1 else "🥈" if i == 2 else "🥉" if i == 3 else ""
         print(f"   {medal} {i}. {key_name}: {working} models ({rate:.1f}% success)")
     
     # Anthropic Summary
     anthropic_results = results["api_keys"]["anthropic"]
     if isinstance(anthropic_results, dict) and "models_working" in anthropic_results:
-        print(f"\n🤖 ANTHROPIC API: {anthropic_results['models_working']} Claude models working")
+        print(f"\n ANTHROPIC API: {anthropic_results['models_working']} Claude models working")
         total_working += anthropic_results["models_working"]
         total_tested += anthropic_results["models_tested"]
     
@@ -342,34 +342,34 @@ def generate_beautiful_report(results):
         total_tested += openai_results["models_tested"]
     
     # Overall Summary
-    print_header("📊 OVERALL ARSENAL SUMMARY", "=", 70)
+    print_header(" OVERALL ARSENAL SUMMARY", "=", 70)
     
-    print(f"\n🎯 TOTAL MODEL ACCESS:")
-    print(f"   🚀 Working Models: {total_working}")
+    print(f"\n TOTAL MODEL ACCESS:")
+    print(f"    Working Models: {total_working}")
     print(f"   📋 Models Tested: {total_tested}")
     print(f"   📈 Overall Success Rate: {(total_working/total_tested*100):.1f}%")
     
-    print(f"\n🏆 BEST API KEYS FOR DIFFERENT NEEDS:")
+    print(f"\n BEST API KEYS FOR DIFFERENT NEEDS:")
     if google_ranking:
         best_google = google_ranking[0]
         print(f"   🥇 Best Google Key: {best_google[0]} ({best_google[1]} models)")
     
-    print(f"\n💪 YOUR AI ORCHESTRATION POWER:")
-    print(f"   🎼 Can orchestrate {total_working} different AI models")
+    print(f"\n YOUR AI ORCHESTRATION POWER:")
+    print(f"    Can orchestrate {total_working} different AI models")
     print(f"   ⚡ Express mode configured for 6x speed")
     print(f"   🧠 Shared memory across all models")
     print(f"   🔗 Local MCP integration ready")
     
-    print(f"\n🎉 RECOMMENDATION:")
+    print(f"\n RECOMMENDATION:")
     if total_working > 15:
-        print("   🔥 INCREDIBLE! You have access to a massive AI arsenal!")
-        print("   🚀 Ready for full MOFY Family AI deployment")
+        print("    INCREDIBLE! You have access to a massive AI arsenal!")
+        print("    Ready for full MOFY Family AI deployment")
         print("   👨‍👩‍👧‍👦 All systems GO for Family Unity!")
     elif total_working > 5:
-        print("   ✅ Good model access for orchestration")
-        print("   🎯 Ready for multi-AI coordination")
+        print("    Good model access for orchestration")
+        print("    Ready for multi-AI coordination")
     else:
-        print("   ⚠️  Limited model access - check API quotas")
+        print("     Limited model access - check API quotas")
 
 async def main():
     """Run ultimate API strength test"""

@@ -10,7 +10,7 @@ venv_packages = "/mnt/c/Bonzai-Desktop/venv/lib/python3.12/site-packages"
 if venv_packages not in sys.path:
     sys.path.insert(0, venv_packages)
 
-print(f"🔥 Added venv packages to path: {venv_packages}")
+print(f" Added venv packages to path: {venv_packages}")
 
 # Now run the comprehensive test
 if __name__ == "__main__":

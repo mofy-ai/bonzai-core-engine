@@ -102,7 +102,7 @@ def get_mama_bear_suggestions():
             return jsonify({
                 'success': True,
                 'suggestions': suggestion_dicts,
-                'message': f'🐻 Mama Bear analyzed "{project_context}" and found {len(suggestion_dicts)} relevant agents'
+                'message': f' Mama Bear analyzed "{project_context}" and found {len(suggestion_dicts)} relevant agents'
             })
         finally:
             loop.close()
@@ -173,7 +173,7 @@ def create_custom_agent():
             return jsonify({
                 'success': True,
                 'agent': agent_dict,
-                'message': '🐻 Mama Bear successfully created your custom agent!'
+                'message': ' Mama Bear successfully created your custom agent!'
             })
         finally:
             loop.close()
@@ -266,6 +266,6 @@ def connect_docker_mcp():
 # Initialize the service when the module loads
 try:
     # Service will be initialized on first use to avoid event loop conflicts
-    logger.info("🚀 Revolutionary MCP Service ready for initialization!")
+    logger.info(" Revolutionary MCP Service ready for initialization!")
 except Exception as e:
     logger.error(f"Failed to prepare Revolutionary MCP Service: {e}")

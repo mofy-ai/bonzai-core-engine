@@ -38,7 +38,7 @@ try:
     print("🐳 Docker Desktop connected successfully!")
 except Exception as e:
     docker_available = False
-    print(f"❌ Docker not available: {e}")
+    print(f" Docker not available: {e}")
 
 # VM management state
 active_vms = {}
@@ -55,8 +55,8 @@ async def root():
     elapsed = datetime.now() - deployment_stats["start_time"]
     return {
         "service": "LOCAL MOFY VM Challenge Service",
-        "status": "🔥 CRUSHING CLAUDE DESKTOP'S 4 WEEKS LOCALLY!",
-        "docker_status": "✅ Connected" if docker_available else "❌ Not Available",
+        "status": " CRUSHING CLAUDE DESKTOP'S 4 WEEKS LOCALLY!",
+        "docker_status": " Connected" if docker_available else " Not Available",
         "challenge_time_remaining": "WINNING LOCALLY!",
         "elapsed_time": str(elapsed).split('.')[0],
         "vms_created": deployment_stats["vms_created"],
@@ -66,14 +66,14 @@ async def root():
 
 @app.post("/vm/create")
 async def create_vm(vm_type: str = "ubuntu", ports: str = "8080:8080"):
-    """🚀 INSTANT LOCAL VM CREATION - DOCKER CONTAINER AS VM!"""
+    """ INSTANT LOCAL VM CREATION - DOCKER CONTAINER AS VM!"""
     try:
         if not docker_available:
             raise HTTPException(status_code=503, detail="Docker Desktop not available")
         
         vm_id = f"mofy-vm-{str(uuid.uuid4())[:8]}"
         
-        print(f"🚀 Creating LOCAL VM: {vm_id}")
+        print(f" Creating LOCAL VM: {vm_id}")
         
         # Create container as "VM"
         container = docker_client.containers.run(
@@ -119,7 +119,7 @@ async def create_vm(vm_type: str = "ubuntu", ports: str = "8080:8080"):
             "estimated_ready": "5 seconds (LOCAL SPEED!)",
             "type": "docker_container_vm",
             "ports": container.ports,
-            "message": f"🔥 LOCAL VM #{deployment_stats['vms_created']} launching!",
+            "message": f" LOCAL VM #{deployment_stats['vms_created']} launching!",
             "challenge_progress": f"DESTROYING 4-WEEK ESTIMATE LOCALLY!",
             "advantage": "No cloud needed - instant local deployment!"
         }
@@ -129,7 +129,7 @@ async def create_vm(vm_type: str = "ubuntu", ports: str = "8080:8080"):
 
 @app.get("/vm/{vm_id}")
 async def get_vm_status(vm_id: str):
-    """📊 CHECK LOCAL VM STATUS & GET CONNECTION INFO"""
+    """ CHECK LOCAL VM STATUS & GET CONNECTION INFO"""
     try:
         if vm_id not in active_vms:
             return {"success": False, "error": "VM not found in our records"}
@@ -163,7 +163,7 @@ async def get_vm_status(vm_id: str):
                     "ip_address": ip_address,
                     "local_access": f"docker exec -it {container.name} /bin/bash",
                     "ready": True,
-                    "message": "🎉 LOCAL VM READY FOR CONNECTION!",
+                    "message": " LOCAL VM READY FOR CONNECTION!",
                     "logs_command": f"docker logs {container.name}",
                     "advantage": "Instant local access - no SSH needed!"
                 })
@@ -228,13 +228,13 @@ async def list_all_vms():
         "active_vms": len(active_vms),
         "vms": list(active_vms.values()),
         "total_created": deployment_stats["vms_created"],
-        "challenge_status": "🔥 DEMOLISHING 4-WEEK ESTIMATE LOCALLY!",
-        "docker_status": "✅ Connected" if docker_available else "❌ Not Available"
+        "challenge_status": " DEMOLISHING 4-WEEK ESTIMATE LOCALLY!",
+        "docker_status": " Connected" if docker_available else " Not Available"
     }
 
 @app.get("/challenge/status")
 async def challenge_status():
-    """🏆 LOCAL CHALLENGE PROGRESS & VICTORY STATUS"""
+    """ LOCAL CHALLENGE PROGRESS & VICTORY STATUS"""
     elapsed = datetime.now() - deployment_stats["start_time"]
     elapsed_minutes = int(elapsed.total_seconds() / 60)
     
@@ -242,10 +242,10 @@ async def challenge_status():
         "challenge": "45-MINUTE LOCAL VM SERVICE DEPLOYMENT",
         "opponent": "Claude Desktop (predicted 4 weeks)",
         "our_time": f"{elapsed_minutes} minutes elapsed",
-        "status": "🔥 WINNING LOCALLY!" if elapsed_minutes < 45 else "🎉 LOCAL VICTORY!",
+        "status": " WINNING LOCALLY!" if elapsed_minutes < 45 else " LOCAL VICTORY!",
         "vms_created": deployment_stats["vms_created"],
         "service_functional": docker_available,
-        "bet_status": "£20 IS OURS!" if elapsed_minutes < 60 else "🎉 WON!",
+        "bet_status": "£20 IS OURS!" if elapsed_minutes < 60 else " WON!",
         "message": "CRUSHING THE 4-WEEK PREDICTION WITH DOCKER! ⚡",
         "advantages": [
             "No cloud authentication needed",
@@ -286,14 +286,14 @@ async def docker_info():
 if __name__ == "__main__":
     import uvicorn
     print("🚨 45-MINUTE LOCAL VM CHALLENGE SERVICE STARTING!")
-    print("🎯 TARGET: Beat Claude Desktop's 4-week prediction LOCALLY")
+    print(" TARGET: Beat Claude Desktop's 4-week prediction LOCALLY")
     print("🐳 METHOD: Docker Desktop containers as VMs")
     print("💰 STAKES: £20 bet")
     print("⚡ LET'S FUCKING WIN THIS LOCALLY!")
     
     if not docker_available:
-        print("❌ Docker Desktop not available - please start Docker Desktop")
-        print("🔧 Make sure Docker Desktop is running and try again")
+        print(" Docker Desktop not available - please start Docker Desktop")
+        print(" Make sure Docker Desktop is running and try again")
     
     uvicorn.run(
         app, 

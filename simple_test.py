@@ -20,7 +20,7 @@ def health_check():
         "service": "bonzai-backend-test",
         "version": "1.0.0",
         "timestamp": "2025-07-08",
-        "message": "✅ REAL app.py backend is WORKING locally!"
+        "message": " REAL app.py backend is WORKING locally!"
     })
 
 @app.route('/api/test', methods=['GET'])
@@ -64,6 +64,6 @@ def simple_chat():
 
 if __name__ == '__main__':
     port = int(os.getenv('PORT', 5000))
-    print(f"🚀 Starting simple Bonzai backend test on port {port}")
-    print("✅ Ready to test Railway deployment!")
+    print(f" Starting simple Bonzai backend test on port {port}")
+    print(" Ready to test Railway deployment!")
     app.run(host='0.0.0.0', port=port, debug=True)

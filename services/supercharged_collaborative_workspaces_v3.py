@@ -1,5 +1,5 @@
 """
-🚀 Quick Service Templates for 16/16 Backend Completion
+ Quick Service Templates for 16/16 Backend Completion
 """
 
 import logging

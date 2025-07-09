@@ -1,5 +1,5 @@
 """
-🐻⚡ Express Mode + Vertex AI API Blueprint
+⚡ Express Mode + Vertex AI API Blueprint
 Integration layer for Mama Bear's Express Mode + Vertex AI supercharger
 Provides 6x faster responses with Claude model access via Google Cloud credits
 """
@@ -64,7 +64,7 @@ def get_express_mode_status():
 @require_supercharger
 def agentic_express_chat():
     """
-    🐻⚡ Agentic Express Mode Chat
+    ⚡ Agentic Express Mode Chat
     Let Mama Bear autonomously decide the best routing for 6x faster responses
     """
     try:
@@ -307,7 +307,7 @@ def initialize_express_mode_supercharger(app, settings):
             # No running loop, safe to use asyncio.run
             asyncio.run(_supercharger.initialize())
 
-        logger.info("🐻⚡ Express Mode + Vertex AI Supercharger initialized successfully!")
+        logger.info("⚡ Express Mode + Vertex AI Supercharger initialized successfully!")
         return True
 
     except ImportError as e:
@@ -330,11 +330,11 @@ def integrate_express_mode_with_app(app):
         if settings:
             success = initialize_express_mode_supercharger(app, settings)
             if success:
-                logger.info("✅ Express Mode + Vertex AI integration complete")
+                logger.info(" Express Mode + Vertex AI integration complete")
             else:
-                logger.warning("⚠️ Express Mode + Vertex AI supercharger initialization failed - running in fallback mode")
+                logger.warning(" Express Mode + Vertex AI supercharger initialization failed - running in fallback mode")
         else:
-            logger.warning("⚠️ No settings found - Express Mode running in basic mode")
+            logger.warning(" No settings found - Express Mode running in basic mode")
 
         return True
 

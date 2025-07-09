@@ -1,5 +1,5 @@
 """
-🚀 MCP + Agentic RAG API Endpoint for Revolutionary Workspace
+ MCP + Agentic RAG API Endpoint for Revolutionary Workspace
 This creates a FastAPI endpoint that connects our React frontend with the Python MCP system
 """
 
@@ -62,14 +62,14 @@ async def startup_event():
     global mcp_orchestrator, gemini_orchestra
 
     try:
-        logger.info("🚀 Initializing Revolutionary Workspace Backend...")
+        logger.info(" Initializing Revolutionary Workspace Backend...")
 
         # For now, we'll run in demo mode with mock implementations
         # This allows the frontend to work while we integrate the full MCP system
-        logger.info("✅ Revolutionary Workspace Backend initialized in demo mode!")
+        logger.info(" Revolutionary Workspace Backend initialized in demo mode!")
 
     except Exception as e:
-        logger.error(f"❌ Failed to initialize backend: {e}")
+        logger.error(f" Failed to initialize backend: {e}")
         # Continue with demo mode
 
 @app.post("/api/mcp-agentic-rag", response_model=MCPAgenticResponse)
@@ -233,7 +233,7 @@ async def get_performance_metrics():
 async def root():
     """Health check endpoint"""
     return {
-        "status": "Revolutionary Workspace API is running! 🚀",
+        "status": "Revolutionary Workspace API is running! ",
         "version": "1.0.0",
         "features": [
             "MCP + Agentic RAG Integration",
@@ -401,12 +401,12 @@ async def test_docker_connection():
 @app.on_event("startup")
 async def startup_event():
     """Initialize Revolutionary MCP Service on startup"""
-    logger.info("🚀 Initializing Revolutionary MCP Client...")
+    logger.info(" Initializing Revolutionary MCP Client...")
     try:
         await revolutionary_mcp_service.initialize()
-        logger.info("✅ Revolutionary MCP Client initialized successfully")
+        logger.info(" Revolutionary MCP Client initialized successfully")
     except Exception as e:
-        logger.error(f"❌ Failed to initialize Revolutionary MCP Client: {e}")
+        logger.error(f" Failed to initialize Revolutionary MCP Client: {e}")
 
 if __name__ == "__main__":
     # Run the API server

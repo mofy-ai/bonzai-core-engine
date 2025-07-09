@@ -326,12 +326,12 @@ def welcome():
 
 if __name__ == '__main__':
     print("🔗 Starting ZAI OpenAI-Compatible Proxy...")
-    print("🎯 This makes ZAI work with Roo, Cline, and other OpenAI tools!")
+    print(" This makes ZAI work with Roo, Cline, and other OpenAI tools!")
     print()
     print("📍 Proxy URL: http://localhost:8080")
-    print("🔑 API Key: zai-local-key")
+    print(" API Key: zai-local-key")
     print("🧠 ZAI Backend: http://localhost:5001")
     print()
-    print("✅ Ready for OpenAI-compatible requests!")
+    print(" Ready for OpenAI-compatible requests!")
     
     app.run(host='0.0.0.0', port=8080, debug=True)

@@ -1,6 +1,6 @@
 # backend/api/agentic_superpowers_api.py
 """
-🐻 MAMA BEAR AGENTIC SUPERPOWERS API - PRODUCTION READY
+ MAMA BEAR AGENTIC SUPERPOWERS API - PRODUCTION READY
 💥 Express Mode + Autonomous AI Agent Endpoints
 """
 
@@ -24,7 +24,7 @@ def init_agentic_service(config: Dict[str, Any]):
     """Initialize the agentic superpowers service"""
     global agentic_service
     agentic_service = ZaiAgenticSuperpowersV3(config)
-    logger.info("🐻 Agentic Superpowers API initialized!")
+    logger.info(" Agentic Superpowers API initialized!")
 
 @agentic_superpowers_bp.route('/health', methods=['GET'])
 def health_check():
@@ -162,7 +162,7 @@ def set_capability_level():
 @agentic_superpowers_bp.route('/personality', methods=['GET', 'POST'])
 def manage_personality():
     """
-    🎭 MANAGE MAMA BEAR'S AGENTIC PERSONALITY
+     MANAGE MAMA BEAR'S AGENTIC PERSONALITY
     """
     try:
         if agentic_service is None:
@@ -212,7 +212,7 @@ def manage_personality():
 
 @agentic_superpowers_bp.route('/metrics', methods=['GET'])
 def get_metrics():
-    """📊 GET AGENTIC PERFORMANCE METRICS"""
+    """ GET AGENTIC PERFORMANCE METRICS"""
     try:
         if agentic_service is None:
             return jsonify({"error": "Service not initialized"}), 503
@@ -262,7 +262,7 @@ def get_memory_state():
 @agentic_superpowers_bp.route('/test', methods=['POST'])
 def test_agentic_capabilities():
     """
-    🧪 TEST AGENTIC CAPABILITIES
+     TEST AGENTIC CAPABILITIES
 
     Expected payload:
     {

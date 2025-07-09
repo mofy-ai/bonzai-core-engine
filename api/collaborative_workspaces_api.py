@@ -1,6 +1,6 @@
 # backend/api/collaborative_workspaces_api.py
 """
-🚀 SUPERCHARGED COLLABORATIVE WORKSPACES API - PRODUCTION READY
+ SUPERCHARGED COLLABORATIVE WORKSPACES API - PRODUCTION READY
 ✨ Express Mode + Real-time Collaboration + Agentic Control
 """
 
@@ -24,7 +24,7 @@ def init_workspace_service(config: Dict[str, Any]):
     """Initialize the collaborative workspaces service"""
     global workspace_service
     workspace_service = SuperchargedCollaborativeWorkspacesV3(config)
-    logger.info("🚀 Collaborative Workspaces API initialized!")
+    logger.info(" Collaborative Workspaces API initialized!")
 
 @collaborative_workspaces_bp.route('/health', methods=['GET'])
 def health_check():
@@ -199,7 +199,7 @@ def send_message(session_id: str):
 @collaborative_workspaces_bp.route('/sessions/<session_id>/agentic-takeover', methods=['POST'])
 def initiate_agentic_takeover(session_id: str):
     """
-    🤖 INITIATE AGENTIC TAKEOVER MODE
+     INITIATE AGENTIC TAKEOVER MODE
 
     Expected payload:
     {
@@ -249,7 +249,7 @@ def initiate_agentic_takeover(session_id: str):
 
 @collaborative_workspaces_bp.route('/sessions/<session_id>/metrics', methods=['GET'])
 def get_session_metrics(session_id: str):
-    """📊 GET SESSION METRICS AND INSIGHTS"""
+    """ GET SESSION METRICS AND INSIGHTS"""
     try:
         if workspace_service is None:
             return jsonify({"error": "Service not initialized"}), 503
@@ -302,7 +302,7 @@ def get_collaboration_modes():
 
 @collaborative_workspaces_bp.route('/express-agents', methods=['GET'])
 def get_express_agents():
-    """🤖 GET AVAILABLE EXPRESS AGENTS"""
+    """ GET AVAILABLE EXPRESS AGENTS"""
     try:
         from services.supercharged_collaborative_workspaces_v3 import ExpressAgentType
 
@@ -339,7 +339,7 @@ def get_express_agents():
 @collaborative_workspaces_bp.route('/test', methods=['POST'])
 def test_collaborative_features():
     """
-    🧪 TEST COLLABORATIVE WORKSPACE FEATURES
+     TEST COLLABORATIVE WORKSPACE FEATURES
 
     Expected payload:
     {

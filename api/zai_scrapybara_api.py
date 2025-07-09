@@ -1,5 +1,5 @@
 """
-🤖 Zai Scrapybara API - Scout-Level Endpoints
+ Zai Scrapybara API - Scout-Level Endpoints
 Exposes all Scout capabilities through REST API for Zai
 """
 
@@ -496,12 +496,12 @@ def integrate_zai_scrapybara_api(app):
     """Integrate Zai Scrapybara API with Flask app"""
     try:
         app.register_blueprint(zai_scrapybara_bp)
-        logger.info("🐻 Zai Scrapybara API integrated successfully")
+        logger.info(" Zai Scrapybara API integrated successfully")
         
         # Initialize agent on startup
         with app.app_context():
             if SCRAPYBARA_AVAILABLE:
-                logger.info("🚀 Initializing Zai Scrapybara agent...")
+                logger.info(" Initializing Zai Scrapybara agent...")
         
         return True
         

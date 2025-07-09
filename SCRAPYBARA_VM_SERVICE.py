@@ -140,7 +140,7 @@ async def root():
     return {
         "service": "SCRAPYBARA VM SERVICE - PRODUCTION READY!",
         "status": "🕷️ CONNECTED TO SCRAPYBARA CLOUD!",
-        "api_status": "✅ Configured" if SCRAPYBARA_API_KEY else "❌ No API Key",
+        "api_status": " Configured" if SCRAPYBARA_API_KEY else " No API Key",
         "operational_hours": deployment_stats["operational_hours"],
         "elapsed_time": str(elapsed).split('.')[0],
         "vms_created": deployment_stats["vms_created"],
@@ -161,14 +161,14 @@ async def create_vm(
     resolution: Optional[str] = None,
     blocked_domains: Optional[List[str]] = None
 ):
-    """🚀 CREATE REAL SCRAPYBARA VM INSTANCE!"""
+    """ CREATE REAL SCRAPYBARA VM INSTANCE!"""
     try:
         if not SCRAPYBARA_API_KEY:
             raise HTTPException(status_code=503, detail="ScrapyBara API key not configured")
         
         vm_id = f"scrapybara-vm-{str(uuid.uuid4())[:8]}"
         
-        logger.info(f"🚀 Creating ScrapyBara instance: {vm_id}")
+        logger.info(f" Creating ScrapyBara instance: {vm_id}")
         
         # Prepare request parameters
         request_params = {
@@ -223,7 +223,7 @@ async def create_vm(
 
 @app.get("/vm/{vm_id}")
 async def get_vm_status(vm_id: str):
-    """📊 CHECK SCRAPYBARA VM STATUS"""
+    """ CHECK SCRAPYBARA VM STATUS"""
     try:
         if vm_id not in active_vms:
             return {"success": False, "error": "VM not found in our records"}
@@ -255,7 +255,7 @@ async def get_vm_status(vm_id: str):
         if status_data.get("status") == "running":
             response.update({
                 "ready": True,
-                "message": "🎉 SCRAPYBARA VM READY FOR USE!",
+                "message": " SCRAPYBARA VM READY FOR USE!",
                 "stream_url": status_data.get("stream_url"),
                 "remote_desktop": "Available via ScrapyBara Dashboard",
                 "capabilities": [
@@ -340,12 +340,12 @@ async def list_all_vms():
         "total_created": deployment_stats["vms_created"],
         "operational_hours_remaining": deployment_stats["operational_hours"],
         "challenge_status": "🕷️ SCRAPYBARA CLOUD POWER ACTIVATED!",
-        "api_status": "✅ Connected" if SCRAPYBARA_API_KEY else "❌ No API Key"
+        "api_status": " Connected" if SCRAPYBARA_API_KEY else " No API Key"
     }
 
 @app.get("/challenge/status")
 async def challenge_status():
-    """🏆 SCRAPYBARA CHALLENGE PROGRESS"""
+    """ SCRAPYBARA CHALLENGE PROGRESS"""
     elapsed = datetime.now() - deployment_stats["start_time"]
     elapsed_minutes = int(elapsed.total_seconds() / 60)
     
@@ -353,11 +353,11 @@ async def challenge_status():
         "challenge": "SCRAPYBARA VM SERVICE DEPLOYMENT",
         "opponent": "Claude Desktop (predicted 4 weeks)",
         "our_time": f"{elapsed_minutes} minutes elapsed",
-        "status": "🕷️ WINNING WITH REAL CLOUD!" if elapsed_minutes < 60 else "🎉 SCRAPYBARA VICTORY!",
+        "status": "🕷️ WINNING WITH REAL CLOUD!" if elapsed_minutes < 60 else " SCRAPYBARA VICTORY!",
         "vms_created": deployment_stats["vms_created"],
         "service_functional": bool(SCRAPYBARA_API_KEY),
         "operational_hours": deployment_stats["operational_hours"],
-        "bet_status": "£20 IS OURS!" if elapsed_minutes < 60 else "🎉 WON WITH SCRAPYBARA!",
+        "bet_status": "£20 IS OURS!" if elapsed_minutes < 60 else " WON WITH SCRAPYBARA!",
         "message": "REAL CLOUD VMS CRUSH THE 4-WEEK PREDICTION! ⚡",
         "infrastructure": "ScrapyBara Cloud - Professional Grade",
         "advantages": [
@@ -395,16 +395,16 @@ async def scrapybara_info():
 if __name__ == "__main__":
     import uvicorn
     print("🕷️ SCRAPYBARA VM SERVICE STARTING!")
-    print("🎯 TARGET: Beat Claude Desktop with REAL CLOUD VMs")
+    print(" TARGET: Beat Claude Desktop with REAL CLOUD VMs")
     print("⚡ METHOD: ScrapyBara Cloud Infrastructure")
     print("💰 STAKES: £20 bet + 10 operational hours")
-    print("🚀 LIGHTNING FAST VM DEPLOYMENT!")
+    print(" LIGHTNING FAST VM DEPLOYMENT!")
     
     if not SCRAPYBARA_API_KEY:
-        print("❌ ScrapyBara API key not configured")
-        print("🔧 Set SCRAPYBARA_API_KEY in environment")
+        print(" ScrapyBara API key not configured")
+        print(" Set SCRAPYBARA_API_KEY in environment")
     else:
-        print("✅ ScrapyBara API key configured!")
+        print(" ScrapyBara API key configured!")
         print("🕷️ Ready to deploy lightning-fast cloud VMs!")
     
     uvicorn.run(

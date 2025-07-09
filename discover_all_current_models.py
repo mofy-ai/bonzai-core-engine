@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-🔥 DISCOVER ALL CURRENT MODELS - 2025 EDITION
+ DISCOVER ALL CURRENT MODELS - 2025 EDITION
 Research and test ALL current API model names across providers
 """
 
@@ -16,7 +16,7 @@ from dotenv import load_dotenv
 # Load environment
 load_dotenv('../.env')
 
-print("🔥 DISCOVERING ALL CURRENT MODELS - 2025 EDITION")
+print(" DISCOVERING ALL CURRENT MODELS - 2025 EDITION")
 print("=" * 80)
 print(f"Discovery Started: {datetime.now()}")
 print("=" * 80)
@@ -41,7 +41,7 @@ results = {
 
 def print_header(title):
     print(f"\n{'='*60}")
-    print(f"🔥 {title}")
+    print(f" {title}")
     print(f"{'='*60}")
 
 async def discover_google_models_comprehensive(api_key, key_name):
@@ -55,7 +55,7 @@ async def discover_google_models_comprehensive(api_key, key_name):
         import google.generativeai as genai
         genai.configure(api_key=api_key)
         
-        print(f"🔑 Using API Key: {api_key[:15]}...")
+        print(f" Using API Key: {api_key[:15]}...")
         
         # Method 1: Official list_models()
         print("\n📋 Method 1: Official API Discovery")
@@ -69,7 +69,7 @@ async def discover_google_models_comprehensive(api_key, key_name):
                 
                 # Test if it supports generation
                 if 'generateContent' in model.supported_generation_methods:
-                    print(f"   📝 {model_name} - Generation supported")
+                    print(f"    {model_name} - Generation supported")
                     
                     # Quick test
                     try:
@@ -81,15 +81,15 @@ async def discover_google_models_comprehensive(api_key, key_name):
                         if response.text:
                             working_models.append({
                                 "name": model_name,
-                                "status": "✅ Working",
+                                "status": " Working",
                                 "sample": response.text[:20]
                             })
-                            print(f"      ✅ WORKING - Sample: {response.text[:20]}")
+                            print(f"       WORKING - Sample: {response.text[:20]}")
                         else:
-                            print(f"      ❌ No response")
+                            print(f"       No response")
                     except Exception as e:
                         error = str(e)[:40]
-                        print(f"      ❌ Error: {error}")
+                        print(f"       Error: {error}")
                         if "quota" in error.lower():
                             print(f"      💰 Quota issue")
                         elif "deprecated" in error.lower():
@@ -98,10 +98,10 @@ async def discover_google_models_comprehensive(api_key, key_name):
                     print(f"   🚫 {model_name} - No generation support")
                     
         except Exception as e:
-            print(f"❌ Official discovery failed: {e}")
+            print(f" Official discovery failed: {e}")
         
         # Method 2: Try known 2025 model patterns
-        print("\n🔍 Method 2: Testing 2025 Model Patterns")
+        print("\n Method 2: Testing 2025 Model Patterns")
         
         potential_2025_models = [
             # Gemini 2.5 variants (current naming)
@@ -145,7 +145,7 @@ async def discover_google_models_comprehensive(api_key, key_name):
                 if response.text:
                     working_models.append({
                         "name": model_name,
-                        "status": "✅ DISCOVERED NEW!",
+                        "status": " DISCOVERED NEW!",
                         "sample": response.text[:20]
                     })
                     print(f"   🆕 FOUND NEW: {model_name} - {response.text[:20]}")
@@ -155,9 +155,9 @@ async def discover_google_models_comprehensive(api_key, key_name):
                 # Silent fail for speculation
                 pass
         
-        print(f"\n📊 GOOGLE DISCOVERY SUMMARY ({key_name}):")
+        print(f"\n GOOGLE DISCOVERY SUMMARY ({key_name}):")
         print(f"   📋 Total models discovered: {len(discovered_models)}")
-        print(f"   ✅ Working models: {len(working_models)}")
+        print(f"    Working models: {len(working_models)}")
         
         return {
             "discovered_count": len(discovered_models),
@@ -167,7 +167,7 @@ async def discover_google_models_comprehensive(api_key, key_name):
         }
         
     except Exception as e:
-        print(f"❌ Google discovery failed: {e}")
+        print(f" Google discovery failed: {e}")
         return {"error": str(e)}
 
 async def discover_anthropic_models_comprehensive():
@@ -181,7 +181,7 @@ async def discover_anthropic_models_comprehensive():
         import anthropic
         client = anthropic.Anthropic(api_key=ANTHROPIC_KEY)
         
-        print(f"🔑 Using API Key: {ANTHROPIC_KEY[:15]}...")
+        print(f" Using API Key: {ANTHROPIC_KEY[:15]}...")
         
         # Method 1: Test all known Claude variants
         print("\n📋 Method 1: Testing All Claude Variants")
@@ -222,7 +222,7 @@ async def discover_anthropic_models_comprehensive():
         
         for model_name in potential_claude_models:
             try:
-                print(f"   🔍 Testing: {model_name}")
+                print(f"    Testing: {model_name}")
                 start_time = time.time()
                 message = client.messages.create(
                     model=model_name,
@@ -235,12 +235,12 @@ async def discover_anthropic_models_comprehensive():
                     sample_text = message.content[0].text[:20]
                     working_models.append({
                         "name": model_name,
-                        "status": "✅ Working",
+                        "status": " Working",
                         "response_time_ms": round(response_time, 2),
                         "sample": sample_text
                     })
                     discovered_models.append(model_name)
-                    print(f"      ✅ WORKING: {model_name} ({response_time:.0f}ms) - {sample_text}")
+                    print(f"       WORKING: {model_name} ({response_time:.0f}ms) - {sample_text}")
                     
             except Exception as e:
                 error = str(e)
@@ -249,11 +249,11 @@ async def discover_anthropic_models_comprehensive():
                 elif "model" in error.lower():
                     print(f"      🚫 {model_name} - Invalid model")
                 else:
-                    print(f"      ❌ {model_name} - {error[:30]}")
+                    print(f"       {model_name} - {error[:30]}")
         
-        print(f"\n📊 ANTHROPIC DISCOVERY SUMMARY:")
+        print(f"\n ANTHROPIC DISCOVERY SUMMARY:")
         print(f"   📋 Models tested: {len(potential_claude_models)}")
-        print(f"   ✅ Working models: {len(working_models)}")
+        print(f"    Working models: {len(working_models)}")
         
         return {
             "discovered_count": len(discovered_models),
@@ -263,7 +263,7 @@ async def discover_anthropic_models_comprehensive():
         }
         
     except Exception as e:
-        print(f"❌ Anthropic discovery failed: {e}")
+        print(f" Anthropic discovery failed: {e}")
         return {"error": str(e)}
 
 async def discover_openai_models_comprehensive():
@@ -274,7 +274,7 @@ async def discover_openai_models_comprehensive():
         import openai
         client = openai.OpenAI(api_key=OPENAI_KEY)
         
-        print(f"🔑 Using API Key: {OPENAI_KEY[:15]}...")
+        print(f" Using API Key: {OPENAI_KEY[:15]}...")
         
         # Get all available models
         try:
@@ -288,14 +288,14 @@ async def discover_openai_models_comprehensive():
                 'gpt-4', 'gpt-3.5', 'gpt-4o', 'o1', 'o3'  # Include o1 and o3 series
             ])]
             
-            print(f"🎯 Testing {len(current_models)} current GPT models...")
+            print(f" Testing {len(current_models)} current GPT models...")
             
             working_models = []
             test_models = current_models[:10]  # Test top 10 to avoid quota
             
             for model_name in test_models:
                 try:
-                    print(f"   🔍 Testing: {model_name}")
+                    print(f"    Testing: {model_name}")
                     start_time = time.time()
                     response = client.chat.completions.create(
                         model=model_name,
@@ -308,23 +308,23 @@ async def discover_openai_models_comprehensive():
                         sample_text = response.choices[0].message.content[:20]
                         working_models.append({
                             "name": model_name,
-                            "status": "✅ Working",
+                            "status": " Working",
                             "response_time_ms": round(response_time, 2),
                             "sample": sample_text
                         })
-                        print(f"      ✅ WORKING: {model_name} ({response_time:.0f}ms)")
+                        print(f"       WORKING: {model_name} ({response_time:.0f}ms)")
                         
                 except Exception as e:
                     error = str(e)[:40]
                     if "quota" in error.lower():
                         print(f"      💰 {model_name} - Quota exceeded")
                     else:
-                        print(f"      ❌ {model_name} - {error}")
+                        print(f"       {model_name} - {error}")
             
-            print(f"\n📊 OPENAI DISCOVERY SUMMARY:")
+            print(f"\n OPENAI DISCOVERY SUMMARY:")
             print(f"   📋 Total models available: {len(all_models)}")
-            print(f"   🎯 Current models: {len(current_models)}")
-            print(f"   ✅ Working models tested: {len(working_models)}")
+            print(f"    Current models: {len(current_models)}")
+            print(f"    Working models tested: {len(working_models)}")
             
             return {
                 "total_available": len(all_models),
@@ -334,26 +334,26 @@ async def discover_openai_models_comprehensive():
             }
             
         except Exception as e:
-            print(f"❌ Failed to list OpenAI models: {e}")
+            print(f" Failed to list OpenAI models: {e}")
             return {"error": str(e)}
             
     except Exception as e:
-        print(f"❌ OpenAI discovery failed: {e}")
+        print(f" OpenAI discovery failed: {e}")
         return {"error": str(e)}
 
 def generate_comprehensive_report(results):
     """Generate the ultimate model discovery report"""
-    print_header("🎉 ULTIMATE MODEL DISCOVERY REPORT")
+    print_header(" ULTIMATE MODEL DISCOVERY REPORT")
     
     total_working = 0
     
     # Google summary
-    print("\n🎯 GOOGLE MODEL DISCOVERIES:")
+    print("\n GOOGLE MODEL DISCOVERIES:")
     for key_name, data in results["all_models_found"].get("google", {}).items():
         if isinstance(data, dict) and "working_count" in data:
             working = data["working_count"]
             total_working += working
-            print(f"   🔑 {key_name}: {working} working models")
+            print(f"    {key_name}: {working} working models")
             
             # Show newest discoveries
             if "working_models" in data:
@@ -368,12 +368,12 @@ def generate_comprehensive_report(results):
     if isinstance(anthropic_data, dict) and "working_count" in anthropic_data:
         working = anthropic_data["working_count"]
         total_working += working
-        print(f"\n🤖 ANTHROPIC DISCOVERIES: {working} working Claude models")
+        print(f"\n ANTHROPIC DISCOVERIES: {working} working Claude models")
         
         if "working_models" in anthropic_data:
             print(f"   📋 Working Claude Models:")
             for model in anthropic_data["working_models"]:
-                print(f"      ✅ {model['name']} ({model.get('response_time_ms', 'N/A')}ms)")
+                print(f"       {model['name']} ({model.get('response_time_ms', 'N/A')}ms)")
     
     # OpenAI summary
     openai_data = results["all_models_found"].get("openai", {})
@@ -381,15 +381,15 @@ def generate_comprehensive_report(results):
         working = len(openai_data["working_models"])
         total_working += working
         print(f"\n🧠 OPENAI DISCOVERIES: {working} working GPT models")
-        print(f"   📊 Total available: {openai_data.get('total_available', 'Unknown')}")
+        print(f"    Total available: {openai_data.get('total_available', 'Unknown')}")
     
-    print(f"\n🏆 TOTAL ARSENAL:")
-    print(f"   🚀 TOTAL WORKING MODELS: {total_working}")
-    print(f"   🎼 Ready for orchestration across all providers")
+    print(f"\n TOTAL ARSENAL:")
+    print(f"    TOTAL WORKING MODELS: {total_working}")
+    print(f"    Ready for orchestration across all providers")
     
     if total_working > 50:
-        print(f"\n🎉 INCREDIBLE DISCOVERY!")
-        print(f"   🔥 You have access to a MASSIVE AI arsenal!")
+        print(f"\n INCREDIBLE DISCOVERY!")
+        print(f"    You have access to a MASSIVE AI arsenal!")
         print(f"   👨‍👩‍👧‍👦 MOFY Family AI is UNSTOPPABLE!")
 
 async def main():

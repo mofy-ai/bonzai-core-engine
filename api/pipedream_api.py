@@ -423,7 +423,7 @@ def pipedream_assistant_chat():
             result = asyncio.run(create_from_nl())
 
             if result.get('success'):
-                response = f"✅ I've created your workflow! Here's what I built:\n\n" \
+                response = f" I've created your workflow! Here's what I built:\n\n" \
                           f"**{result.get('workflow_id', 'Workflow')}**\n" \
                           f"🔗 Pipedream URL: {result.get('pipedream_url', 'N/A')}\n\n" \
                           f"Your workflow is now live and ready to automate your process!"
@@ -435,11 +435,11 @@ def pipedream_assistant_chat():
                           f"• Use the visual workflow builder for complex automations"
         else:
             # General assistant response
-            response = f"🐻 **Mama Bear Pipedream Assistant**\n\n" \
+            response = f" **Mama Bear Pipedream Assistant**\n\n" \
                       f"I can help you with workflow automation! Here are some things I can do:\n\n" \
-                      f"🔧 **Create Workflows**: Just describe what you want to automate\n" \
-                      f"📊 **Analytics**: Get insights on your workflow performance\n" \
-                      f"🎯 **Templates**: Browse pre-built workflow templates\n" \
+                      f" **Create Workflows**: Just describe what you want to automate\n" \
+                      f" **Analytics**: Get insights on your workflow performance\n" \
+                      f" **Templates**: Browse pre-built workflow templates\n" \
                       f"🔗 **Integrations**: Connect 2000+ services and apps\n\n" \
                       f"Try saying: *'Create a workflow that sends me a Slack message when someone stars my GitHub repo'*"
 
@@ -490,9 +490,9 @@ def integrate_pipedream_api_with_app(app):
     try:
         # Register the blueprint
         app.register_blueprint(pipedream_bp, url_prefix='/api/pipedream')
-        logger.info("✅ Pipedream API endpoints registered")
+        logger.info(" Pipedream API endpoints registered")
         return True
 
     except Exception as e:
-        logger.error(f"❌ Failed to integrate Pipedream API: {e}")
+        logger.error(f" Failed to integrate Pipedream API: {e}")
         return False

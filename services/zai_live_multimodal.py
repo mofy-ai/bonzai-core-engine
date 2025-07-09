@@ -105,7 +105,7 @@ class ZaiLiveMultimodal:
             
             self.state = LiveSessionState.CONNECTED
             
-            print(f"✅ Live session started: {self.current_session['session_id']}")
+            print(f" Live session started: {self.current_session['session_id']}")
             
             return {
                 "success": True,
@@ -146,7 +146,7 @@ class ZaiLiveMultimodal:
             # Queue message for processing
             await self.message_queue.put(message)
             
-            print(f"🎤 Voice message queued: {len(audio_data)} bytes")
+            print(f" Voice message queued: {len(audio_data)} bytes")
             
             # Simulate processing (in production, send via WebSocket)
             response = await self.process_multimodal_message(message)
@@ -400,7 +400,7 @@ async def main():
     
     # Test session start
     session_result = await zai_live.start_live_session()
-    print(f"📊 Session: {json.dumps(session_result, indent=2)}")
+    print(f" Session: {json.dumps(session_result, indent=2)}")
     
     # Test text message
     text_result = await zai_live.send_text_message("Hello, this is a live multimodal test")
@@ -408,7 +408,7 @@ async def main():
     
     # Test capabilities
     capabilities = zai_live.get_live_capabilities()
-    print(f"🔍 Capabilities: {json.dumps(capabilities, indent=2)}")
+    print(f" Capabilities: {json.dumps(capabilities, indent=2)}")
     
     # Test TTS
     tts_result = await zai_live.enable_voice_synthesis("Hello, this is a voice synthesis test")

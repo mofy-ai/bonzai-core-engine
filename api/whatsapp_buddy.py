@@ -1,6 +1,6 @@
 # WhatsApp ZAI Buddy - Mobile AI Assistant
 """
-🤖 ZAI WhatsApp Buddy - Your AI brother on mobile!
+ ZAI WhatsApp Buddy - Your AI brother on mobile!
 Connects WhatsApp Business API to ZAI brain for mobile assistance
 """
 
@@ -20,7 +20,7 @@ try:
     from services.zai_memory_system import ZaiMemoryManager
     from services.zai_model_manager import ZaiModelManager
 except ImportError:
-    print("⚠️ ZAI services not found - make sure you're in the backend directory")
+    print(" ZAI services not found - make sure you're in the backend directory")
 
 logger = logging.getLogger(__name__)
 
@@ -65,10 +65,10 @@ class WhatsAppZaiBuddy:
     def verify_webhook(self, mode, token, challenge):
         """Verify WhatsApp webhook"""
         if mode == "subscribe" and token == self.verify_token:
-            logger.info("✅ WhatsApp webhook verified!")
+            logger.info(" WhatsApp webhook verified!")
             return challenge
         else:
-            logger.warning("❌ WhatsApp webhook verification failed")
+            logger.warning(" WhatsApp webhook verification failed")
             return None
     
     def verify_signature(self, payload, signature):
@@ -93,7 +93,7 @@ class WhatsAppZaiBuddy:
     async def send_whatsapp_message(self, to_number, message):
         """Send message via WhatsApp Business API"""
         if not self.access_token or not self.phone_number_id:
-            logger.error("❌ WhatsApp credentials not configured")
+            logger.error(" WhatsApp credentials not configured")
             return False
             
         url = f"https://graph.facebook.com/v18.0/{self.phone_number_id}/messages"
@@ -119,14 +119,14 @@ class WhatsAppZaiBuddy:
             async with aiohttp.ClientSession() as session:
                 async with session.post(url, headers=headers, json=data) as response:
                     if response.status == 200:
-                        logger.info(f"✅ Message sent to {to_number}")
+                        logger.info(f" Message sent to {to_number}")
                         return True
                     else:
                         error_text = await response.text()
-                        logger.error(f"❌ Failed to send message: {error_text}")
+                        logger.error(f" Failed to send message: {error_text}")
                         return False
         except Exception as e:
-            logger.error(f"❌ Error sending WhatsApp message: {e}")
+            logger.error(f" Error sending WhatsApp message: {e}")
             return False
     
     def format_for_mobile(self, message):
@@ -170,7 +170,7 @@ class WhatsAppZaiBuddy:
                 )
                 return
             
-            logger.info(f"📱 Message from {user_name} ({from_number}): {message_text}")
+            logger.info(f" Message from {user_name} ({from_number}): {message_text}")
             
             # Process through ZAI brain
             if not self.zai_orchestrator:
@@ -194,7 +194,7 @@ class WhatsAppZaiBuddy:
             
             # Send response back to WhatsApp
             if zai_response.get('success', False):
-                ai_message = zai_response.get('content', 'I had a thought but it escaped me! 🤖')
+                ai_message = zai_response.get('content', 'I had a thought but it escaped me! ')
                 await self.send_whatsapp_message(from_number, ai_message)
                 
                 # Save the interaction
@@ -211,16 +211,16 @@ class WhatsAppZaiBuddy:
                 )
             else:
                 # Error fallback
-                error_message = "🤖 I'm having a moment! Try asking me again in a different way?"
+                error_message = " I'm having a moment! Try asking me again in a different way?"
                 await self.send_whatsapp_message(from_number, error_message)
                 
         except Exception as e:
-            logger.error(f"❌ Error processing WhatsApp message: {e}")
+            logger.error(f" Error processing WhatsApp message: {e}")
             # Send friendly error message
             if 'from_number' in locals():
                 await self.send_whatsapp_message(
                     from_number, 
-                    "🤖 Oops! I had a glitch. Nathan's teaching me to be more reliable! Try again?"
+                    " Oops! I had a glitch. Nathan's teaching me to be more reliable! Try again?"
                 )
 
 # Flask app for webhook
@@ -248,7 +248,7 @@ async def whatsapp_webhook():
         signature = request.headers.get('X-Hub-Signature-256', '')
         
         if not buddy.verify_signature(request.data, signature):
-            logger.warning("❌ Invalid webhook signature")
+            logger.warning(" Invalid webhook signature")
             return 'Forbidden', 403
         
         webhook_data = request.get_json()
@@ -278,6 +278,6 @@ def buddy_status():
     return jsonify(status)
 
 if __name__ == '__main__':
-    print("🤖 Starting ZAI WhatsApp Buddy...")
-    print("📱 Your AI brother is getting ready for mobile!")
+    print(" Starting ZAI WhatsApp Buddy...")
+    print(" Your AI brother is getting ready for mobile!")
     app.run(host='0.0.0.0', port=5001, debug=True)

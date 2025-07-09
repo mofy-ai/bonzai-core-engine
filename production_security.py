@@ -76,10 +76,10 @@ class ProductionSecurity:
             self.chat_rate_limit = chat_rate_limit
             self.auth_rate_limit = auth_rate_limit
             
-            logger.info("✅ Rate limiting configured")
+            logger.info(" Rate limiting configured")
             
         except Exception as e:
-            logger.error(f"❌ Rate limiting setup failed: {e}")
+            logger.error(f" Rate limiting setup failed: {e}")
     
     def setup_security_headers(self):
         """Configure security headers for all responses"""
@@ -128,10 +128,10 @@ class ProductionSecurity:
             ]
             self.app.config['CORS_METHODS'] = ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS']
             
-            logger.info(f"✅ CORS configured for origins: {cors_origins}")
+            logger.info(f" CORS configured for origins: {cors_origins}")
             
         except Exception as e:
-            logger.error(f"❌ CORS setup failed: {e}")
+            logger.error(f" CORS setup failed: {e}")
     
     def setup_request_monitoring(self):
         """Setup request monitoring and logging"""
@@ -228,7 +228,7 @@ class ProductionMonitoring:
         self.app = app
         self.setup_health_endpoints()
         self.setup_metrics_collection()
-        logger.info("📊 Production monitoring initialized")
+        logger.info(" Production monitoring initialized")
     
     def setup_health_endpoints(self):
         """Setup health check endpoints"""
@@ -411,7 +411,7 @@ def setup_production_logging():
     
     # Create Bonzai-specific logger
     bonzai_logger = logging.getLogger('BonzaiProduction')
-    bonzai_logger.info("🚀 Bonzai Desktop production logging initialized")
+    bonzai_logger.info(" Bonzai Desktop production logging initialized")
     
     return bonzai_logger
 

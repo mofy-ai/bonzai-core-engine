@@ -1,6 +1,6 @@
 # backend/api/scout_workflow_api.py
 """
-🎯 Scout Workflow API - Integration with Enhanced Gemini Orchestration
+ Scout Workflow API - Integration with Enhanced Gemini Orchestration
 RESTful endpoints for autonomous full-stack development workflows
 """
 
@@ -41,7 +41,7 @@ def initialize_scout_orchestrator():
     
     try:
         scout_orchestrator = EnhancedGeminiScoutOrchestrator(gemini_api_key)
-        logger.info("🎯 Scout orchestrator initialized successfully")
+        logger.info(" Scout orchestrator initialized successfully")
         return True
     except Exception as e:
         logger.error(f"Failed to initialize Scout orchestrator: {e}")
@@ -57,7 +57,7 @@ def get_scout_orchestrator() -> Optional[EnhancedGeminiScoutOrchestrator]:
 @scout_bp.route('/api/scout/workflow/start', methods=['POST'])
 def start_scout_workflow():
     """
-    🚀 Start a new Scout workflow
+     Start a new Scout workflow
     
     Expected payload:
     {
@@ -105,9 +105,9 @@ def start_scout_workflow():
                 result = loop.run_until_complete(
                     orchestrator.execute_full_workflow(enhanced_description, preferences)
                 )
-                logger.info(f"🎯 Workflow {workflow_id} completed: {result['success']}")
+                logger.info(f" Workflow {workflow_id} completed: {result['success']}")
             except Exception as e:
-                logger.error(f"❌ Workflow {workflow_id} failed: {e}")
+                logger.error(f" Workflow {workflow_id} failed: {e}")
             finally:
                 loop.close()
         
@@ -134,7 +134,7 @@ def start_scout_workflow():
 @scout_bp.route('/api/scout/workflow/status/<workflow_id>', methods=['GET'])
 def get_workflow_status(workflow_id: str):
     """
-    📊 Get the status of a specific workflow
+     Get the status of a specific workflow
     """
     try:
         orchestrator = get_scout_orchestrator()
@@ -166,7 +166,7 @@ def get_workflow_status(workflow_id: str):
 @scout_bp.route('/api/scout/orchestration/status', methods=['GET'])
 def get_orchestration_status():
     """
-    🎭 Get the current orchestration status and model health
+     Get the current orchestration status and model health
     """
     try:
         orchestrator = get_scout_orchestrator()
@@ -193,7 +193,7 @@ def get_orchestration_status():
 @scout_bp.route('/api/scout/models', methods=['GET'])
 def get_available_models():
     """
-    🤖 Get list of all available Gemini models with their configurations
+     Get list of all available Gemini models with their configurations
     """
     try:
         orchestrator = get_scout_orchestrator()
@@ -300,7 +300,7 @@ def execute_single_stage():
 @scout_bp.route('/api/scout/models/suggest', methods=['POST'])
 def suggest_model_for_task():
     """
-    🎯 Suggest the best model for a specific task or stage
+     Suggest the best model for a specific task or stage
     
     Expected payload:
     {
@@ -388,13 +388,13 @@ def integrate_scout_workflow_api(app, socketio):
         # Initialize the orchestrator
         initialized = initialize_scout_orchestrator()
         if not initialized:
-            logger.warning("❌ Scout orchestrator initialization failed")
+            logger.warning(" Scout orchestrator initialization failed")
             return False
         
         # Register the blueprint
         app.register_blueprint(scout_bp)
         
-        logger.info("✅ Scout Workflow API integrated successfully")
+        logger.info(" Scout Workflow API integrated successfully")
         return True
         
     except Exception as e:

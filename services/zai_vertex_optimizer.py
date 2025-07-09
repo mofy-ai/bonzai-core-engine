@@ -95,12 +95,12 @@ class ZaiVertexOptimizer:
             if project_id and region:
                 vertexai.init(project=project_id, location=region)
                 self.vertex_available = True
-                print(f"✅ Vertex AI initialized: {project_id} in {region}")
+                print(f" Vertex AI initialized: {project_id} in {region}")
             else:
-                print("⚠️  Vertex AI config missing - using standard API with quota rotation")
+                print("  Vertex AI config missing - using standard API with quota rotation")
                 
         except ImportError:
-            print("⚠️  Vertex AI SDK not available - using standard API with quota rotation")
+            print("  Vertex AI SDK not available - using standard API with quota rotation")
             
     def load_performance_data(self):
         """Load model performance data"""
@@ -118,7 +118,7 @@ class ZaiVertexOptimizer:
                         quota_status=perf_data.get('quota_status', 'available')
                     )
         except FileNotFoundError:
-            print("📊 Initializing performance tracking...")
+            print(" Initializing performance tracking...")
             
     def save_performance_data(self):
         """Save model performance data"""
@@ -150,7 +150,7 @@ class ZaiVertexOptimizer:
         key_name, model_name = all_models[self.quota_rotation_index % len(all_models)]
         self.quota_rotation_index += 1
         
-        print(f"🔄 Quota rotation: {key_name} -> {model_name}")
+        print(f" Quota rotation: {key_name} -> {model_name}")
         return key_name, model_name
         
     def intelligent_model_selection(self, task_type: str, optimization_mode: OptimizationMode) -> Tuple[str, str]:
@@ -159,7 +159,7 @@ class ZaiVertexOptimizer:
         Falls back to quota rotation if needed
         """
         if not self.vertex_available:
-            print("🎯 Using quota rotation (Vertex AI not available)")
+            print(" Using quota rotation (Vertex AI not available)")
             return self.get_next_quota_rotation_model()
             
         # Get available models with good performance
@@ -187,7 +187,7 @@ class ZaiVertexOptimizer:
                     available_models.append((key_name, model, perf))
         
         if not available_models:
-            print("⚠️  No available models - using quota rotation fallback")
+            print("  No available models - using quota rotation fallback")
             return self.get_next_quota_rotation_model()
             
         # Select based on optimization mode
@@ -316,7 +316,7 @@ class ZaiVertexOptimizer:
             except Exception as e:
                 if 'model_name' in locals():
                     self.update_model_performance(model_name, 0, False, str(e))
-                print(f"🔄 Attempt {attempt + 1} failed: {str(e)[:50]}")
+                print(f" Attempt {attempt + 1} failed: {str(e)[:50]}")
                 await asyncio.sleep(1)
                 
         return {
@@ -399,11 +399,11 @@ async def main():
         optimization_mode=OptimizationMode.QUALITY
     )
     
-    print(f"📊 Result: {json.dumps(result, indent=2)}")
+    print(f" Result: {json.dumps(result, indent=2)}")
     
     # Test status
     status = zai_optimizer.get_orchestration_status()
-    print(f"🎼 Status: {json.dumps(status, indent=2)}")
+    print(f" Status: {json.dumps(status, indent=2)}")
 
 if __name__ == "__main__":
     asyncio.run(main())

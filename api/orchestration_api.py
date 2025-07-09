@@ -1,6 +1,6 @@
 # backend/api/mama_bear_orchestration_api.py
 """
-🐻 Mama Bear Orchestration API
+ Mama Bear Orchestration API
 RESTful endpoints and WebSocket handlers for agent coordination
 """
 
@@ -19,7 +19,7 @@ orchestration_bp = Blueprint('orchestration', __name__)
 @orchestration_bp.route('/api/mama-bear/chat', methods=['POST'])
 async def intelligent_chat():
     """
-    🐻 Main chat endpoint with intelligent agent routing
+     Main chat endpoint with intelligent agent routing
     Automatically determines which agents to involve based on the request
     """
     try:
@@ -49,7 +49,7 @@ async def intelligent_chat():
         return jsonify({
             'success': False,
             'error': str(e),
-            'fallback_message': "🐻 I'm having a moment! Let me gather myself and try again."
+            'fallback_message': " I'm having a moment! Let me gather myself and try again."
         }), 500
 
 @orchestration_bp.route('/api/mama-bear/agents/status', methods=['GET'])
@@ -228,7 +228,7 @@ def init_socketio_handlers(socketio):
             # Emit thinking status
             emit('mama_bear_thinking', {
                 'status': 'analyzing_request',
-                'message': '🐻 Let me think about the best way to help you...'
+                'message': ' Let me think about the best way to help you...'
             }, room=f'orchestration_{user_id}')
             
             # Get orchestrator
@@ -253,7 +253,7 @@ def init_socketio_handlers(socketio):
             emit('mama_bear_error', {
                 'success': False,
                 'error': str(e),
-                'fallback_message': "🐻 Something went wrong, but I'm here to help!"
+                'fallback_message': " Something went wrong, but I'm here to help!"
             }, room=f'orchestration_{user_id}')
     
     @socketio.on('get_agent_status')
@@ -389,7 +389,7 @@ def integrate_orchestration_with_app(app, socketio, memory_manager, model_manage
                     )
                 )
     
-    logger.info("🐻 Mama Bear Orchestration API integrated successfully!")
+    logger.info(" Mama Bear Orchestration API integrated successfully!")
 
 # Example usage in main app.py
 """

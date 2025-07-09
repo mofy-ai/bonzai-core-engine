@@ -1,5 +1,5 @@
 """
-🏛️ Library API Routes - Deep Research Center
+ Library API Routes - Deep Research Center
 Flask API endpoints for the collaborative Claude-Gemini research system
 """
 
@@ -50,8 +50,8 @@ def init_library_section(app):
         
         if not anthropic_api_key or not gemini_api_key:
             logger.error("Missing required API keys for Library section")
-            logger.error(f"Anthropic API Key: {'✅' if anthropic_api_key else '❌'}")
-            logger.error(f"Gemini API Key: {'✅' if gemini_api_key else '❌'}")
+            logger.error(f"Anthropic API Key: {'' if anthropic_api_key else ''}")
+            logger.error(f"Gemini API Key: {'' if gemini_api_key else ''}")
             return False
         
         library_section = LibrarySection(
@@ -59,7 +59,7 @@ def init_library_section(app):
             gemini_api_key=gemini_api_key
         )
         
-        logger.info("🏛️ Library section initialized successfully!")
+        logger.info(" Library section initialized successfully!")
         return True
         
     except Exception as e:
@@ -132,7 +132,7 @@ def start_research():
                 "error": f"Invalid depth. Valid depths: {valid_depths}"
             }), 400
         
-        logger.info(f"🏛️ Starting research session: {session_id}")
+        logger.info(f" Starting research session: {session_id}")
         logger.info(f"Query: {query}")
         logger.info(f"Mode: {mode}, Depth: {depth}")
         
@@ -250,7 +250,7 @@ def quick_research():
         
         mode = data.get('mode', 'claude_only')  # Default to fastest mode
         
-        logger.info(f"🏛️ Quick research: {query}")
+        logger.info(f" Quick research: {query}")
         
         # Run quick research synchronously
         def run_quick_research():
@@ -308,10 +308,10 @@ def integrate_library_api(app):
         # Initialize the library section
         if init_library_section(app):
             app.register_blueprint(library_bp)
-            logger.info("🏛️ Library API integrated successfully!")
+            logger.info(" Library API integrated successfully!")
             return True
         else:
-            logger.warning("🏛️ Library API initialization failed - blueprint not registered")
+            logger.warning(" Library API initialization failed - blueprint not registered")
             return False
     except Exception as e:
         logger.error(f"Failed to integrate Library API: {e}")

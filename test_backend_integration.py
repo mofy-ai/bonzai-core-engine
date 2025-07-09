@@ -15,7 +15,7 @@ from pathlib import Path
 # Add parent directory to path
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-print("🎯 BONZAI FAMILY INTEGRATION TEST")
+print(" BONZAI FAMILY INTEGRATION TEST")
 print("=" * 50)
 print(f"Test Started: {datetime.now()}")
 print("=" * 50)
@@ -54,11 +54,11 @@ def check_env_vars():
     for var, description in required_vars.items():
         value = os.getenv(var)
         if value and value != f"your_{var.lower()}_here":
-            print(f"   ✅ {var}: Set ({description})")
-            test_results["environment"][var] = "✅ Set"
+            print(f"    {var}: Set ({description})")
+            test_results["environment"][var] = " Set"
         else:
-            print(f"   ❌ {var}: Missing! ({description})")
-            test_results["environment"][var] = "❌ Missing"
+            print(f"    {var}: Missing! ({description})")
+            test_results["environment"][var] = " Missing"
             all_good = False
             test_results["summary"]["failed"] += 1
     
@@ -67,11 +67,11 @@ def check_env_vars():
     for var, description in optional_vars.items():
         value = os.getenv(var)
         if value and value != f"your_{var.lower()}_here":
-            print(f"   ✅ {var}: Set ({description})")
-            test_results["environment"][var] = "✅ Set"
+            print(f"    {var}: Set ({description})")
+            test_results["environment"][var] = " Set"
         else:
-            print(f"   ⚠️  {var}: Not configured ({description})")
-            test_results["environment"][var] = "⚠️ Optional"
+            print(f"     {var}: Not configured ({description})")
+            test_results["environment"][var] = " Optional"
             test_results["summary"]["warnings"] += 1
     
     return all_good
@@ -99,12 +99,12 @@ def test_python_imports():
     for package, description in required_packages:
         try:
             __import__(package)
-            print(f"   ✅ {package}: Installed ({description})")
-            test_results["services"][f"package_{package}"] = "✅ Installed"
+            print(f"    {package}: Installed ({description})")
+            test_results["services"][f"package_{package}"] = " Installed"
             test_results["summary"]["passed"] += 1
         except ImportError:
-            print(f"   ❌ {package}: Not installed! ({description})")
-            test_results["services"][f"package_{package}"] = "❌ Missing"
+            print(f"    {package}: Not installed! ({description})")
+            test_results["services"][f"package_{package}"] = " Missing"
             test_results["summary"]["failed"] += 1
             all_good = False
     
@@ -113,11 +113,11 @@ def test_python_imports():
     for package, description in optional_packages:
         try:
             __import__(package)
-            print(f"   ✅ {package}: Installed ({description})")
-            test_results["services"][f"package_{package}"] = "✅ Installed"
+            print(f"    {package}: Installed ({description})")
+            test_results["services"][f"package_{package}"] = " Installed"
         except ImportError:
-            print(f"   ⚠️  {package}: Not installed ({description})")
-            test_results["services"][f"package_{package}"] = "⚠️ Optional"
+            print(f"     {package}: Not installed ({description})")
+            test_results["services"][f"package_{package}"] = " Optional"
             test_results["summary"]["warnings"] += 1
     
     return all_good
@@ -170,16 +170,16 @@ def test_services():
         try:
             # Try to import the module
             module = __import__(service['module'], fromlist=[service['class']])
-            print(f"   ✅ {service['name']}: Module loaded")
+            print(f"    {service['name']}: Module loaded")
             
             # Try to get the class
             if hasattr(module, service['class']):
-                print(f"   ✅ {service['name']}: Class found")
-                test_results["services"][service['name']] = "✅ Ready"
+                print(f"    {service['name']}: Class found")
+                test_results["services"][service['name']] = " Ready"
                 test_results["summary"]["passed"] += 1
             else:
-                print(f"   ⚠️  {service['name']}: Class not found")
-                test_results["services"][service['name']] = "⚠️ Partial"
+                print(f"     {service['name']}: Class not found")
+                test_results["services"][service['name']] = " Partial"
                 if service['critical']:
                     test_results["summary"]["failed"] += 1
                 else:
@@ -188,11 +188,11 @@ def test_services():
         except Exception as e:
             error_msg = str(e)
             if "No module named" in error_msg:
-                print(f"   ❌ {service['name']}: Module not found")
+                print(f"    {service['name']}: Module not found")
             else:
-                print(f"   ❌ {service['name']}: {error_msg[:50]}...")
+                print(f"    {service['name']}: {error_msg[:50]}...")
             
-            test_results["services"][service['name']] = f"❌ Error"
+            test_results["services"][service['name']] = f" Error"
             if service['critical']:
                 test_results["summary"]["failed"] += 1
             else:
@@ -217,20 +217,20 @@ def test_ports():
         sock.close()
         
         if result == 0:
-            print(f"   ⚠️  Port {port}: In use ({description})")
-            test_results["services"][f"port_{port}"] = "⚠️ In use"
+            print(f"     Port {port}: In use ({description})")
+            test_results["services"][f"port_{port}"] = " In use"
         else:
-            print(f"   ✅ Port {port}: Available ({description})")
-            test_results["services"][f"port_{port}"] = "✅ Available"
+            print(f"    Port {port}: Available ({description})")
+            test_results["services"][f"port_{port}"] = " Available"
 
 def generate_fix_script():
     """Generate a script to fix common issues"""
-    print("\n📝 Generating fix script...")
+    print("\n Generating fix script...")
     
     fix_script = """#!/bin/bash
 # Auto-generated fix script for Bonzai Backend
 
-echo "🔧 BONZAI BACKEND FIX SCRIPT"
+echo " BONZAI BACKEND FIX SCRIPT"
 echo "============================"
 
 # Install missing Python packages
@@ -249,12 +249,12 @@ mkdir -p credentials
 
 # Set up environment file if missing
 if [ ! -f .env ]; then
-    echo "📝 Creating .env from template..."
+    echo " Creating .env from template..."
     cp .env.example .env
-    echo "⚠️  Please edit .env and add your API keys!"
+    echo "  Please edit .env and add your API keys!"
 fi
 
-echo "✅ Fix script complete!"
+echo " Fix script complete!"
 echo "Next steps:"
 echo "1. Edit .env file with your API keys"
 echo "2. Run: python app.py"
@@ -266,7 +266,7 @@ echo "2. Run: python app.py"
     if os.name != 'nt':  # Unix-like systems
         os.chmod('fix_backend.sh', 0o755)
     
-    print("   ✅ Created fix_backend.sh")
+    print("    Created fix_backend.sh")
 
 def main():
     """Run all tests"""
@@ -287,11 +287,11 @@ def main():
     
     # Summary
     print("\n" + "=" * 50)
-    print("📊 TEST SUMMARY")
+    print(" TEST SUMMARY")
     print("=" * 50)
-    print(f"✅ Passed: {test_results['summary']['passed']}")
-    print(f"❌ Failed: {test_results['summary']['failed']}")
-    print(f"⚠️  Warnings: {test_results['summary']['warnings']}")
+    print(f" Passed: {test_results['summary']['passed']}")
+    print(f" Failed: {test_results['summary']['failed']}")
+    print(f"  Warnings: {test_results['summary']['warnings']}")
     
     # Save results
     with open('family_integration_test_results.json', 'w') as f:
@@ -300,23 +300,23 @@ def main():
     print(f"\n💾 Results saved to: family_integration_test_results.json")
     
     # Recommendations
-    print("\n🎯 RECOMMENDATIONS:")
+    print("\n RECOMMENDATIONS:")
     if test_results['summary']['failed'] > 0:
-        print("❌ Critical issues found! Run: bash fix_backend.sh")
+        print(" Critical issues found! Run: bash fix_backend.sh")
         print("   Then edit .env file with your API keys")
     elif test_results['summary']['warnings'] > 0:
-        print("⚠️  Optional features missing but core is ready!")
+        print("  Optional features missing but core is ready!")
         print("   You can start the backend with: python app.py")
     else:
-        print("🎉 ALL SYSTEMS GO! Start backend with: python app.py")
+        print(" ALL SYSTEMS GO! Start backend with: python app.py")
     
     # DXT readiness
     print("\n📦 DXT EXTENSION READINESS:")
     if env_ok and imports_ok:
-        print("✅ Backend is ready for DXT packaging!")
+        print(" Backend is ready for DXT packaging!")
         print("   Next: Start backend, then update DXT extension")
     else:
-        print("❌ Fix backend issues before DXT packaging")
+        print(" Fix backend issues before DXT packaging")
     
     return test_results['summary']['failed'] == 0
 

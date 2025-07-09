@@ -14,7 +14,7 @@ test_script = r"C:\Bonzai-Desktop\zai-backend\comprehensive_backend_test.py"
 env = os.environ.copy()
 env['PYTHONIOENCODING'] = 'utf-8'
 
-print("🔥 RUNNING COMPREHENSIVE TEST WITH VENV PYTHON...")
+print(" RUNNING COMPREHENSIVE TEST WITH VENV PYTHON...")
 print(f"Using Python: {venv_python}")
 print(f"Test script: {test_script}")
 print()

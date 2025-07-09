@@ -1,5 +1,5 @@
 """
-🚀 Express Mode + Vertex AI API Endpoints
+ Express Mode + Vertex AI API Endpoints
 RESTful API for 6x faster responses with Claude model access
 """
 
@@ -26,7 +26,7 @@ def get_mama_bear_v2() -> MamaBearV2Supercharger:
 @express_bp.route('/api/mama-bear-v2/chat', methods=['POST'])
 async def express_chat():
     """
-    🚀 Main Express Mode chat endpoint
+     Main Express Mode chat endpoint
     Provides 6x faster responses with intelligent routing
     """
     try:
@@ -72,7 +72,7 @@ async def express_chat():
         return jsonify({
             'success': False,
             'error': str(e),
-            'fallback_message': "🚀 Express Mode temporarily unavailable. Switching to standard processing..."
+            'fallback_message': " Express Mode temporarily unavailable. Switching to standard processing..."
         }), 500
 
 @express_bp.route('/api/mama-bear-v2/express-config', methods=['GET', 'POST'])
@@ -220,7 +220,7 @@ async def available_models():
 @express_bp.route('/api/mama-bear-v2/status', methods=['GET'])
 async def system_status():
     """
-    📊 Get comprehensive V2.0 system status
+     Get comprehensive V2.0 system status
     """
     try:
         mama_bear_v2 = get_mama_bear_v2()
@@ -242,7 +242,7 @@ async def system_status():
 @express_bp.route('/api/mama-bear-v2/autonomous', methods=['GET', 'POST'])
 async def autonomous_mode():
     """
-    🤖 Manage autonomous mode settings
+     Manage autonomous mode settings
     """
     mama_bear_v2 = get_mama_bear_v2()
     if not mama_bear_v2:

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-🚀 ULTIMATE PRE-FLIGHT TEST SUITE
+ ULTIMATE PRE-FLIGHT TEST SUITE
 Testing all AI endpoints, models, and orchestration capabilities
 For Nathan's BONZAI Family Unity System
 """
@@ -34,14 +34,14 @@ class UltimatePreflightTester:
         self.google_key = os.getenv('GOOGLE_API_KEY') 
         self.mem0_key = os.getenv('MEM0_API_KEY')
         
-        print("🚀 ULTIMATE PRE-FLIGHT TEST SUITE")
+        print(" ULTIMATE PRE-FLIGHT TEST SUITE")
         print("=" * 70)
         print(f"Test Started: {datetime.now()}")
         print("=" * 70)
 
     async def test_google_standard_endpoints(self):
         """Test standard Gemini API endpoints"""
-        print("\n🔥 TESTING GOOGLE STANDARD API ENDPOINTS")
+        print("\n TESTING GOOGLE STANDARD API ENDPOINTS")
         print("-" * 50)
         
         # Standard endpoint
@@ -56,13 +56,13 @@ class UltimatePreflightTester:
                 models_data = response.json()
                 models = [model['name'] for model in models_data.get('models', [])]
                 
-                print(f"✅ Standard API Connected")
-                print(f"📊 Available Models: {len(models)}")
+                print(f" Standard API Connected")
+                print(f" Available Models: {len(models)}")
                 
                 # Extract Gemini models
                 gemini_models = [m for m in models if 'gemini' in m.lower()]
                 for model in gemini_models:
-                    print(f"   🤖 {model}")
+                    print(f"    {model}")
                     self.results["model_inventory"].append({
                         "name": model,
                         "endpoint": "standard",
@@ -75,7 +75,7 @@ class UltimatePreflightTester:
                     "gemini_models": gemini_models
                 }
             else:
-                print(f"❌ Standard API Error: {response.status_code}")
+                print(f" Standard API Error: {response.status_code}")
                 self.results["google_standard_api"] = {
                     "status": "failed",
                     "error": f"HTTP {response.

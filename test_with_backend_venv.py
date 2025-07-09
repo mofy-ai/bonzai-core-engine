@@ -10,7 +10,7 @@ backend_dir = "/mnt/c/Bonzai-Desktop/zai-backend"
 venv_python = os.path.join(backend_dir, "backend_venv", "bin", "python")
 test_script = os.path.join(backend_dir, "comprehensive_backend_test.py")
 
-print("🔥 RUNNING COMPREHENSIVE TEST WITH BACKEND VENV...")
+print(" RUNNING COMPREHENSIVE TEST WITH BACKEND VENV...")
 print(f"Using Python: {venv_python}")
 print(f"Test script: {test_script}")
 print()

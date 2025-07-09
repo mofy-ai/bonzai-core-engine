@@ -86,7 +86,7 @@ async def initialize_secure_services():
     global services_initialized
     
     try:
-        logger.info("🚀 Initializing ZAI Secure API services...")
+        logger.info(" Initializing ZAI Secure API services...")
         
         # Try to import and initialize real services
         try:
@@ -95,18 +95,18 @@ async def initialize_secure_services():
             anthropic_api_key = os.getenv('ANTHROPIC_API_KEY')
             
             if google_api_key:
-                logger.info("✅ Google AI API key found - Gemini models available")
+                logger.info(" Google AI API key found - Gemini models available")
             if anthropic_api_key:
-                logger.info("✅ Anthropic API key found - Claude models available")
+                logger.info(" Anthropic API key found - Claude models available")
                 
         except Exception as e:
-            logger.warning(f"⚠️  Advanced services unavailable, using mock: {e}")
+            logger.warning(f"  Advanced services unavailable, using mock: {e}")
         
         services_initialized = True
-        logger.info("✅ ZAI Secure API services initialized!")
+        logger.info(" ZAI Secure API services initialized!")
         
     except Exception as e:
-        logger.error(f"❌ Service initialization failed: {e}")
+        logger.error(f" Service initialization failed: {e}")
         services_initialized = True  # Continue with mock services
 
 # ==============================================================================
@@ -124,7 +124,7 @@ def health_check():
         'timestamp': datetime.now().isoformat(),
         'services_initialized': services_initialized,
         'models_available': len(zai_agent.models),
-        'message': '🚀 ZAI Secure API is operational'
+        'message': ' ZAI Secure API is operational'
     })
 
 @app.route('/api/models', methods=['GET'])
@@ -313,9 +313,9 @@ if __name__ == '__main__':
     
     async def startup():
         """Async startup for development"""
-        logger.info("🚀 Starting ZAI Secure API...")
+        logger.info(" Starting ZAI Secure API...")
         await initialize_secure_services()
-        logger.info("✅ ZAI Secure API ready!")
+        logger.info(" ZAI Secure API ready!")
     
     # Run startup
     asyncio.run(startup())
@@ -324,9 +324,9 @@ if __name__ == '__main__':
     port = int(os.getenv('PORT', 5001))
     host = os.getenv('HOST', '0.0.0.0')
     
-    logger.info(f"🌐 ZAI Secure API running on {host}:{port}")
+    logger.info(f" ZAI Secure API running on {host}:{port}")
     logger.info("🔒 Frontend access blocked - API endpoints only")
-    logger.info("✅ Ready for Railway deployment!")
+    logger.info(" Ready for Railway deployment!")
     
     app.run(
         host=host,
