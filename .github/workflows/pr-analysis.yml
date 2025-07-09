@@ -135,7 +135,7 @@ jobs:
           echo "🔍 Checking environment variable usage..."
           
           # Look for hardcoded values that should be environment variables
-          HARDCODED=$(grep -r -E "(api_key|password|secret).*=.*['\"][^'\"]*['\"]" . --include="*.py" || echo "")
+          HARDCODED=$(grep -r -E "(api_key|password|secret).*=.*['\"'][^'\"]*['\"']" . --include="*.py" || echo "")
           
           if [[ -n "$HARDCODED" ]]; then
             echo "⚠️ Potential hardcoded secrets found:"
