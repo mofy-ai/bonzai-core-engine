@@ -1,0 +1,148 @@
+{
+  "timestamp": "2025-07-09T12:38:29.154214",
+  "target_services": 16,
+  "services_tested": 18,
+  "services_passed": 17,
+  "services_failed": 1,
+  "detailed_results": {
+    "Enhanced Scout Workflow": {
+      "success": true,
+      "message": "Service operational - get_orchestration_status successful",
+      "details": {
+        "result": "{'active_workflows': 0, 'total_models': 8, 'healthy_models': 8, 'model_status': {'gemini-2.5-pro-pre"
+      },
+      "timestamp": "2025-07-09T12:38:30.136659"
+    },
+    "Vertex AI Supercharger": {
+      "success": true,
+      "message": "Service class instantiated successfully",
+      "details": {},
+      "timestamp": "2025-07-09T12:38:34.119169"
+    },
+    "Multimodal Chat API": {
+      "success": true,
+      "message": "Service class instantiated successfully",
+      "details": {},
+      "timestamp": "2025-07-09T12:38:34.269482"
+    },
+    "Agentic Superpowers V3.0": {
+      "success": true,
+      "message": "Service operational - health_check successful",
+      "details": {
+        "result": "{'status': 'healthy', 'service': 'ZAI Agentic Superpowers V3.0', 'version': '3.0.0', 'capabilities':"
+      },
+      "timestamp": "2025-07-09T12:38:34.372055"
+    },
+    "Collaborative Workspaces V3.0": {
+      "success": true,
+      "message": "Service class instantiated successfully",
+      "details": {},
+      "timestamp": "2025-07-09T12:38:34.473236"
+    },
+    "Pipedream Integration": {
+      "success": true,
+      "message": "Service class instantiated successfully",
+      "details": {},
+      "timestamp": "2025-07-09T12:38:34.574422"
+    },
+    "Memory Manager": {
+      "success": true,
+      "message": "Service class instantiated successfully",
+      "details": {},
+      "timestamp": "2025-07-09T12:38:36.359268"
+    },
+    "Deep Research Center": {
+      "success": true,
+      "message": "Service class instantiated successfully",
+      "details": {},
+      "timestamp": "2025-07-09T12:38:36.483941"
+    },
+    "Virtual Computer": {
+      "success": true,
+      "message": "Service class instantiated successfully",
+      "details": {},
+      "timestamp": "2025-07-09T12:38:36.586844"
+    },
+    "Claude Computer Use": {
+      "success": true,
+      "message": "Service operational - health_check successful",
+      "details": {
+        "result": "{'service': 'Claude Computer Use', 'status': 'healthy', 'screenshot_capability': True, 'claude_clien"
+      },
+      "timestamp": "2025-07-09T12:38:36.771123"
+    },
+    "DeepSeek Integration": {
+      "success": true,
+      "message": "Service class instantiated successfully",
+      "details": {},
+      "timestamp": "2025-07-09T12:38:36.872832"
+    },
+    "CrewAI Orchestration": {
+      "success": true,
+      "message": "Service class instantiated successfully",
+      "details": {},
+      "timestamp": "2025-07-09T12:38:36.973532"
+    },
+    "Monitoring System": {
+      "success": true,
+      "message": "Service class instantiated successfully",
+      "details": {},
+      "timestamp": "2025-07-09T12:38:37.074280"
+    },
+    "Multi-Provider System": {
+      "success": true,
+      "message": "Service class instantiated successfully",
+      "details": {},
+      "timestamp": "2025-07-09T12:38:37.174950"
+    },
+    "Agent Registry": {
+      "success": true,
+      "message": "Service class instantiated successfully",
+      "details": {},
+      "timestamp": "2025-07-09T12:38:37.277706"
+    },
+    "Task Orchestrator": {
+      "success": true,
+      "message": "Service class instantiated successfully (no health_check method)",
+      "details": {},
+      "timestamp": "2025-07-09T12:38:37.378691"
+    },
+    "Main App Integration": {
+      "success": true,
+      "message": "All 16 services running through main app",
+      "details": {},
+      "timestamp": "2025-07-09T12:38:37.480590"
+    },
+    "Backend Health Endpoint": {
+      "success": false,
+      "message": "Health endpoint test failed: HTTPConnectionPool(host='localhost', port=5001): Max retries exceeded with url: /api/health (Caused ",
+      "details": {},
+      "timestamp": "2025-07-09T12:38:37.481707"
+    }
+  },
+  "summary": {
+    "passed": [
+      "Enhanced Scout Workflow",
+      "Vertex AI Supercharger",
+      "Multimodal Chat API",
+      "Agentic Superpowers V3.0",
+      "Collaborative Workspaces V3.0",
+      "Pipedream Integration",
+      "Memory Manager",
+      "Deep Research Center",
+      "Virtual Computer",
+      "Claude Computer Use",
+      "DeepSeek Integration",
+      "CrewAI Orchestration",
+      "Monitoring System",
+      "Multi-Provider System",
+      "Agent Registry",
+      "Task Orchestrator",
+      "Main App Integration"
+    ],
+    "failed": [
+      "Backend Health Endpoint"
+    ],
+    "warnings": []
+  }
+}
