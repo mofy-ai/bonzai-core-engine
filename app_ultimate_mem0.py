@@ -750,6 +750,57 @@ def health_check():
     
     return jsonify(health_status)
 
+@app.route('/api/debug', methods=['GET'])
+def debug_initialization():
+    """Debug endpoint to show initialization details"""
+    debug_info = {
+        'timestamp': datetime.now().isoformat(),
+        'family_system_status': 'initialized' if family_system else 'not_initialized',
+        'api_key_manager_status': 'initialized' if api_key_manager else 'not_initialized'
+    }
+    
+    # Environment variables check
+    mem0_api_key = os.getenv('MEM0_API_KEY')
+    mem0_org_id = os.getenv('MEM0_ORG_ID', 'org_3fnXbTK2Indmg54y2LSvBerDV7Arerb2bJYX1ezr')
+    mem0_project_id = os.getenv('MEM0_PROJECT_ID', 'default-project')
+    
+    debug_info.update({
+        'environment_variables': {
+            'MEM0_API_KEY': 'present' if mem0_api_key else 'missing',
+            'MEM0_API_KEY_preview': mem0_api_key[:10] + '...' if mem0_api_key else None,
+            'MEM0_ORG_ID': mem0_org_id,
+            'MEM0_PROJECT_ID': mem0_project_id
+        }
+    })
+    
+    # Try to initialize Mem0 client directly for debugging
+    if mem0_api_key:
+        try:
+            from mem0 import MemoryClient
+            test_client = MemoryClient(
+                api_key=mem0_api_key,
+                org_id=mem0_org_id,
+                project_id=mem0_project_id
+            )
+            debug_info['mem0_test_initialization'] = 'success'
+            
+            # Try a simple operation
+            try:
+                # Test basic connectivity
+                debug_info['mem0_test_operation'] = 'testing...'
+                result = test_client.search(query="test", user_id="debug_test")
+                debug_info['mem0_test_operation'] = 'success'
+                debug_info['mem0_search_result_count'] = len(result) if result else 0
+            except Exception as e:
+                debug_info['mem0_test_operation'] = f'failed: {str(e)}'
+                
+        except Exception as e:
+            debug_info['mem0_test_initialization'] = f'failed: {str(e)}'
+            import traceback
+            debug_info['mem0_initialization_traceback'] = traceback.format_exc()
+    
+    return jsonify(debug_info)
+
 @app.route('/api/status', methods=['GET'])
 @require_api_key
 def system_status():
