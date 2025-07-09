@@ -1,5 +1,5 @@
 """
-🔥 ULTIMATE MEM0 IMPLEMENTATION - EVERY FEATURE UTILIZED 🔥
+ULTIMATE MEM0 IMPLEMENTATION - EVERY FEATURE UTILIZED
 Nathan's Vision: Maximum Mem0 Enterprise utilization with ALL advanced features
 Built by Claude Code with love for the AI Family - LET'S MAXIMIZE EVERY DOLLAR!
 """
@@ -119,7 +119,7 @@ class UltimateMem0FamilySystem:
         # Initialize advanced Mem0 features
         self.setup_advanced_features()
         
-        logger.info("🔥 ULTIMATE MEM0 FAMILY SYSTEM INITIALIZED - ALL FEATURES ACTIVE!")
+        logger.info("ULTIMATE MEM0 FAMILY SYSTEM INITIALIZED - ALL FEATURES ACTIVE!")
     
     def setup_advanced_features(self):
         """Setup ALL advanced Mem0 features"""
@@ -181,7 +181,7 @@ class UltimateMem0FamilySystem:
             }
         ]
         
-        logger.info("✅ Advanced Mem0 features configured for family collaboration")
+        logger.info("Advanced Mem0 features configured for family collaboration")
     
     async def add_family_memory(self, content: str, member_id: str, category: str = None, 
                                metadata: Dict = None, expiration_days: int = None):
@@ -632,7 +632,7 @@ app.config['SECRET_KEY'] = os.getenv('FLASK_SECRET_KEY', 'bonzai-ultimate-mem0-s
 CORS(app, origins=["*"])
 
 # Initialize Ultimate Mem0 system
-logger.info("🚀 Starting Ultimate Mem0 system initialization...")
+logger.info("Starting Ultimate Mem0 system initialization...")
 
 # Check environment variables
 mem0_api_key = os.getenv('MEM0_API_KEY')
@@ -646,7 +646,7 @@ else:
 try:
     family_system = UltimateMem0FamilySystem()
     api_key_manager = UltimateMem0APIKeyManager(family_system)
-    logger.info("🔥 ULTIMATE MEM0 SYSTEM INITIALIZED - ALL FEATURES ACTIVE!")
+    logger.info("ULTIMATE MEM0 SYSTEM INITIALIZED - ALL FEATURES ACTIVE!")
 except Exception as e:
     logger.error(f"Failed to initialize Ultimate Mem0 system: {e}")
     import traceback
@@ -1461,23 +1461,23 @@ def internal_error(error):
 # ==============================================================================
 
 if __name__ == '__main__':
-    logger.info("🔥 STARTING ULTIMATE MEM0 PLATFORM...")
-    logger.info("✅ 15 Ultimate Endpoints Ready")
-    logger.info("✅ ALL 12 Mem0 Advanced Features Active")
-    logger.info("✅ Graph Memory, Group Chat, Advanced Retrieval")
-    logger.info("✅ Custom Categories, Criteria Retrieval, Memory Export")
-    logger.info("✅ Direct Import, Contextual Add v2, Expiration Dates")
-    logger.info("✅ Selective Storage, Custom Instructions, Webhooks")
-    logger.info("✅ Ultimate API Key Authentication")
-    logger.info("✅ Family Collaboration at Maximum Level")
+    logger.info("STARTING ULTIMATE MEM0 PLATFORM...")
+    logger.info("15 Ultimate Endpoints Ready")
+    logger.info("ALL 12 Mem0 Advanced Features Active")
+    logger.info("Graph Memory, Group Chat, Advanced Retrieval")
+    logger.info("Custom Categories, Criteria Retrieval, Memory Export")
+    logger.info("Direct Import, Contextual Add v2, Expiration Dates")
+    logger.info("Selective Storage, Custom Instructions, Webhooks")
+    logger.info("Ultimate API Key Authentication")
+    logger.info("Family Collaboration at Maximum Level")
     
     # Test API keys
-    logger.info("🔑 Test API Keys:")
-    logger.info("  🚀 Ultimate Enterprise: bz_ultimate_enterprise_123")
-    logger.info("  👨‍👩‍👧‍👦 Ultimate Family: bz_ultimate_family_456")
+    logger.info("Test API Keys:")
+    logger.info("  Ultimate Enterprise: bz_ultimate_enterprise_123")
+    logger.info("  Ultimate Family: bz_ultimate_family_456")
     
-    logger.info("🎯 OPTIMIZATION LEVEL: MAXIMUM")
-    logger.info("💰 MEM0 UTILIZATION: 100% OF ENTERPRISE FEATURES")
+    logger.info("OPTIMIZATION LEVEL: MAXIMUM")
+    logger.info("MEM0 UTILIZATION: 100% OF ENTERPRISE FEATURES")
     
     # Start the ultimate application
     app.run(
