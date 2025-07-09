@@ -64,14 +64,24 @@ class UltimateMem0FamilySystem:
         if not MEM0_AVAILABLE:
             raise Exception("Mem0 not available - install with: pip install mem0ai")
         
-        # Get Mem0 API key from environment
+        # Get Mem0 credentials from environment
         mem0_api_key = os.getenv('MEM0_API_KEY')
+        mem0_org_id = os.getenv('MEM0_ORG_ID', 'daddyholmes-default-org')
+        mem0_project_id = os.getenv('MEM0_PROJECT_ID', 'default-project')
+        
         if not mem0_api_key:
             raise Exception("MEM0_API_KEY environment variable not set")
         
         # Initialize Ultimate Mem0 client with ALL advanced features
         logger.info(f"Initializing Mem0 client with API key: {mem0_api_key[:10]}...")
-        self.mem0_client = MemoryClient(api_key=mem0_api_key)
+        logger.info(f"Mem0 org_id: {mem0_org_id}")
+        logger.info(f"Mem0 project_id: {mem0_project_id}")
+        
+        self.mem0_client = MemoryClient(
+            api_key=mem0_api_key,
+            org_id=mem0_org_id,
+            project_id=mem0_project_id
+        )
         
         # Redis for supplementary real-time features
         self.redis_client = redis.Redis(
