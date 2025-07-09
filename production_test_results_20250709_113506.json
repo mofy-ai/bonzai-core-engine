@@ -1,0 +1,664 @@
+{
+  "meta": {
+    "timestamp": "2025-07-09T11:35:03.302381",
+    "python_version": "3.13.3 (main, Jun 16 2025, 18:15:32) [GCC 14.2.0]",
+    "test_duration": 3.0311453342437744,
+    "total_tests": 95,
+    "passed": 66,
+    "failed": 12,
+    "warnings": 17,
+    "critical_failures": 10
+  },
+  "environment": {
+    "GEMINI_API_KEY": {
+      "status": "FAIL",
+      "message": "Gemini AI access - MISSING/INVALID",
+      "timestamp": "2025-07-09T11:35:03.343445",
+      "critical": true
+    },
+    "MEM0_API_KEY": {
+      "status": "FAIL",
+      "message": "Memory system - MISSING/INVALID",
+      "timestamp": "2025-07-09T11:35:03.343473",
+      "critical": true
+    },
+    "MEM0_USER_ID": {
+      "status": "FAIL",
+      "message": "Memory user ID - MISSING/INVALID",
+      "timestamp": "2025-07-09T11:35:03.343489",
+      "critical": true
+    },
+    "FLASK_SECRET_KEY": {
+      "status": "FAIL",
+      "message": "Flask security - MISSING/INVALID",
+      "timestamp": "2025-07-09T11:35:03.343496",
+      "critical": true
+    },
+    "PORT": {
+      "status": "FAIL",
+      "message": "Backend port - MISSING/INVALID",
+      "timestamp": "2025-07-09T11:35:03.343506",
+      "critical": true
+    }
+  },
+  "dependencies": {
+    "flask": {
+      "status": "PASS",
+      "message": "Web framework - v3.1.1",
+      "timestamp": "2025-07-09T11:35:03.400231",
+      "critical": true
+    },
+    "flask_cors": {
+      "status": "PASS",
+      "message": "CORS support - v6.0.1",
+      "timestamp": "2025-07-09T11:35:03.401051",
+      "critical": true
+    },
+    "flask_socketio": {
+      "status": "PASS",
+      "message": "WebSocket support - vUnknown",
+      "timestamp": "2025-07-09T11:35:03.426299",
+      "critical": true
+    },
+    "google.generativeai": {
+      "status": "PASS",
+      "message": "Gemini SDK - vUnknown",
+      "timestamp": "2025-07-09T11:35:03.426328",
+      "critical": true
+    },
+    "openai": {
+      "status": "PASS",
+      "message": "OpenAI SDK - v1.93.2",
+      "timestamp": "2025-07-09T11:35:03.738781",
+      "critical": true
+    },
+    "anthropic": {
+      "status": "PASS",
+      "message": "Claude SDK - v0.57.1",
+      "timestamp": "2025-07-09T11:35:03.835936",
+      "critical": true
+    },
+    "mem0": {
+      "status": "PASS",
+      "message": "Memory system - v0.1.114",
+      "timestamp": "2025-07-09T11:35:04.455744",
+      "critical": true
+    },
+    "aiohttp": {
+      "status": "PASS",
+      "message": "Async HTTP - v3.12.13",
+      "timestamp": "2025-07-09T11:35:04.455788",
+      "critical": true
+    },
+    "asyncio": {
+      "status": "PASS",
+      "message": "Async support - vUnknown",
+      "timestamp": "2025-07-09T11:35:04.455805",
+      "critical": true
+    },
+    "json": {
+      "status": "PASS",
+      "message": "JSON processing - v2.0.9",
+      "timestamp": "2025-07-09T11:35:04.455823",
+      "critical": true
+    },
+    "ai_google.cloud.aiplatform": {
+      "status": "PASS",
+      "message": "Vertex AI - vUnknown",
+      "timestamp": "2025-07-09T11:35:04.455838",
+      "critical": false
+    },
+    "ai_litellm": {
+      "status": "PASS",
+      "message": "Multi-model support - vUnknown",
+      "timestamp": "2025-07-09T11:35:05.216633",
+      "critical": false
+    },
+    "ai_instructor": {
+      "status": "PASS",
+      "message": "Structured outputs - vUnknown",
+      "timestamp": "2025-07-09T11:35:05.588234",
+      "critical": false
+    },
+    "ai_crewai": {
+      "status": "PASS",
+      "message": "Agent orchestration - v0.140.0",
+      "timestamp": "2025-07-09T11:35:06.268160",
+      "critical": false
+    },
+    "opt_websockets": {
+      "status": "PASS",
+      "message": "WebSocket client - Available",
+      "timestamp": "2025-07-09T11:35:06.268883",
+      "critical": false
+    },
+    "opt_beautifulsoup4": {
+      "status": "WARNING",
+      "message": "Not installed - Web scraping",
+      "timestamp": "2025-07-09T11:35:06.269044",
+      "critical": false
+    },
+    "opt_requests": {
+      "status": "PASS",
+      "message": "HTTP requests - Available",
+      "timestamp": "2025-07-09T11:35:06.269080",
+      "critical": false
+    },
+    "opt_psutil": {
+      "status": "PASS",
+      "message": "System monitoring - Available",
+      "timestamp": "2025-07-09T11:35:06.269103",
+      "critical": false
+    },
+    "opt_redis": {
+      "status": "WARNING",
+      "message": "Not installed - Redis cache",
+      "timestamp": "2025-07-09T11:35:06.269262",
+      "critical": false
+    },
+    "opt_pymongo": {
+      "status": "WARNING",
+      "message": "Not installed - MongoDB",
+      "timestamp": "2025-07-09T11:35:06.269392",
+      "critical": false
+    }
+  },
+  "core_services": {
+    "ZAI Orchestration Engine": {
+      "status": "PASS",
+      "message": "Module loaded - Classes: AgentCapability, AgentContext, AgentOrchestrator...",
+      "timestamp": "2025-07-09T11:35:06.273564",
+      "critical": true
+    },
+    "Model Manager": {
+      "status": "PASS",
+      "message": "Module loaded - Classes: APIException, AllModelsFailedException, Any...",
+      "timestamp": "2025-07-09T11:35:06.276729",
+      "critical": true
+    },
+    "Memory System": {
+      "status": "PASS",
+      "message": "Module loaded - Classes: EnhancedMemoryManager, EnhancedMemoryManagerDocs, Memory...",
+      "timestamp": "2025-07-09T11:35:06.277091",
+      "critical": true
+    },
+    "7 AI Variants": {
+      "status": "PASS",
+      "message": "Module loaded - Classes: Any, DevOpsSpecialist, IntegrationArchitect...",
+      "timestamp": "2025-07-09T11:35:06.277129",
+      "critical": true
+    },
+    "Multi-Provider System": {
+      "status": "PASS",
+      "message": "Module loaded - Classes: ModelConfig, ModelRole, ProviderCredentials...",
+      "timestamp": "2025-07-09T11:35:06.278393",
+      "critical": true
+    },
+    "Monitoring System": {
+      "status": "PASS",
+      "message": "Module loaded - Classes: Any, ZAIMonitoring, datetime...",
+      "timestamp": "2025-07-09T11:35:06.278733",
+      "critical": true
+    },
+    "Observability": {
+      "status": "PASS",
+      "message": "Module loaded - Classes: BatchSpanProcessor, ConsoleSpanExporter, MeterProvider...",
+      "timestamp": "2025-07-09T11:35:06.281696",
+      "critical": true
+    }
+  },
+  "orchestration": {
+    "Multi-Model Orchestrator": {
+      "status": "PASS",
+      "message": "Module loaded - Classes: Anthropic, Any, CapabilityType...",
+      "timestamp": "2025-07-09T11:35:06.291742",
+      "critical": false
+    },
+    "Execution Router": {
+      "status": "WARNING",
+      "message": "ERROR: No module named 'e2b_code_interpreter'",
+      "timestamp": "2025-07-09T11:35:06.293913",
+      "critical": false
+    },
+    "Task Orchestrator": {
+      "status": "PASS",
+      "message": "Module loaded - Classes: AgentCapability, Any, BonzaiTaskOrchestrator...",
+      "timestamp": "2025-07-09T11:35:06.301589",
+      "critical": false
+    },
+    "Agent Registry": {
+      "status": "PASS",
+      "message": "Module loaded - Classes: AgentCapability, AgentCategory, AgentStatus...",
+      "timestamp": "2025-07-09T11:35:06.301643",
+      "critical": false
+    },
+    "WebSocket Coordinator": {
+      "status": "PASS",
+      "message": "Module loaded - Classes: AgentConnection, Any, BonzaiWebSocketCoordinator...",
+      "timestamp": "2025-07-09T11:35:06.303599",
+      "critical": false
+    }
+  },
+  "ai_providers": {
+    "OPENAI_API_KEY": {
+      "status": "WARNING",
+      "message": "OpenAI GPT models - Not configured",
+      "timestamp": "2025-07-09T11:35:03.343513",
+      "critical": false
+    },
+    "ANTHROPIC_API_KEY": {
+      "status": "WARNING",
+      "message": "Claude models - Not configured",
+      "timestamp": "2025-07-09T11:35:03.343528",
+      "critical": false
+    },
+    "DEEPSEEK_API_KEY": {
+      "status": "WARNING",
+      "message": "DeepSeek models - Not configured",
+      "timestamp": "2025-07-09T11:35:03.343543",
+      "critical": false
+    },
+    "GOOGLE_AI_API_KEY": {
+      "status": "WARNING",
+      "message": "Google AI services - Not configured",
+      "timestamp": "2025-07-09T11:35:03.343557",
+      "critical": false
+    }
+  },
+  "memory_systems": {
+    "Mem0_Library": {
+      "status": "PASS",
+      "message": "Mem0 library installed - v0.1.114",
+      "timestamp": "2025-07-09T11:35:06.330937",
+      "critical": false
+    },
+    "Mem0_API_Key": {
+      "status": "FAIL",
+      "message": "Mem0 API key missing or invalid",
+      "timestamp": "2025-07-09T11:35:06.330968",
+      "critical": true
+    },
+    "zai_memory_system": {
+      "status": "PASS",
+      "message": "Basic memory system - Available",
+      "timestamp": "2025-07-09T11:35:06.330994",
+      "critical": false
+    },
+    "zai_memory_professional": {
+      "status": "WARNING",
+      "message": "Professional memory system - Not available",
+      "timestamp": "2025-07-09T11:35:06.331534",
+      "critical": false
+    },
+    "environment_snapshot_manager": {
+      "status": "PASS",
+      "message": "Environment snapshots - Available",
+      "timestamp": "2025-07-09T11:35:06.332053",
+      "critical": false
+    }
+  },
+  "integration_services": {
+    "SCRAPYBARA_API_KEY": {
+      "status": "WARNING",
+      "message": "Web scraping service - Not configured",
+      "timestamp": "2025-07-09T11:35:03.343564",
+      "critical": false
+    },
+    "E2B_API_KEY": {
+      "status": "WARNING",
+      "message": "Code execution - Not configured",
+      "timestamp": "2025-07-09T11:35:03.343573",
+      "critical": false
+    },
+    "GITHUB_PAT": {
+      "status": "WARNING",
+      "message": "GitHub integration - Not configured",
+      "timestamp": "2025-07-09T11:35:03.343579",
+      "critical": false
+    },
+    "PIPEDREAM_API_TOKEN": {
+      "status": "WARNING",
+      "message": "Workflow automation - Not configured",
+      "timestamp": "2025-07-09T11:35:03.343592",
+      "critical": false
+    },
+    "ScrapyBara Integration": {
+      "status": "PASS",
+      "message": "Module loaded - Classes: Any, CollaborativeSession, Memory...",
+      "timestamp": "2025-07-09T11:35:06.284914",
+      "critical": false
+    },
+    "Enhanced ScrapyBara": {
+      "status": "PASS",
+      "message": "Module loaded - Classes: ActionAuditor, Any, AuthenticationFlow...",
+      "timestamp": "2025-07-09T11:35:06.287174",
+      "critical": false
+    },
+    "Virtual Computer": {
+      "status": "WARNING",
+      "message": "ERROR: No module named 'e2b_code_interpreter'",
+      "timestamp": "2025-07-09T11:35:06.287867",
+      "critical": false
+    },
+    "DeepSeek Integration": {
+      "status": "PASS",
+      "message": "Module loaded - Classes: Any, DeepSeekConfig, DeepSeekModel...",
+      "timestamp": "2025-07-09T11:35:06.290164",
+      "critical": false
+    },
+    "Pipedream Integration": {
+      "status": "PASS",
+      "message": "Module loaded - Classes: PipedreamIntegrationService",
+      "timestamp": "2025-07-09T11:35:06.290526",
+      "critical": false
+    },
+    "ScrapyBara_Basic": {
+      "status": "FAIL",
+      "message": "ScrapyBara integration not available",
+      "timestamp": "2025-07-09T11:35:06.316571",
+      "critical": true
+    },
+    "Virtual_Computer": {
+      "status": "WARNING",
+      "message": "Virtual computer service not available",
+      "timestamp": "2025-07-09T11:35:06.317171",
+      "critical": false
+    },
+    "MCP_Integration": {
+      "status": "WARNING",
+      "message": "MCP integration not available",
+      "timestamp": "2025-07-09T11:35:06.318491",
+      "critical": false
+    }
+  },
+  "api_endpoints": {
+    "core__api_health": {
+      "status": "PASS",
+      "message": "Health check - Status: 200, Time: 0.001s",
+      "timestamp": "2025-07-09T11:35:06.319718",
+      "critical": false,
+      "performance": {
+        "response_time": 0.0011222362518310547,
+        "status_code": 200
+      }
+    },
+    "core__": {
+      "status": "PASS",
+      "message": "Root endpoint - Status: 200, Time: 0.001s",
+      "timestamp": "2025-07-09T11:35:06.321380",
+      "critical": false,
+      "performance": {
+        "response_time": 0.001477956771850586,
+        "status_code": 200
+      }
+    },
+    "core__api_mcp_tools": {
+      "status": "PASS",
+      "message": "MCP tools - Status: 200, Time: 0.001s",
+      "timestamp": "2025-07-09T11:35:06.322757",
+      "critical": false,
+      "performance": {
+        "response_time": 0.001222848892211914,
+        "status_code": 200
+      }
+    },
+    "core__api_multi-model_status": {
+      "status": "PASS",
+      "message": "Multi-model status - Status: 200, Time: 0.001s",
+      "timestamp": "2025-07-09T11:35:06.323994",
+      "critical": false,
+      "performance": {
+        "response_time": 0.001100778579711914,
+        "status_code": 200
+      }
+    },
+    "core__api_orchestration_status": {
+      "status": "PASS",
+      "message": "Orchestration status - Status: 404, Time: 0.001s",
+      "timestamp": "2025-07-09T11:35:06.325210",
+      "critical": false,
+      "performance": {
+        "response_time": 0.0010919570922851562,
+        "status_code": 404
+      }
+    },
+    "api__api_chat_simple": {
+      "status": "PASS",
+      "message": "Simple chat - Status: 200, Time: 0.001s",
+      "timestamp": "2025-07-09T11:35:06.326818",
+      "critical": false,
+      "performance": {
+        "response_time": 0.001462697982788086,
+        "status_code": 200
+      }
+    },
+    "api__api_memory_status": {
+      "status": "PASS",
+      "message": "Memory status - Status: 404, Time: 0.001s",
+      "timestamp": "2025-07-09T11:35:06.328009",
+      "critical": false,
+      "performance": {
+        "response_time": 0.001064300537109375,
+        "status_code": 404
+      }
+    },
+    "api__api_scrape_status": {
+      "status": "PASS",
+      "message": "Scrape status - Status: 200, Time: 0.001s",
+      "timestamp": "2025-07-09T11:35:06.329224",
+      "critical": false,
+      "performance": {
+        "response_time": 0.0010640621185302734,
+        "status_code": 200
+      }
+    },
+    "api__api_scout_status": {
+      "status": "PASS",
+      "message": "Scout status - Status: 200, Time: 0.001s",
+      "timestamp": "2025-07-09T11:35:06.330756",
+      "critical": false,
+      "performance": {
+        "response_time": 0.001375436782836914,
+        "status_code": 200
+      }
+    }
+  },
+  "websocket_services": {
+    "Flask_SocketIO": {
+      "status": "PASS",
+      "message": "Flask-SocketIO library available",
+      "timestamp": "2025-07-09T11:35:06.332117",
+      "critical": false
+    },
+    "WebSocket_Coordinator": {
+      "status": "PASS",
+      "message": "WebSocket coordinator available",
+      "timestamp": "2025-07-09T11:35:06.332134",
+      "critical": false
+    },
+    "Agent_Client": {
+      "status": "PASS",
+      "message": "WebSocket agent client available",
+      "timestamp": "2025-07-09T11:35:06.332914",
+      "critical": false
+    }
+  },
+  "performance_benchmarks": {
+    "Vertex_Supercharger": {
+      "status": "FAIL",
+      "message": "Express Vertex Supercharger not available",
+      "timestamp": "2025-07-09T11:35:06.303973",
+      "critical": true
+    },
+    "Response_Time__api_health": {
+      "status": "PASS",
+      "message": "Response time: 0.006s",
+      "timestamp": "2025-07-09T11:35:06.309583",
+      "critical": false,
+      "performance": {
+        "response_time": 0.0055675506591796875
+      }
+    },
+    "Response_Time__api_chat_simple": {
+      "status": "FAIL",
+      "message": "Response time: 0.002s",
+      "timestamp": "2025-07-09T11:35:06.311762",
+      "critical": false,
+      "performance": {
+        "response_time": 0.0020072460174560547
+      }
+    },
+    "Response_Time__api_multi-model_status": {
+      "status": "PASS",
+      "message": "Response time: 0.001s",
+      "timestamp": "2025-07-09T11:35:06.313066",
+      "critical": false,
+      "performance": {
+        "response_time": 0.0011775493621826172
+      }
+    },
+    "Response_Time__api_orchestration_status": {
+      "status": "FAIL",
+      "message": "Response time: 0.001s",
+      "timestamp": "2025-07-09T11:35:06.314384",
+      "critical": false,
+      "performance": {
+        "response_time": 0.0011627674102783203
+      }
+    },
+    "Concurrent_Request_Framework": {
+      "status": "PASS",
+      "message": "Concurrent request testing framework available",
+      "timestamp": "2025-07-09T11:35:06.314530",
+      "critical": false
+    }
+  },
+  "quota_management": {
+    "Gemini_Quota_Manager": {
+      "status": "PASS",
+      "message": "Gemini quota manager available",
+      "timestamp": "2025-07-09T11:35:06.316388",
+      "critical": false
+    },
+    "Rate_Limiting_Framework": {
+      "status": "PASS",
+      "message": "Rate limiting framework ready for implementation",
+      "timestamp": "2025-07-09T11:35:06.316496",
+      "critical": false
+    }
+  },
+  "fallback_systems": {
+    "Fallback_System": {
+      "status": "FAIL",
+      "message": "API fallback system not available",
+      "timestamp": "2025-07-09T11:35:06.316465",
+      "critical": true
+    }
+  },
+  "variant_testing": {
+    "Research_Specialist": {
+      "status": "PASS",
+      "message": "Research variant available and importable",
+      "timestamp": "2025-07-09T11:35:06.303669",
+      "critical": false
+    },
+    "DevOps_Specialist": {
+      "status": "PASS",
+      "message": "DevOps variant available and importable",
+      "timestamp": "2025-07-09T11:35:06.303696",
+      "critical": false
+    },
+    "Scout_Commander": {
+      "status": "PASS",
+      "message": "Scout variant available and importable",
+      "timestamp": "2025-07-09T11:35:06.303715",
+      "critical": false
+    },
+    "Analyst_Variant": {
+      "status": "PASS",
+      "message": "Data analysis and insights - Framework available",
+      "timestamp": "2025-07-09T11:35:06.303843",
+      "critical": false
+    },
+    "Creative_Variant": {
+      "status": "PASS",
+      "message": "Content creation and ideation - Framework available",
+      "timestamp": "2025-07-09T11:35:06.303867",
+      "critical": false
+    },
+    "Support_Variant": {
+      "status": "PASS",
+      "message": "User assistance and guidance - Framework available",
+      "timestamp": "2025-07-09T11:35:06.303883",
+      "critical": false
+    },
+    "Coordinator_Variant": {
+      "status": "PASS",
+      "message": "Multi-agent orchestration - Framework available",
+      "timestamp": "2025-07-09T11:35:06.303896",
+      "critical": false
+    }
+  },
+  "security": {
+    "Flask_Secret_Key": {
+      "status": "FAIL",
+      "message": "Flask secret key missing or too short",
+      "timestamp": "2025-07-09T11:35:06.332988",
+      "critical": true
+    },
+    "Production_Security": {
+      "status": "WARNING",
+      "message": "Production security module not available",
+      "timestamp": "2025-07-09T11:35:06.333379",
+      "critical": false
+    }
+  },
+  "scalability": {},
+  "monitoring": {},
+  "deployment": {
+    "Railway_Config": {
+      "status": "PASS",
+      "message": "Railway configuration found",
+      "timestamp": "2025-07-09T11:35:06.333458",
+      "critical": false
+    },
+    "Requirements": {
+      "status": "PASS",
+      "message": "Requirements file found",
+      "timestamp": "2025-07-09T11:35:06.333479",
+      "critical": false
+    },
+    "Startup_run_backend": {
+      "status": "PASS",
+      "message": "Startup script run_backend.py found",
+      "timestamp": "2025-07-09T11:35:06.333505",
+      "critical": false
+    },
+    "Startup_start_backend_with_root_env": {
+      "status": "PASS",
+      "message": "Startup script start_backend_with_root_env.py found",
+      "timestamp": "2025-07-09T11:35:06.333522",
+      "critical": false
+    }
+  },
+  "performance_services": {
+    "Vertex Optimizer": {
+      "status": "PASS",
+      "message": "Module loaded - Classes: ModelPerformance, OptimizationMode, ZaiVertexOptimizer...",
+      "timestamp": "2025-07-09T11:35:06.281746",
+      "critical": false
+    },
+    "Express Supercharger (6x speed)": {
+      "status": "PASS",
+      "message": "Module loaded - Classes: Any, SuperchargerConfig, ZaiExpressVertexSupercharger...",
+      "timestamp": "2025-07-09T11:35:06.282684",
+      "critical": false
+    },
+    "Express Mode Integration": {
+      "status": "PASS",
+      "message": "Module loaded - Classes: Any, ExpressModeVertexIntegration, ZAIExpressVertexSupercharger...",
+      "timestamp": "2025-07-09T11:35:06.283067",
+      "critical": false
+    }
+  }
+}
