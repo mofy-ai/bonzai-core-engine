@@ -503,9 +503,9 @@ class UltimateMem0APIKeyManager:
     
     def create_default_keys(self):
         """Create default API keys stored in Mem0"""
-        asyncio.create_task(self.setup_default_keys())
+        self.setup_default_keys()
     
-    async def setup_default_keys(self):
+    def setup_default_keys(self):
         """Setup default keys in Mem0"""
         default_keys = [
             {
