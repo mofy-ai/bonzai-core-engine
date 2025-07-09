@@ -51,7 +51,7 @@ async def initialize_all_services():
         ('Memory Manager', 'zai_memory_system'),
         ('Deep Research Center', 'deep_research_center'),
         ('Virtual Computer', 'virtual_computer_service'),
-        ('WhatsApp Integration', None),  # Loaded from API
+        ('Claude Computer Use', 'claude_computer_use_service'),
         ('DeepSeek Integration', 'zai_deepseek_integration'),
         ('CrewAI Orchestration', 'crewai_supercharger'),
         ('Monitoring System', 'zai_monitoring'),
@@ -137,7 +137,7 @@ async def initialize_all_services():
     _initialized = True
     
     print("-" * 40)
-    print(f"\nStatus: {successful}/{successful + failed} services running")
+    print(f"\nStatus: {successful}/16 services running")
     print("Server: http://127.0.0.1:5001")
     print("Ready for requests!\n")
 
