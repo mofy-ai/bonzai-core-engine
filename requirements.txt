@@ -19,6 +19,7 @@ google-auth==2.40.3
 # ===== MEMORY & VECTOR DB =====
 mem0ai==0.1.114
 qdrant-client==1.14.3
+redis==6.2.0
 
 # ===== WEB SCRAPING & HTTP =====
 requests==2.32.4
