@@ -1,0 +1,218 @@
+{
+  "total_tests": 30,
+  "passed": 28,
+  "failed": 2,
+  "warnings": 0,
+  "results": [
+    {
+      "name": "Health Endpoint",
+      "success": true,
+      "message": "Status: healthy",
+      "details": {},
+      "timestamp": "2025-07-09T13:37:25.807788"
+    },
+    {
+      "name": "Root Endpoint",
+      "success": true,
+      "message": "Service: Bonzai Railway Backend",
+      "details": {},
+      "timestamp": "2025-07-09T13:37:25.920763"
+    },
+    {
+      "name": "Status Endpoint",
+      "success": true,
+      "message": "Status: operational",
+      "details": {},
+      "timestamp": "2025-07-09T13:37:26.180506"
+    },
+    {
+      "name": "CORS Headers",
+      "success": false,
+      "message": "CORS headers missing",
+      "details": {},
+      "timestamp": "2025-07-09T13:37:26.297274"
+    },
+    {
+      "name": "Chat Endpoint /api/chat",
+      "success": true,
+      "message": "Responds (status: 404)",
+      "details": {},
+      "timestamp": "2025-07-09T13:37:26.401419"
+    },
+    {
+      "name": "Chat Endpoint /api/chat/simple",
+      "success": true,
+      "message": "Responds (status: 404)",
+      "details": {},
+      "timestamp": "2025-07-09T13:37:26.513681"
+    },
+    {
+      "name": "Chat Endpoint /api/chat/anthropic",
+      "success": true,
+      "message": "Responds (status: 404)",
+      "details": {},
+      "timestamp": "2025-07-09T13:37:26.631059"
+    },
+    {
+      "name": "Chat Endpoint /api/chat/openai",
+      "success": true,
+      "message": "Responds (status: 404)",
+      "details": {},
+      "timestamp": "2025-07-09T13:37:26.749742"
+    },
+    {
+      "name": "Chat Endpoint /api/chat/gemini",
+      "success": true,
+      "message": "Responds (status: 404)",
+      "details": {},
+      "timestamp": "2025-07-09T13:37:26.862590"
+    },
+    {
+      "name": "Chat Endpoint /api/chat/vertex",
+      "success": true,
+      "message": "Responds (status: 404)",
+      "details": {},
+      "timestamp": "2025-07-09T13:37:26.978962"
+    },
+    {
+      "name": "Model Status /api/anthropic/status",
+      "success": true,
+      "message": "Endpoint exists (status: 404)",
+      "details": {},
+      "timestamp": "2025-07-09T13:37:27.094505"
+    },
+    {
+      "name": "Model Status /api/openai/status",
+      "success": true,
+      "message": "Endpoint exists (status: 404)",
+      "details": {},
+      "timestamp": "2025-07-09T13:37:27.348619"
+    },
+    {
+      "name": "Model Status /api/gemini/status",
+      "success": true,
+      "message": "Endpoint exists (status: 404)",
+      "details": {},
+      "timestamp": "2025-07-09T13:37:27.458548"
+    },
+    {
+      "name": "Model Status /api/vertex/status",
+      "success": true,
+      "message": "Endpoint exists (status: 404)",
+      "details": {},
+      "timestamp": "2025-07-09T13:37:27.572518"
+    },
+    {
+      "name": "Model Status /api/deepseek/status",
+      "success": true,
+      "message": "Endpoint exists (status: 404)",
+      "details": {},
+      "timestamp": "2025-07-09T13:37:27.682504"
+    },
+    {
+      "name": "Service /api/services/status",
+      "success": true,
+      "message": "Reachable (status: 404)",
+      "details": {},
+      "timestamp": "2025-07-09T13:37:27.798523"
+    },
+    {
+      "name": "Service /api/services/health",
+      "success": true,
+      "message": "Reachable (status: 404)",
+      "details": {},
+      "timestamp": "2025-07-09T13:37:27.916159"
+    },
+    {
+      "name": "Service /api/memory/status",
+      "success": true,
+      "message": "Reachable (status: 404)",
+      "details": {},
+      "timestamp": "2025-07-09T13:37:28.024543"
+    },
+    {
+      "name": "Service /api/scrapybara/status",
+      "success": true,
+      "message": "Reachable (status: 404)",
+      "details": {},
+      "timestamp": "2025-07-09T13:37:28.128991"
+    },
+    {
+      "name": "Service /api/e2b/status",
+      "success": true,
+      "message": "Reachable (status: 404)",
+      "details": {},
+      "timestamp": "2025-07-09T13:37:28.233124"
+    },
+    {
+      "name": "Service /api/zai/status",
+      "success": true,
+      "message": "Reachable (status: 404)",
+      "details": {},
+      "timestamp": "2025-07-09T13:37:28.343492"
+    },
+    {
+      "name": "Service /api/orchestrator/status",
+      "success": true,
+      "message": "Reachable (status: 404)",
+      "details": {},
+      "timestamp": "2025-07-09T13:37:28.459502"
+    },
+    {
+      "name": "Workflow /api/workflow/trigger",
+      "success": true,
+      "message": "Available (status: 404)",
+      "details": {},
+      "timestamp": "2025-07-09T13:37:28.573329"
+    },
+    {
+      "name": "Workflow /api/workflow/status",
+      "success": true,
+      "message": "Available (status: 404)",
+      "details": {},
+      "timestamp": "2025-07-09T13:37:28.695002"
+    },
+    {
+      "name": "Workflow /api/orchestration/status",
+      "success": true,
+      "message": "Available (status: 404)",
+      "details": {},
+      "timestamp": "2025-07-09T13:37:28.828982"
+    },
+    {
+      "name": "Workflow /api/agents/status",
+      "success": true,
+      "message": "Available (status: 404)",
+      "details": {},
+      "timestamp": "2025-07-09T13:37:28.950913"
+    },
+    {
+      "name": "Workflow /api/tasks/status",
+      "success": true,
+      "message": "Available (status: 404)",
+      "details": {},
+      "timestamp": "2025-07-09T13:37:29.082354"
+    },
+    {
+      "name": "Rapid Health Checks",
+      "success": true,
+      "message": "100.0% success rate (10/10)",
+      "details": {},
+      "timestamp": "2025-07-09T13:37:31.182483"
+    },
+    {
+      "name": "Response Time",
+      "success": true,
+      "message": "107ms",
+      "details": {},
+      "timestamp": "2025-07-09T13:37:31.289238"
+    },
+    {
+      "name": "Endpoint Discovery",
+      "success": false,
+      "message": "No additional endpoints discovered",
+      "details": {},
+      "timestamp": "2025-07-09T13:37:32.361531"
+    }
+  ]
+}

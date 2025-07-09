@@ -345,7 +345,7 @@ def main():
     # Test both local and Railway
     urls_to_test = [
         "http://localhost:5001",
-        # Add your Railway URL here: "https://your-app.railway.app"
+        "https://bonzai-backend.railway.app"
     ]
     
     for url in urls_to_test:

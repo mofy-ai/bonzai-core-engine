@@ -1,0 +1,58 @@
+{
+  "timestamp": "2025-07-09T13:37:47.753894",
+  "test_location": "LOCAL",
+  "environment_variables": {
+    "MEM0_API_KEY": "PRESENT",
+    "ANTHROPIC_API_KEY": "PRESENT",
+    "OPENAI_API_KEY": "PRESENT",
+    "GEMINI_API_KEY": "PRESENT",
+    "DEEPSEEK_API_KEY": "PRESENT",
+    "SCRAPYBARA_API_KEY": "PRESENT",
+    "E2B_API_KEY": "PRESENT",
+    "PIPEDREAM_API_TOKEN": "PRESENT",
+    "GITHUB_PAT": "PRESENT"
+  },
+  "api_connections": {
+    "mem0": "CONNECTED",
+    "openai": "FAILED: Error code: 401 - {'error': {'message': 'Incorrect API key provided: sk-proj-********************************************************************************************************************************************************QokA. You can find your API key at https://platform.openai.com/account/api-keys.', 'type': 'invalid_request_error', 'param': None, 'code': 'invalid_api_key'}}",
+    "anthropic": "CONNECTED",
+    "gemini": "CONNECTED"
+  },
+  "service_functionality": {
+    "Agent Registry": "FUNCTIONAL",
+    "Memory Manager": "FUNCTIONAL",
+    "Multi-Provider System": "LOADED_BUT_NO_CLEAR_INTERFACE",
+    "Task Orchestrator": "FUNCTIONAL",
+    "Scrapybara Integration": "FUNCTIONAL",
+    "Pipedream Integration": "FUNCTIONAL",
+    "Gemini Orchestra": "LOADED_BUT_NO_CLEAR_INTERFACE",
+    "Express Mode": "LOADED_BUT_NO_CLEAR_INTERFACE"
+  },
+  "model_availability": {
+    "gpt-3.5-turbo": "FAILED: Error code: 401 - {'error': {'message': 'Incorrect API key provided: sk-proj-********************************************************************************************************************************************************QokA. You can find your API key at https://platform.openai.com/account/api-keys.', 'type': 'invalid_request_error', 'param': None, 'code': 'invalid_api_key'}}",
+    "gemini-pro": "FAILED: 401 API keys are not supported by this API. Expected OAuth2 access token or other authentication credentials that assert a principal. See https://cloud.google.com/docs/authentication [reason: \"CREDENTIALS_MISSING\"\ndomain: \"googleapis.com\"\nmetadata {\n  key: \"service\"\n  value: \"generativelanguage.googleapis.com\"\n}\nmetadata {\n  key: \"method\"\n  value: \"google.ai.generativelanguage.v1beta.GenerativeService.GenerateContent\"\n}\n]"
+  },
+  "integration_tests": {
+    "e2b": "AVAILABLE",
+    "scrapybara": "HTTP_ERROR: 404"
+  },
+  "family_coordination": {
+    "papa-bear": "WORKING",
+    "mama-bear": "WORKING",
+    "claude-code": "WORKING",
+    "nathan-prime": "WORKING",
+    "claude-web": "WORKING"
+  },
+  "summary": {
+    "total_tests": 32,
+    "passed": 24,
+    "failed": 8,
+    "success_rate": "75.0%",
+    "duration_seconds": 53.64
+  },
+  "railway_backend": {
+    "health_check": "PASS",
+    "services_reported": 0,
+    "status": "healthy"
+  }
+}
