@@ -1,0 +1,230 @@
+name: 🚀 Deploy to Production
+on:
+  workflow_run:
+    workflows: ["🚀 Bonzai Production Test Suite"]
+    types:
+      - completed
+    branches: [main, master]
+  workflow_dispatch:
+    inputs:
+      deployment_type:
+        description: 'Type of deployment'
+        required: true
+        default: 'staging'
+        type: choice
+        options:
+        - staging
+        - production
+        - hotfix
+      force_deploy:
+        description: 'Force deployment even with warnings'
+        required: false
+        default: false
+        type: boolean
+
+jobs:
+  pre-deployment-check:
+    name: 🔍 Pre-Deployment Validation
+    runs-on: ubuntu-latest
+    outputs:
+      deploy-approved: ${{ steps.gate.outputs.approved }}
+      deployment-target: ${{ steps.gate.outputs.target }}
+    steps:
+      - name: 📥 Checkout Repository
+        uses: actions/checkout@v4
+        
+      - name: 🐍 Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+          
+      - name: 📦 Install Dependencies
+        run: |
+          pip install requests python-dotenv
+          
+      - name: 🎯 Run Final Readiness Check
+        env:
+          BONZAI_BACKEND_URL: ${{ secrets.BONZAI_BACKEND_URL }}
+        run: |
+          echo "🎯 Running final production readiness assessment..."
+          python PRODUCTION_READINESS_ASSESSMENT.py --deployment-gate --strict
+          
+      - name: 🚦 Deployment Gate Decision
+        id: gate
+        run: |
+          FORCE_DEPLOY="${{ github.event.inputs.force_deploy }}"
+          DEPLOYMENT_TYPE="${{ github.event.inputs.deployment_type }}"
+          
+          # Check if readiness assessment passed
+          if [ -f "PRODUCTION_READINESS_REPORT.json" ]; then
+            STATUS=$(python -c "import json; data=json.load(open('PRODUCTION_READINESS_REPORT.json')); print(data.get('deployment_status', 'UNKNOWN'))")
+            SCORE=$(python -c "import json; data=json.load(open('PRODUCTION_READINESS_REPORT.json')); print(data.get('overall_score', 0))")
+            
+            echo "Assessment Status: $STATUS"
+            echo "Assessment Score: $SCORE"
+            
+            if [[ "$STATUS" == "PRODUCTION_READY" ]] || [[ "$FORCE_DEPLOY" == "true" ]]; then
+              echo "✅ Deployment approved"
+              echo "approved=true" >> $GITHUB_OUTPUT
+              echo "target=${DEPLOYMENT_TYPE:-staging}" >> $GITHUB_OUTPUT
+            else
+              echo "❌ Deployment blocked - system not ready"
+              echo "approved=false" >> $GITHUB_OUTPUT
+              exit 1
+            fi
+          else
+            echo "❌ No readiness report found"
+            echo "approved=false" >> $GITHUB_OUTPUT
+            exit 1
+          fi
+
+  deploy-staging:
+    name: 🧪 Deploy to Staging
+    runs-on: ubuntu-latest
+    needs: pre-deployment-check
+    if: needs.pre-deployment-check.outputs.deploy-approved == 'true' && (needs.pre-deployment-check.outputs.deployment-target == 'staging' || github.event_name == 'workflow_run')
+    environment: staging
+    steps:
+      - name: 📥 Checkout Repository
+        uses: actions/checkout@v4
+        
+      - name: 🚀 Deploy to Railway Staging
+        env:
+          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
+        run: |
+          echo "🚀 Deploying Bonzai to Railway Staging..."
+          
+          # Install Railway CLI
+          curl -fsSL https://railway.app/install.sh | sh
+          
+          # Deploy to staging environment
+          railway login --token $RAILWAY_TOKEN
+          railway environment staging
+          railway up --service bonzai-backend
+          
+      - name: ⏱️ Wait for Deployment
+        run: |
+          echo "⏱️ Waiting for staging deployment to stabilize..."
+          sleep 30
+          
+      - name: 🧪 Validate Staging Deployment
+        env:
+          STAGING_URL: ${{ secrets.BONZAI_STAGING_URL }}
+        run: |
+          echo "🧪 Validating staging deployment..."
+          
+          # Run quick validation tests against staging
+          export BONZAI_BACKEND_URL="$STAGING_URL"
+          python run_production_tests.py --quick --staging-validation
+          
+          if [ $? -eq 0 ]; then
+            echo "✅ Staging deployment successful"
+          else
+            echo "❌ Staging deployment validation failed"
+            exit 1
+          fi
+
+  deploy-production:
+    name: 🌟 Deploy to Production
+    runs-on: ubuntu-latest
+    needs: [pre-deployment-check, deploy-staging]
+    if: needs.pre-deployment-check.outputs.deployment-target == 'production' && needs.deploy-staging.result == 'success'
+    environment: 
+      name: production
+      url: ${{ secrets.BONZAI_PRODUCTION_URL }}
+    steps:
+      - name: 📥 Checkout Repository
+        uses: actions/checkout@v4
+        
+      - name: 🌟 Deploy to Production
+        env:
+          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
+        run: |
+          echo "🌟 Deploying Bonzai to Production..."
+          
+          # Install Railway CLI
+          curl -fsSL https://railway.app/install.sh | sh
+          
+          # Deploy to production environment
+          railway login --token $RAILWAY_TOKEN
+          railway environment production
+          railway up --service bonzai-backend
+          
+      - name: ⏱️ Wait for Production Deployment
+        run: |
+          echo "⏱️ Waiting for production deployment to stabilize..."
+          sleep 60
+          
+      - name: 🧪 Validate Production Deployment
+        env:
+          PRODUCTION_URL: ${{ secrets.BONZAI_PRODUCTION_URL }}
+        run: |
+          echo "🧪 Validating production deployment..."
+          
+          # Run comprehensive validation against production
+          export BONZAI_BACKEND_URL="$PRODUCTION_URL"
+          python PRODUCTION_MASTER_TEST_SUITE.py --production-validation --critical-only
+          
+          if [ $? -eq 0 ]; then
+            echo "✅ Production deployment successful"
+          else
+            echo "❌ Production deployment validation failed"
+            # Note: Don't exit 1 here as we don't want to rollback automatically
+            echo "⚠️ Manual intervention may be required"
+          fi
+          
+      - name: 📊 Post-Deployment Monitoring
+        run: |
+          echo "📊 Starting post-deployment monitoring..."
+          
+          # Run extended monitoring for 5 minutes
+          for i in {1..5}; do
+            echo "Monitor check $i/5..."
+            python run_production_tests.py --health-check --production
+            sleep 60
+          done
+
+  notification:
+    name: 📢 Deployment Notification
+    runs-on: ubuntu-latest
+    needs: [deploy-staging, deploy-production]
+    if: always()
+    steps:
+      - name: 📢 Notify Deployment Status
+        run: |
+          STAGING_STATUS="${{ needs.deploy-staging.result }}"
+          PRODUCTION_STATUS="${{ needs.deploy-production.result }}"
+          
+          echo "📢 BONZAI DEPLOYMENT NOTIFICATION"
+          echo "=================================="
+          echo "Staging: $STAGING_STATUS"
+          echo "Production: $PRODUCTION_STATUS"
+          echo "Timestamp: $(date)"
+          
+          # Here you could integrate with Slack, Discord, email, etc.
+          # For example:
+          # curl -X POST -H 'Content-type: application/json' \
+          #   --data '{"text":"Bonzai deployment complete - Staging: '$STAGING_STATUS', Production: '$PRODUCTION_STATUS'"}' \
+          #   ${{ secrets.SLACK_WEBHOOK_URL }}
+
+  rollback:
+    name: 🔄 Emergency Rollback
+    runs-on: ubuntu-latest
+    if: failure() && github.event.inputs.deployment_type == 'production'
+    environment: production
+    steps:
+      - name: 🔄 Initiate Rollback
+        env:
+          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
+        run: |
+          echo "🔄 Initiating emergency rollback..."
+          
+          # Install Railway CLI
+          curl -fsSL https://railway.app/install.sh | sh
+          
+          # Rollback to previous deployment
+          railway login --token $RAILWAY_TOKEN
+          railway environment production
+          railway rollback --service bonzai-backend
+          
+          echo "🔄 Rollback initiated - manual verification recommended"

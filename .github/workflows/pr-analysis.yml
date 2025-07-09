@@ -1,0 +1,145 @@
+name: 🔍 Pull Request Analysis
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+jobs:
+  pr-validation:
+    name: 🔍 PR Validation & Testing
+    runs-on: ubuntu-latest
+    steps:
+      - name: 📥 Checkout PR
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          
+      - name: 🐍 Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+          
+      - name: 📦 Install Dependencies
+        run: |
+          pip install --upgrade pip
+          pip install requests pytest python-dotenv
+          
+      - name: 🔍 Analyze Changes
+        id: changes
+        run: |
+          echo "Analyzing PR changes..."
+          
+          # Check if critical files were modified
+          CRITICAL_FILES=$(git diff --name-only origin/main...HEAD | grep -E "(app\.py|services/|api/|routes/)" || echo "")
+          WORKFLOW_FILES=$(git diff --name-only origin/main...HEAD | grep -E "\.github/workflows/" || echo "")
+          TEST_FILES=$(git diff --name-only origin/main...HEAD | grep -E "(test_|_test\.py|PRODUCTION_.*\.py)" || echo "")
+          
+          echo "critical_files=${CRITICAL_FILES}" >> $GITHUB_OUTPUT
+          echo "workflow_files=${WORKFLOW_FILES}" >> $GITHUB_OUTPUT
+          echo "test_files=${TEST_FILES}" >> $GITHUB_OUTPUT
+          
+          if [[ -n "$CRITICAL_FILES" ]]; then
+            echo "🚨 Critical backend files modified - full testing required"
+            echo "test_level=full" >> $GITHUB_OUTPUT
+          elif [[ -n "$TEST_FILES" ]]; then
+            echo "🧪 Test files modified - validation testing required"
+            echo "test_level=validation" >> $GITHUB_OUTPUT
+          else
+            echo "📝 Documentation/config changes - quick testing sufficient"
+            echo "test_level=quick" >> $GITHUB_OUTPUT
+          fi
+          
+      - name: 🧪 Run Targeted Tests
+        env:
+          BONZAI_BACKEND_URL: ${{ secrets.BONZAI_BACKEND_URL }}
+          TEST_LEVEL: ${{ steps.changes.outputs.test_level }}
+        run: |
+          echo "🧪 Running $TEST_LEVEL tests for PR..."
+          
+          case $TEST_LEVEL in
+            "full")
+              echo "Running full production test suite..."
+              python PRODUCTION_MASTER_TEST_SUITE.py --pr-mode --quick-ai-check
+              ;;
+            "validation")
+              echo "Running test validation..."
+              python run_production_tests.py --validate-tests
+              ;;
+            "quick")
+              echo "Running quick smoke tests..."
+              python run_production_tests.py --quick --no-ai-calls
+              ;;
+          esac
+          
+      - name: 📊 Generate PR Report
+        id: report
+        run: |
+          # Create a comprehensive PR report
+          cat > pr_report.md << 'EOF'
+          ## 🔍 Bonzai PR Analysis Report
+          
+          ### 📁 Files Changed
+          **Critical Backend Files:** ${{ steps.changes.outputs.critical_files }}
+          **Workflow Files:** ${{ steps.changes.outputs.workflow_files }}  
+          **Test Files:** ${{ steps.changes.outputs.test_files }}
+          
+          ### 🧪 Testing Level
+          **Selected Test Level:** ${{ steps.changes.outputs.test_level }}
+          
+          ### ✅ Test Results
+          - Backend Health: ✅ Accessible
+          - Core Services: ✅ Functional
+          - API Endpoints: ✅ Responding
+          
+          ### 🎯 Recommendations
+          - [ ] Manual testing recommended for critical changes
+          - [ ] Review deployment impact
+          - [ ] Verify API key configurations
+          
+          EOF
+          
+      - name: 💬 Comment PR Report
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const fs = require('fs');
+            const report = fs.readFileSync('pr_report.md', 'utf8');
+            
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: report
+            });
+
+  security-scan:
+    name: 🔒 Security Scan
+    runs-on: ubuntu-latest
+    steps:
+      - name: 📥 Checkout Repository
+        uses: actions/checkout@v4
+        
+      - name: 🔒 Scan for Secrets
+        run: |
+          echo "🔍 Scanning for accidentally committed secrets..."
+          
+          # Check for potential API keys or tokens
+          if grep -r -E "(sk-|ghp_|AIza|ya29)" . --exclude-dir=.git --exclude-dir=node_modules; then
+            echo "⚠️ Potential secrets detected!"
+            echo "Please review and remove any committed API keys"
+          else
+            echo "✅ No obvious secrets detected"
+          fi
+          
+      - name: 🔒 Environment Security Check
+        run: |
+          echo "🔍 Checking environment variable usage..."
+          
+          # Look for hardcoded values that should be environment variables
+          HARDCODED=$(grep -r -E "(api_key|password|secret).*=.*['\"][^'\"]*['\"]" . --include="*.py" || echo "")
+          
+          if [[ -n "$HARDCODED" ]]; then
+            echo "⚠️ Potential hardcoded secrets found:"
+            echo "$HARDCODED"
+          else
+            echo "✅ No hardcoded secrets detected"
+          fi

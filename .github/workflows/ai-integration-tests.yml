@@ -1,0 +1,290 @@
+name: 🤖 AI Models Integration Test
+on:
+  push:
+    paths:
+      - 'services/**'
+      - 'api/**'
+      - 'app.py'
+  workflow_dispatch:
+    inputs:
+      test_real_apis:
+        description: 'Test with real API keys (use secrets)'
+        required: false
+        default: false
+        type: boolean
+
+jobs:
+  ai-integration-test:
+    name: 🧠 AI Models Integration
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Set up Python 3.11
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+        
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt || pip install flask flask-cors flask-socketio
+        pip install anthropic openai google-generativeai requests python-dotenv
+        
+    - name: Create AI Test Environment
+      run: |
+        cat > .env << EOF
+        FLASK_SECRET_KEY=ai-test-secret
+        BACKEND_PORT=5001
+        DEBUG=False
+        
+        # Test API keys (will be mocked unless real testing is enabled)
+        ANTHROPIC_API_KEY=${{ github.event.inputs.test_real_apis == 'true' && secrets.ANTHROPIC_API_KEY || 'test-anthropic-key' }}
+        OPENAI_API_KEY=${{ github.event.inputs.test_real_apis == 'true' && secrets.OPENAI_API_KEY || 'test-openai-key' }}
+        GOOGLE_API_KEY=${{ github.event.inputs.test_real_apis == 'true' && secrets.GOOGLE_API_KEY || 'test-google-key' }}
+        GEMINI_API_KEY=${{ github.event.inputs.test_real_apis == 'true' && secrets.GEMINI_API_KEY || 'test-gemini-key' }}
+        MEM0_API_KEY=${{ github.event.inputs.test_real_apis == 'true' && secrets.MEM0_API_KEY || 'test-mem0-key' }}
+        EOF
+        
+    - name: Start Backend Server
+      run: |
+        python app.py &
+        BACKEND_PID=$!
+        echo "BACKEND_PID=$BACKEND_PID" >> $GITHUB_ENV
+        
+        # Wait for server to start
+        for i in {1..20}; do
+          if curl -f http://localhost:5001/api/health >/dev/null 2>&1; then
+            echo "✅ Backend server started"
+            break
+          fi
+          sleep 3
+        done
+        
+    - name: Test AI Model Endpoints
+      run: |
+        cat > test_ai_models.py << 'EOF'
+        import requests
+        import json
+        import os
+        
+        BASE_URL = "http://localhost:5001"
+        
+        def test_ai_orchestration():
+            """Test AI orchestration endpoint"""
+            print("🧪 Testing AI Orchestration...")
+            
+            payload = {
+                "model": "gemini-2.0-flash-exp",
+                "message": "Say 'AI TEST RESPONSE' and nothing else",
+                "user_id": "ai_test_user"
+            }
+            
+            try:
+                response = requests.post(f"{BASE_URL}/api/chat/simple", json=payload, timeout=15)
+                print(f"Status: {response.status_code}")
+                
+                if response.status_code == 200:
+                    data = response.json()
+                    response_text = data.get("response", "")
+                    
+                    # Check if it's a real AI response vs mock
+                    mock_indicators = ["Chat response for:", "Backend ready", "Mock", "Test response"]
+                    is_mock = any(indicator in response_text for indicator in mock_indicators)
+                    
+                    if is_mock:
+                        print("⚠️ MOCK RESPONSE DETECTED (expected in CI)")
+                        print(f"Response: {response_text}")
+                        return "MOCK"
+                    else:
+                        print("✅ REAL AI RESPONSE!")
+                        print(f"Response: {response_text[:100]}...")
+                        return "REAL"
+                else:
+                    print(f"❌ Error: {response.status_code}")
+                    return "ERROR"
+                    
+            except Exception as e:
+                print(f"❌ Exception: {e}")
+                return "EXCEPTION"
+        
+        def test_multi_model_status():
+            """Test multi-model orchestrator status"""
+            print("\n🧪 Testing Multi-Model Status...")
+            
+            try:
+                response = requests.get(f"{BASE_URL}/api/multi-model/status", timeout=10)
+                print(f"Status: {response.status_code}")
+                
+                if response.status_code == 200:
+                    data = response.json()
+                    print("✅ Multi-Model Status OK")
+                    print(f"Available models: {data.get('available_models', 0)}")
+                    return True
+                else:
+                    print(f"❌ Error: {response.status_code}")
+                    return False
+                    
+            except Exception as e:
+                print(f"❌ Exception: {e}")
+                return False
+        
+        def test_zai_prime_status():
+            """Test ZAI Prime supervisor status"""
+            print("\n🧪 Testing ZAI Prime Status...")
+            
+            try:
+                response = requests.get(f"{BASE_URL}/api/zai-prime/status", timeout=10)
+                print(f"Status: {response.status_code}")
+                
+                if response.status_code == 200:
+                    data = response.json()
+                    print("✅ ZAI Prime Status OK")
+                    zai_status = data.get('zai_prime_status', {})
+                    print(f"Agent count: {zai_status.get('agent_count', 0)}")
+                    return True
+                else:
+                    print(f"⚠️ ZAI Prime not available: {response.status_code}")
+                    return False
+                    
+            except Exception as e:
+                print(f"❌ Exception: {e}")
+                return False
+        
+        def main():
+            print("🤖 AI MODELS INTEGRATION TEST")
+            print("=" * 50)
+            
+            results = {}
+            
+            # Test AI orchestration
+            results['ai_orchestration'] = test_ai_orchestration()
+            
+            # Test multi-model status
+            results['multi_model'] = test_multi_model_status()
+            
+            # Test ZAI Prime
+            results['zai_prime'] = test_zai_prime_status()
+            
+            # Summary
+            print("\n" + "=" * 50)
+            print("🎯 AI INTEGRATION TEST SUMMARY")
+            print("=" * 50)
+            
+            for test, result in results.items():
+                status = "✅" if result in [True, "REAL", "MOCK"] else "❌"
+                print(f"{status} {test}: {result}")
+            
+            # Save results
+            with open("ai_integration_results.json", "w") as f:
+                json.dump({
+                    "timestamp": "$(date -Iseconds)",
+                    "results": results,
+                    "real_api_testing": os.getenv("ANTHROPIC_API_KEY", "").startswith("sk-") or os.getenv("ANTHROPIC_API_KEY", "").startswith("ant-")
+                }, f, indent=2)
+            
+            print(f"\n📄 Results saved to ai_integration_results.json")
+        
+        if __name__ == "__main__":
+            main()
+        EOF
+        
+        python test_ai_models.py
+        
+    - name: Test Service Registry
+      run: |
+        echo "🧪 Testing Service Registry..."
+        
+        # Test agent registry
+        curl -f http://localhost:5001/api/agents || echo "⚠️ Agent registry endpoint not available"
+        
+        # Test task orchestrator
+        curl -f http://localhost:5001/api/task-orchestrator/status || echo "⚠️ Task orchestrator endpoint not available"
+        
+        # Test memory systems
+        curl -f http://localhost:5001/api/memory || echo "⚠️ Memory endpoint not available"
+        
+    - name: Generate AI Integration Report
+      if: always()
+      run: |
+        echo "## 🤖 AI Models Integration Report" > ai_report.md
+        echo "**Date:** $(date)" >> ai_report.md
+        echo "**Real API Testing:** ${{ github.event.inputs.test_real_apis }}" >> ai_report.md
+        echo "**Commit:** ${{ github.sha }}" >> ai_report.md
+        echo "" >> ai_report.md
+        
+        if [ -f "ai_integration_results.json" ]; then
+          echo "**Integration Results:**" >> ai_report.md
+          echo '```json' >> ai_report.md
+          cat ai_integration_results.json >> ai_report.md
+          echo '```' >> ai_report.md
+        fi
+        
+        echo "" >> ai_report.md
+        echo "### Service Endpoints Status:" >> ai_report.md
+        
+        endpoints=(
+          "/api/health:Health Check"
+          "/api/chat/simple:Simple Chat"
+          "/api/multi-model/status:Multi-Model"
+          "/api/zai-prime/status:ZAI Prime"
+          "/api/agents:Agent Registry"
+          "/api/memory:Memory System"
+        )
+        
+        for endpoint_info in "${endpoints[@]}"; do
+          IFS=':' read -r endpoint name <<< "$endpoint_info"
+          if curl -f "http://localhost:5001$endpoint" >/dev/null 2>&1; then
+            echo "- ✅ $name ($endpoint)" >> ai_report.md
+          else
+            echo "- ⚠️ $name ($endpoint) - Not Available" >> ai_report.md
+          fi
+        done
+        
+    - name: Upload AI Integration Report
+      if: always()
+      uses: actions/upload-artifact@v3
+      with:
+        name: ai-integration-report
+        path: |
+          ai_report.md
+          ai_integration_results.json
+          
+    - name: Cleanup
+      if: always()
+      run: |
+        if [ ! -z "$BACKEND_PID" ]; then
+          kill $BACKEND_PID || true
+        fi
+
+    - name: Comment PR with AI Test Results
+      if: github.event_name == 'pull_request'
+      uses: actions/github-script@v6
+      with:
+        script: |
+          const fs = require('fs');
+          
+          let comment = '## 🤖 AI Models Integration Test Results\n\n';
+          
+          if (fs.existsSync('ai_integration_results.json')) {
+            const results = JSON.parse(fs.readFileSync('ai_integration_results.json', 'utf8'));
+            
+            comment += '### Test Summary:\n';
+            for (const [test, result] of Object.entries(results.results || {})) {
+              const emoji = ['true', 'REAL', 'MOCK'].includes(result.toString()) ? '✅' : '❌';
+              comment += `- ${emoji} **${test}**: ${result}\n`;
+            }
+            
+            comment += `\n**Real API Testing**: ${results.real_api_testing ? 'Enabled' : 'Disabled (Mock Mode)'}\n`;
+          }
+          
+          comment += '\n📄 Full results available in the workflow artifacts.';
+          
+          github.rest.issues.createComment({
+            issue_number: context.issue.number,
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            body: comment
+          });

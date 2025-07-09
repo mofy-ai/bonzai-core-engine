@@ -55,4 +55,4 @@ Thumbs.db
 # Temporary files
 *.tmp
 *.temp
-nul
+nultest_venv/

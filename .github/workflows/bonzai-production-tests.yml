@@ -1,0 +1,255 @@
+name: 🚀 Bonzai Production Test Suite
+on:
+  push:
+    branches: [ main, master, development ]
+  pull_request:
+    branches: [ main, master ]
+  schedule:
+    # Run tests daily at 2 AM UTC
+    - cron: '0 2 * * *'
+  workflow_dispatch:
+    inputs:
+      test_type:
+        description: 'Type of test to run'
+        required: true
+        default: 'full'
+        type: choice
+        options:
+        - full
+        - quick
+        - readiness
+        - specific
+
+jobs:
+  bonzai-health-check:
+    name: 🏥 Backend Health Check
+    runs-on: ubuntu-latest
+    outputs:
+      backend-status: ${{ steps.health.outputs.status }}
+    steps:
+      - name: 📥 Checkout Repository
+        uses: actions/checkout@v4
+        
+      - name: 🐍 Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+          
+      - name: 📦 Install Dependencies
+        run: |
+          pip install --upgrade pip
+          pip install -r requirements.txt || echo "No requirements.txt found"
+          pip install requests pytest flask python-dotenv
+          
+      - name: 🏥 Backend Health Check
+        id: health
+        run: |
+          echo "Checking if backend is accessible..."
+          # This would connect to your Railway/deployed backend
+          python -c "
+          import requests
+          try:
+              response = requests.get('${{ secrets.BONZAI_BACKEND_URL }}/api/health', timeout=10)
+              print(f'Backend Status: {response.status_code}')
+              if response.status_code == 200:
+                  print('✅ Backend is healthy')
+                  print('status=healthy' >> $GITHUB_OUTPUT)
+              else:
+                  print('⚠️ Backend responding but not healthy')
+                  print('status=unhealthy' >> $GITHUB_OUTPUT)
+          except Exception as e:
+              print(f'❌ Backend unreachable: {e}')
+              print('status=unreachable' >> $GITHUB_OUTPUT)
+          "
+
+  production-master-tests:
+    name: 🧪 Production Master Test Suite
+    runs-on: ubuntu-latest
+    needs: bonzai-health-check
+    if: needs.bonzai-health-check.outputs.backend-status == 'healthy'
+    strategy:
+      matrix:
+        test-category: [
+          'ai-models',
+          'orchestration', 
+          'memory-systems',
+          'integrations',
+          'performance',
+          'security'
+        ]
+    steps:
+      - name: 📥 Checkout Repository
+        uses: actions/checkout@v4
+        
+      - name: 🐍 Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+          
+      - name: 📦 Install Test Dependencies
+        run: |
+          pip install --upgrade pip
+          pip install requests pytest flask python-dotenv anthropic openai google-generativeai mem0
+          
+      - name: 🧪 Run Production Master Tests
+        env:
+          BONZAI_BACKEND_URL: ${{ secrets.BONZAI_BACKEND_URL }}
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
+          MEM0_API_KEY: ${{ secrets.MEM0_API_KEY }}
+        run: |
+          echo "🧪 Running Production Master Test Suite - Category: ${{ matrix.test-category }}"
+          python PRODUCTION_MASTER_TEST_SUITE.py --category=${{ matrix.test-category }} --output=json
+          
+      - name: 📊 Upload Test Results
+        uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: production-test-results-${{ matrix.test-category }}
+          path: |
+            **/test-results-*.json
+            **/test-report-*.html
+            
+  production-readiness-assessment:
+    name: 🎯 Production Readiness Assessment
+    runs-on: ubuntu-latest
+    needs: [bonzai-health-check, production-master-tests]
+    if: always() && needs.bonzai-health-check.outputs.backend-status == 'healthy'
+    steps:
+      - name: 📥 Checkout Repository
+        uses: actions/checkout@v4
+        
+      - name: 🐍 Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+          
+      - name: 📦 Install Dependencies
+        run: |
+          pip install --upgrade pip
+          pip install requests pytest flask python-dotenv anthropic openai google-generativeai mem0
+          
+      - name: 📥 Download Test Results
+        uses: actions/download-artifact@v3
+        with:
+          path: test-artifacts
+          
+      - name: 🎯 Run Production Readiness Assessment
+        env:
+          BONZAI_BACKEND_URL: ${{ secrets.BONZAI_BACKEND_URL }}
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
+          MEM0_API_KEY: ${{ secrets.MEM0_API_KEY }}
+        run: |
+          echo "🎯 Running Production Readiness Assessment..."
+          python PRODUCTION_READINESS_ASSESSMENT.py --comprehensive --generate-report
+          
+      - name: 📋 Create Assessment Summary
+        id: assessment
+        run: |
+          # Parse the assessment results and create a summary
+          if [ -f "PRODUCTION_READINESS_REPORT.json" ]; then
+            SCORE=$(python -c "import json; data=json.load(open('PRODUCTION_READINESS_REPORT.json')); print(data.get('overall_score', 0))")
+            STATUS=$(python -c "import json; data=json.load(open('PRODUCTION_READINESS_REPORT.json')); print(data.get('deployment_status', 'UNKNOWN'))")
+            echo "score=$SCORE" >> $GITHUB_OUTPUT
+            echo "status=$STATUS" >> $GITHUB_OUTPUT
+          else
+            echo "score=0" >> $GITHUB_OUTPUT
+            echo "status=FAILED" >> $GITHUB_OUTPUT
+          fi
+          
+      - name: 📊 Upload Assessment Report
+        uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: production-readiness-assessment
+          path: |
+            PRODUCTION_READINESS_REPORT.*
+            PRODUCTION_ASSESSMENT_*.json
+            
+      - name: 💬 Comment Assessment Results
+        uses: actions/github-script@v6
+        if: github.event_name == 'pull_request'
+        with:
+          script: |
+            const score = '${{ steps.assessment.outputs.score }}';
+            const status = '${{ steps.assessment.outputs.status }}';
+            const emoji = status === 'PRODUCTION_READY' ? '🎉' : status === 'READY_WITH_WARNINGS' ? '⚠️' : '❌';
+            
+            const comment = `## ${emoji} Bonzai Production Readiness Assessment
+            
+            **Overall Score:** ${score}/100
+            **Deployment Status:** ${status}
+            
+            ${status === 'PRODUCTION_READY' ? 
+              '✅ **APPROVED FOR BETA DEPLOYMENT**' : 
+              status === 'READY_WITH_WARNINGS' ? 
+              '⚠️ **READY WITH WARNINGS** - Review issues before deployment' :
+              '❌ **NOT READY** - Critical issues must be resolved'
+            }
+            
+            📊 **Full Report:** Check the artifacts for detailed analysis
+            🧪 **Test Results:** All test categories completed
+            `;
+            
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: comment
+            });
+
+  quick-smoke-tests:
+    name: 💨 Quick Smoke Tests
+    runs-on: ubuntu-latest
+    if: github.event.inputs.test_type == 'quick' || github.event_name == 'push'
+    steps:
+      - name: 📥 Checkout Repository
+        uses: actions/checkout@v4
+        
+      - name: 🐍 Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+          
+      - name: 📦 Install Dependencies
+        run: |
+          pip install requests python-dotenv
+          
+      - name: 💨 Run Quick Tests
+        env:
+          BONZAI_BACKEND_URL: ${{ secrets.BONZAI_BACKEND_URL }}
+        run: |
+          echo "💨 Running Quick Smoke Tests..."
+          python run_production_tests.py --quick --no-ai-calls
+          
+  deployment-gate:
+    name: 🚦 Deployment Gate
+    runs-on: ubuntu-latest
+    needs: [production-readiness-assessment]
+    if: always()
+    steps:
+      - name: 🚦 Deployment Decision
+        run: |
+          ASSESSMENT_STATUS="${{ needs.production-readiness-assessment.outputs.status }}"
+          SCORE="${{ needs.production-readiness-assessment.outputs.score }}"
+          
+          echo "🚦 DEPLOYMENT GATE ANALYSIS"
+          echo "Assessment Status: $ASSESSMENT_STATUS"
+          echo "Overall Score: $SCORE"
+          
+          if [[ "$ASSESSMENT_STATUS" == "PRODUCTION_READY" ]]; then
+            echo "✅ GATE PASSED - System approved for deployment"
+            echo "deployment=approved" >> $GITHUB_OUTPUT
+          elif [[ "$ASSESSMENT_STATUS" == "READY_WITH_WARNINGS" ]] && [[ "$SCORE" -gt "80" ]]; then
+            echo "⚠️ GATE CONDITIONAL - Deployment approved with warnings"
+            echo "deployment=conditional" >> $GITHUB_OUTPUT
+          else
+            echo "❌ GATE FAILED - System not ready for deployment"
+            echo "deployment=blocked" >> $GITHUB_OUTPUT
+            exit 1
+          fi

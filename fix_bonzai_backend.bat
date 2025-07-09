@@ -1,8 +1,8 @@
 @echo off
-REM 🔥 BONZAI BACKEND COMPREHENSIVE FIX SCRIPT (Windows)
-REM Generated: 2025-07-05 21:37:55.312304
+REM  BONZAI BACKEND COMPREHENSIVE FIX SCRIPT (Windows)
+REM Generated: 2025-07-09 11:30:12.560245
 
-echo 🔧 BONZAI BACKEND FIX SCRIPT (Windows)
+echo  BONZAI BACKEND FIX SCRIPT (Windows)
 echo ====================================
 
 REM Activate virtual environment if exists
@@ -24,15 +24,15 @@ if not exist credentials mkdir credentials
 
 REM Check environment
 if not exist .env (
-    echo 📝 Creating .env from template...
+    echo  Creating .env from template...
     copy .env.example .env
     echo.
-    echo ⚠️  IMPORTANT: Edit .env file and add your API keys!
+    echo   IMPORTANT: Edit .env file and add your API keys!
     echo.
 )
 
 echo.
-echo ✅ Fix script complete!
+echo  Fix script complete!
 echo.
 echo 📋 NEXT STEPS:
 echo 1. Edit .env file with your API keys
