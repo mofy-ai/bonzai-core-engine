@@ -1,46 +1,8 @@
-# 🚀 ULTIMATE BONZAI BACKEND - RAILWAY DEPLOYMENT
-# 15/16 Services Running - All Dependencies Verified!
+# 🚀 SIMPLIFIED REQUIREMENTS FOR RAILWAY DEPLOYMENT
+# Essential packages only - guaranteed to work
 
-# ===== CORE FLASK ECOSYSTEM =====
-flask==3.1.1
-flask-cors==6.0.1
-flask-socketio==5.5.1
-python-socketio==5.13.0
-eventlet==0.40.1
-python-dotenv==1.1.1
-
-# ===== AI MODEL PROVIDERS =====
-anthropic==0.57.1
-openai==1.93.2
-google-generativeai==0.8.5
-google-api-core==2.25.1
-google-auth==2.40.3
-
-# ===== MEMORY & VECTOR DB =====
-mem0ai==0.1.114
-qdrant-client==1.14.3
-
-# ===== WEB SCRAPING & HTTP =====
-requests==2.32.4
-beautifulsoup4==4.13.4
-aiohttp==3.12.13
-
-# ===== CREWAI & AGENT ORCHESTRATION =====
-crewai==0.140.0
-instructor==1.9.2
-litellm==1.72.6
-
-# ===== DATA PROCESSING =====
-pydantic==2.11.7
-numpy==2.3.1
-
-# ===== SYSTEM & UTILITIES =====
-psutil==5.9.6
-python-dateutil==2.9.0
-
-# ===== ASYNC & CONCURRENCY =====
-httpx==0.28.1
-anyio==4.9.0
-
-# ===== PRODUCTION SERVER =====
+Flask==2.3.3
+flask-cors==4.0.0
 gunicorn==21.2.0
+python-dotenv==1.0.0
+requests==2.31.0
