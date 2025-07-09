@@ -19,36 +19,36 @@ import sys
 BACKEND_BASE = "http://127.0.0.1:5001"
 OUTPUT_FILE = "BONZAI_BACKEND_MAPPING.json"
 
-# Comprehensive endpoint configuration
+# Comprehensive endpoint configuration - FIXED WITH /api/ PREFIX!
 TEST_CONFIG = {
     "CORE": [
         {"name": "Root", "url": "/", "method": "GET"},
-        {"name": "Health Check", "url": "/health", "method": "GET"},
+        {"name": "Health Check", "url": "/api/health", "method": "GET"},
     ],
     "ZAI_PRIME": [
-        {"name": "ZAI Prime Status", "url": "/zai-prime/status", "method": "GET"},
-        {"name": "Agents List", "url": "/zai-prime/agents", "method": "GET"},
-        {"name": "Global Context", "url": "/zai-prime/context", "method": "GET"},
+        {"name": "ZAI Prime Status", "url": "/api/zai-prime/status", "method": "GET"},
+        {"name": "Agents List", "url": "/api/zai-prime/agents", "method": "GET"},
+        {"name": "Global Context", "url": "/api/zai-prime/context", "method": "GET"},
     ],
     "MCP_INTEGRATION": [
-        {"name": "MCP Tools", "url": "/mcp/tools", "method": "GET"},
-        {"name": "MCP Execute", "url": "/mcp/execute", "method": "GET"},
+        {"name": "MCP Tools", "url": "/api/mcp/tools", "method": "GET"},
+        {"name": "MCP Execute", "url": "/api/mcp/execute", "method": "POST", "data": {"tool": "orchestrate_ai", "parameters": {"model": "test", "prompt": "Mapping test"}}},
     ],
     "MEMORY_SYSTEM": [
-        {"name": "Memory Health", "url": "/memory/health", "method": "GET"},
-        {"name": "Memory Search", "url": "/memory/search", "method": "GET"},
+        {"name": "Memory Health", "url": "/api/memory/health", "method": "GET"},
+        {"name": "Memory Search", "url": "/api/memory/search", "method": "POST", "data": {"query": "test", "user_id": "mapper_test"}},
     ],
     "AI_ORCHESTRATION": [
-        {"name": "Simple Chat", "url": "/ai/chat", "method": "GET"},
-        {"name": "Multi-Model", "url": "/ai/multi-model", "method": "GET"},
+        {"name": "Simple Chat", "url": "/api/chat/simple", "method": "POST", "data": {"message": "Backend mapping test", "model": "gemini"}},
+        {"name": "Multi-Model", "url": "/api/multi-model/status", "method": "GET"},
     ],
     "ADVANCED_FEATURES": [
-        {"name": "Agent Registry", "url": "/agent-registry", "method": "GET"},
-        {"name": "Task Orchestrator", "url": "/task-orchestrator", "method": "GET"},
-        {"name": "WebSocket Coordinator", "url": "/websocket-coordinator", "method": "GET"},
+        {"name": "Agent Registry", "url": "/api/agent-registry/status", "method": "GET"},
+        {"name": "Task Orchestrator", "url": "/api/task-orchestrator/status", "method": "GET"},
+        {"name": "WebSocket Coordinator", "url": "/api/websocket-coordinator/status", "method": "GET"},
     ],
     "SCRAPYBARA": [
-        {"name": "Scrapybara Status", "url": "/scrapybara/status", "method": "GET"},
+        {"name": "Scrapybara Status", "url": "/api/scrape/status", "method": "GET"},
     ]
 }
 
@@ -101,7 +101,12 @@ def test_endpoint(category: str, endpoint: Dict[str, str]) -> Dict[str, Any]:
     
     try:
         full_url = f"{BACKEND_BASE}{endpoint['url']}"
-        response = requests.get(full_url, timeout=10)
+        
+        # Handle different HTTP methods
+        if endpoint["method"] == "POST":
+            response = requests.post(full_url, json=endpoint.get("data", {}), timeout=10)
+        else:
+            response = requests.get(full_url, timeout=10)
         
         result["status_code"] = response.status_code
         result["response_time_ms"] = round((time.time() - test_start) * 1000, 2)
