@@ -44,3 +44,7 @@ python-dateutil==2.9.0
 # ===== ASYNC & CONCURRENCY =====
 httpx==0.28.1
 anyio==4.9.0
+
+# ===== GITHUB MODELS INTEGRATION =====
+azure-ai-inference==1.0.0b5
+azure-core==1.32.0
