@@ -609,7 +609,7 @@ def root_endpoint():
         'service': 'Bonzai Ultimate Mem0 Platform',
         'version': '3.0',
         'status': 'operational',
-        'message': 'Nathan\\'s Ultimate AI Platform - EVERY Mem0 Feature Utilized',
+        'message': "Nathan's Ultimate AI Platform - EVERY Mem0 Feature Utilized",
         'mem0_features': [
             'Graph Memory', 'Group Chat', 'Custom Categories', 'Advanced Retrieval',
             'Criteria Retrieval', 'Memory Export', 'Direct Import', 'Contextual Add v2',
@@ -726,7 +726,7 @@ def mcp_status():
 @app.route('/robots.txt', methods=['GET'])
 def robots_txt():
     """Stop crawlers - was causing 404s"""
-    return Response("User-agent: *\\nDisallow: /\\n", mimetype='text/plain')
+    return Response("User-agent: *\nDisallow: /\n", mimetype='text/plain')
 
 # ==============================================================================
 # ERROR HANDLERS
