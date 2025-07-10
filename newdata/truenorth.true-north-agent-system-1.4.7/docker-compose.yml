@@ -1,0 +1,264 @@
+# ==================================================
+# 🐳 TrueNorth Agent System - Docker Compose
+# ==================================================
+
+version: '3.8'
+
+services:
+  # ==========================================
+  # TrueNorth Agent System - Main Service
+  # ==========================================
+  truenorth-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: production
+      args:
+        NODE_ENV: production
+    image: truenorth/agent-system:latest
+    container_name: truenorth-app
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+      - "8080:8080"  # WebSocket port
+    environment:
+      - NODE_ENV=production
+      - LOG_LEVEL=info
+      - METRICS_ENABLED=true
+      - HEALTH_CHECK_INTERVAL=30000
+    volumes:
+      - ./logs:/app/logs:rw
+      - ./reports:/app/reports:rw
+      - truenorth-data:/app/data
+    networks:
+      - truenorth-network
+    depends_on:
+      - redis
+      - monitoring
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.truenorth.rule=Host(`truenorth.local`)"
+      - "traefik.http.services.truenorth.loadbalancer.server.port=3000"
+
+  # ==========================================
+  # Development Environment
+  # ==========================================
+  truenorth-dev:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: development
+    image: truenorth/agent-system:dev
+    container_name: truenorth-dev
+    profiles: ["development"]
+    ports:
+      - "8081:8080"  # Code Server
+      - "3001:3000"  # App Dev Server
+    environment:
+      - NODE_ENV=development
+      - LOG_LEVEL=debug
+      - HOT_RELOAD=true
+    volumes:
+      - .:/app:cached
+      - node_modules_dev:/app/node_modules
+      - ./logs:/app/logs:rw
+    networks:
+      - truenorth-network
+    command: ["code-server", "--bind-addr", "0.0.0.0:8080", "--auth", "none"]
+
+  # ==========================================
+  # Testing Environment
+  # ==========================================
+  truenorth-test:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: testing
+    image: truenorth/agent-system:test
+    container_name: truenorth-test
+    profiles: ["testing"]
+    environment:
+      - NODE_ENV=test
+      - CI=true
+    volumes:
+      - ./tests:/app/tests:ro
+      - ./coverage:/app/coverage:rw
+    networks:
+      - truenorth-network
+    command: ["npm", "run", "test:coverage"]
+
+  # ==========================================
+  # Redis Cache & Session Store
+  # ==========================================
+  redis:
+    image: redis:7-alpine
+    container_name: truenorth-redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+      - ./docker/redis/redis.conf:/usr/local/etc/redis/redis.conf:ro
+    networks:
+      - truenorth-network
+    command: ["redis-server", "/usr/local/etc/redis/redis.conf"]
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # ==========================================
+  # Monitoring & Observability Stack
+  # ==========================================
+  monitoring:
+    image: prom/prometheus:latest
+    container_name: truenorth-prometheus
+    restart: unless-stopped
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./docker/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - prometheus-data:/prometheus
+    networks:
+      - truenorth-network
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/usr/share/prometheus/console_libraries'
+      - '--web.console.templates=/usr/share/prometheus/consoles'
+      - '--web.enable-lifecycle'
+      - '--web.enable-admin-api'
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: truenorth-grafana
+    restart: unless-stopped
+    ports:
+      - "3003:3000"
+    environment:
+      - GF_SECURITY_ADMIN_USER=${GRAFANA_ADMIN_USER:-admin}
+      - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_ADMIN_PASSWORD}
+    volumes:
+      - grafana-data:/var/lib/grafana
+      - ./docker/grafana/dashboards:/etc/grafana/provisioning/dashboards:ro
+      - ./docker/grafana/datasources:/etc/grafana/provisioning/datasources:ro
+    networks:
+      - truenorth-network
+    depends_on:
+      - monitoring
+
+  # ==========================================
+  # Log Aggregation
+  # ==========================================
+  loki:
+    image: grafana/loki:latest
+    container_name: truenorth-loki
+    restart: unless-stopped
+    ports:
+      - "3100:3100"
+    volumes:
+      - ./docker/loki/loki.yml:/etc/loki/local-config.yaml:ro
+      - loki-data:/loki
+    networks:
+      - truenorth-network
+    command: -config.file=/etc/loki/local-config.yaml
+
+  promtail:
+    image: grafana/promtail:latest
+    container_name: truenorth-promtail
+    restart: unless-stopped
+    volumes:
+      - ./logs:/var/log/truenorth:ro
+      - ./docker/promtail/promtail.yml:/etc/promtail/config.yml:ro
+      - /var/lib/docker/containers:/var/lib/docker/containers:ro
+    networks:
+      - truenorth-network
+    depends_on:
+      - loki
+    command: -config.file=/etc/promtail/config.yml
+
+  # ==========================================
+  # Load Balancer & Reverse Proxy
+  # ==========================================
+  traefik:
+    image: traefik:v3.0
+    container_name: truenorth-traefik
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+      - "8090:8080"  # Dashboard
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - ./docker/traefik/traefik.yml:/etc/traefik/traefik.yml:ro
+      - ./docker/traefik/dynamic:/etc/traefik/dynamic:ro
+      - traefik-certs:/certs
+    networks:
+      - truenorth-network
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.dashboard.rule=Host(`traefik.local`)"
+      - "traefik.http.routers.dashboard.service=api@internal"
+
+  # ==========================================
+  # Database (Optional - for enterprise features)
+  # ==========================================
+  postgres:
+    image: postgres:15-alpine
+    container_name: truenorth-postgres
+    profiles: ["enterprise"]
+    restart: unless-stopped
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_DB=${DB_NAME:-truenorth}
+      - POSTGRES_USER=${DB_USERNAME:-truenorth}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+      - ./docker/postgres/init:/docker-entrypoint-initdb.d:ro
+    networks:
+      - truenorth-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U truenorth"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+# ==========================================
+# Networks
+# ==========================================
+networks:
+  truenorth-network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16
+
+# ==========================================
+# Volumes
+# ==========================================
+volumes:
+  truenorth-data:
+    driver: local
+  node_modules_dev:
+    driver: local
+  redis-data:
+    driver: local
+  prometheus-data:
+    driver: local
+  grafana-data:
+    driver: local
+  loki-data:
+    driver: local
+  traefik-certs:
+    driver: local
+  postgres-data:
+    driver: local

@@ -1,0 +1,528 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://truenorth.dev/schemas/config.schema.json",
+  "title": "TrueNorth Agent System Configuration Schema",
+  "description": "Comprehensive schema for TrueNorth Agent System configuration validation",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "$schema": {
+      "type": "string",
+      "description": "Schema reference"
+    },
+    "environment": {
+      "type": "string",
+      "enum": ["development", "staging", "production", "test"],
+      "description": "Current environment"
+    },
+    "claudeCommand": {
+      "type": "string",
+      "pattern": "^[a-zA-Z0-9_\\-\\/\\.]+$",
+      "minLength": 1,
+      "maxLength": 255,
+      "description": "Path to Claude CLI command"
+    },
+    "maxParallelAgents": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 50,
+      "description": "Maximum number of agents running simultaneously"
+    },
+    "audioNotifications": {
+      "type": "boolean",
+      "description": "Enable audio notifications for agent status"
+    },
+    "dashboardPort": {
+      "type": "integer",
+      "minimum": 1024,
+      "maximum": 65535,
+      "description": "Port for the dashboard web interface"
+    },
+    "autoAnalyzeOnOpen": {
+      "type": "boolean",
+      "description": "Automatically analyze project when workspace opens"
+    },
+    "sessionTimeout": {
+      "type": "integer",
+      "minimum": 1000,
+      "maximum": 3600000,
+      "description": "Session timeout in milliseconds"
+    },
+    "maxRetries": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 10,
+      "description": "Maximum retry attempts"
+    },
+    "logLevel": {
+      "type": "string",
+      "enum": ["debug", "info", "warn", "error"],
+      "description": "Logging level"
+    },
+    "hotReload": {
+      "type": "boolean",
+      "description": "Enable hot reload for configuration changes"
+    },
+    "apiKey": {
+      "type": "string",
+      "pattern": "^[a-zA-Z0-9\\-_]+$",
+      "minLength": 10,
+      "description": "API key for external services"
+    },
+    "accessibility": {
+      "type": "object",
+      "description": "Accessibility configuration options",
+      "additionalProperties": false,
+      "properties": {
+        "screenReader": {
+          "type": "boolean",
+          "description": "Enable screen reader support and announcements"
+        },
+        "highContrast": {
+          "type": "boolean",
+          "description": "Enable high contrast theme for better visibility"
+        },
+        "largeText": {
+          "type": "boolean",
+          "description": "Enable large text mode for better readability"
+        },
+        "reducedMotion": {
+          "type": "boolean",
+          "description": "Reduce animations and motion effects"
+        },
+        "voiceControl": {
+          "type": "boolean",
+          "description": "Enable voice control and speech recognition"
+        },
+        "keyboardNavigation": {
+          "type": "boolean",
+          "description": "Enable enhanced keyboard navigation"
+        },
+        "colorBlindnessFilter": {
+          "type": "string",
+          "enum": ["none", "protanopia", "deuteranopia", "tritanopia", "achromatopsia"],
+          "description": "Color blindness filter to apply"
+        },
+        "theme": {
+          "type": "string",
+          "enum": ["default", "high-contrast", "large-text", "dark-mode", "reduced-motion"],
+          "description": "Accessibility theme to use"
+        },
+        "focusIndicatorStyle": {
+          "type": "string",
+          "enum": ["default", "high-contrast", "thick-border"],
+          "description": "Focus indicator style"
+        },
+        "notifications": {
+          "type": "object",
+          "description": "Accessibility notification settings",
+          "additionalProperties": false,
+          "properties": {
+            "screenReader": {
+              "type": "boolean",
+              "description": "Enable screen reader announcements for notifications"
+            },
+            "soundAlerts": {
+              "type": "boolean",
+              "description": "Enable sound alerts for notifications"
+            },
+            "visualAlerts": {
+              "type": "boolean",
+              "description": "Enable visual alerts for notifications"
+            },
+            "soundVolume": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1,
+              "description": "Volume level for notification sounds"
+            },
+            "duration": {
+              "type": "integer",
+              "minimum": 1000,
+              "maximum": 30000,
+              "description": "Default notification duration in milliseconds"
+            },
+            "maxSimultaneous": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 10,
+              "description": "Maximum number of simultaneous notifications"
+            },
+            "priorityFiltering": {
+              "type": "boolean",
+              "description": "Enable priority-based notification filtering"
+            }
+          }
+        },
+        "monitoring": {
+          "type": "object",
+          "description": "Accessibility monitoring settings",
+          "additionalProperties": false,
+          "properties": {
+            "enabled": {
+              "type": "boolean",
+              "description": "Enable accessibility compliance monitoring"
+            },
+            "intervalMinutes": {
+              "type": "integer",
+              "minimum": 5,
+              "maximum": 1440,
+              "description": "Monitoring interval in minutes"
+            },
+            "thresholds": {
+              "type": "object",
+              "description": "Monitoring thresholds",
+              "additionalProperties": false,
+              "properties": {
+                "minimumScore": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 100,
+                  "description": "Minimum acceptable accessibility score"
+                },
+                "criticalIssueLimit": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "description": "Maximum allowed critical accessibility issues"
+                },
+                "regressionThreshold": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 50,
+                  "description": "Score drop threshold for regression alerts"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "enterprise": {
+      "type": "object",
+      "description": "Enterprise features configuration",
+      "additionalProperties": false,
+      "properties": {
+        "sso": {
+          "type": "object",
+          "description": "Single Sign-On configuration",
+          "additionalProperties": false,
+          "properties": {
+            "enabled": {
+              "type": "boolean",
+              "description": "Enable enterprise SSO authentication"
+            },
+            "provider": {
+              "type": "string",
+              "enum": ["azure", "okta", "auth0", "ldap"],
+              "description": "SSO provider to use"
+            },
+            "config": {
+              "type": "object",
+              "description": "Provider-specific configuration",
+              "additionalProperties": true
+            }
+          }
+        },
+        "multiTenant": {
+          "type": "object",
+          "description": "Multi-tenant configuration",
+          "additionalProperties": false,
+          "properties": {
+            "enabled": {
+              "type": "boolean",
+              "description": "Enable multi-tenant architecture"
+            },
+            "isolationLevel": {
+              "type": "string",
+              "enum": ["strict", "moderate", "relaxed"],
+              "description": "Tenant isolation level"
+            }
+          }
+        },
+        "compliance": {
+          "type": "object",
+          "description": "Compliance configuration",
+          "additionalProperties": false,
+          "properties": {
+            "framework": {
+              "type": "string",
+              "enum": ["soc2", "hipaa", "gdpr", "iso27001"],
+              "description": "Compliance framework to enforce"
+            },
+            "auditLogging": {
+              "type": "boolean",
+              "description": "Enable audit logging for compliance"
+            },
+            "dataRetentionDays": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 3650,
+              "description": "Data retention period in days"
+            }
+          }
+        }
+      }
+    },
+    "monitoring": {
+      "type": "object",
+      "description": "Monitoring and observability configuration",
+      "additionalProperties": false,
+      "properties": {
+        "enabled": {
+          "type": "boolean",
+          "description": "Enable monitoring"
+        },
+        "metricsCollection": {
+          "type": "boolean",
+          "description": "Enable metrics collection"
+        },
+        "performanceTracking": {
+          "type": "boolean",
+          "description": "Enable performance tracking"
+        },
+        "errorReporting": {
+          "type": "boolean",
+          "description": "Enable error reporting"
+        },
+        "healthChecks": {
+          "type": "object",
+          "description": "Health check configuration",
+          "additionalProperties": false,
+          "properties": {
+            "enabled": {
+              "type": "boolean",
+              "description": "Enable health checks"
+            },
+            "interval": {
+              "type": "integer",
+              "minimum": 1000,
+              "maximum": 300000,
+              "description": "Health check interval in milliseconds"
+            },
+            "timeout": {
+              "type": "integer",
+              "minimum": 1000,
+              "maximum": 60000,
+              "description": "Health check timeout in milliseconds"
+            }
+          }
+        }
+      }
+    },
+    "security": {
+      "type": "object",
+      "description": "Security configuration",
+      "additionalProperties": false,
+      "properties": {
+        "encryptionEnabled": {
+          "type": "boolean",
+          "description": "Enable encryption for sensitive data"
+        },
+        "auditLogging": {
+          "type": "boolean",
+          "description": "Enable security audit logging"
+        },
+        "sensitiveDataMasking": {
+          "type": "boolean",
+          "description": "Enable masking of sensitive data in logs"
+        },
+        "rateLimiting": {
+          "type": "object",
+          "description": "Rate limiting configuration",
+          "additionalProperties": false,
+          "properties": {
+            "enabled": {
+              "type": "boolean",
+              "description": "Enable rate limiting"
+            },
+            "windowMs": {
+              "type": "integer",
+              "minimum": 1000,
+              "maximum": 3600000,
+              "description": "Rate limit window in milliseconds"
+            },
+            "maxRequests": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 10000,
+              "description": "Maximum requests per window"
+            }
+          }
+        }
+      }
+    },
+    "performance": {
+      "type": "object",
+      "description": "Performance optimization configuration",
+      "additionalProperties": false,
+      "properties": {
+        "cacheEnabled": {
+          "type": "boolean",
+          "description": "Enable caching"
+        },
+        "cacheTtl": {
+          "type": "integer",
+          "minimum": 1000,
+          "maximum": 3600000,
+          "description": "Cache time-to-live in milliseconds"
+        },
+        "maxCacheSize": {
+          "type": "integer",
+          "minimum": 10,
+          "maximum": 10000,
+          "description": "Maximum cache size"
+        },
+        "compressionEnabled": {
+          "type": "boolean",
+          "description": "Enable compression"
+        },
+        "concurrency": {
+          "type": "object",
+          "description": "Concurrency settings",
+          "additionalProperties": false,
+          "properties": {
+            "maxConcurrentOperations": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "description": "Maximum concurrent operations"
+            },
+            "queueSize": {
+              "type": "integer",
+              "minimum": 10,
+              "maximum": 10000,
+              "description": "Operation queue size"
+            }
+          }
+        }
+      }
+    },
+    "integrations": {
+      "type": "object",
+      "description": "External integrations configuration",
+      "additionalProperties": false,
+      "properties": {
+        "github": {
+          "type": "object",
+          "description": "GitHub integration settings",
+          "additionalProperties": false,
+          "properties": {
+            "enabled": {
+              "type": "boolean",
+              "description": "Enable GitHub integration"
+            },
+            "token": {
+              "type": "string",
+              "pattern": "^(ghp_[a-zA-Z0-9]{36}|github_pat_[a-zA-Z0-9_]{82})$",
+              "description": "GitHub personal access token"
+            },
+            "webhookSecret": {
+              "type": "string",
+              "minLength": 10,
+              "description": "GitHub webhook secret"
+            }
+          }
+        },
+        "slack": {
+          "type": "object",
+          "description": "Slack integration settings",
+          "additionalProperties": false,
+          "properties": {
+            "enabled": {
+              "type": "boolean",
+              "description": "Enable Slack integration"
+            },
+            "webhookUrl": {
+              "type": "string",
+              "pattern": "^https://hooks\\.slack\\.com/services/[A-Z0-9/]+$",
+              "description": "Slack webhook URL"
+            },
+            "channel": {
+              "type": "string",
+              "pattern": "^#[a-z0-9\\-_]+$",
+              "description": "Default Slack channel"
+            }
+          }
+        }
+      }
+    },
+    "features": {
+      "type": "object",
+      "description": "Feature flags",
+      "additionalProperties": false,
+      "properties": {
+        "advancedAnalytics": {
+          "type": "boolean",
+          "description": "Enable advanced analytics features"
+        },
+        "quantumComputing": {
+          "type": "boolean",
+          "description": "Enable quantum computing features"
+        },
+        "claudeCli": {
+          "type": "boolean",
+          "description": "Enable Claude CLI integration features"
+        },
+        "iotIntegration": {
+          "type": "boolean",
+          "description": "Enable IoT integration features"
+        },
+        "mobileSupport": {
+          "type": "boolean",
+          "description": "Enable mobile app support"
+        },
+        "enterpriseMode": {
+          "type": "boolean",
+          "description": "Enable enterprise features"
+        }
+      }
+    }
+  },
+  "required": [
+    "environment",
+    "claudeCommand",
+    "maxParallelAgents",
+    "logLevel"
+  ],
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "environment": {
+            "const": "production"
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "sessionTimeout",
+          "maxRetries"
+        ],
+        "properties": {
+          "logLevel": {
+            "enum": ["warn", "error"]
+          },
+          "hotReload": {
+            "const": false
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "environment": {
+            "const": "development"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "logLevel": {
+            "enum": ["debug", "info"]
+          }
+        }
+      }
+    }
+  ]
+}

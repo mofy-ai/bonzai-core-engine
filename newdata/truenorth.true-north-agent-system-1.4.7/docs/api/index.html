@@ -1,0 +1,153 @@
+<!DOCTYPE html><html class="default" lang="en"><head><meta charSet="utf-8"/><meta http-equiv="x-ua-compatible" content="IE=edge"/><title>TrueNorth Agent System API - v1.0.0</title><meta name="description" content="Documentation for TrueNorth Agent System API"/><meta name="viewport" content="width=device-width, initial-scale=1"/><link rel="stylesheet" href="assets/style.css"/><link rel="stylesheet" href="assets/highlight.css"/><script defer src="assets/main.js"></script><script async src="assets/icons.js" id="tsd-icons-script"></script><script async src="assets/search.js" id="tsd-search-script"></script><script async src="assets/navigation.js" id="tsd-nav-script"></script></head><body><script>document.documentElement.dataset.theme = localStorage.getItem("tsd-theme") || "os";document.body.style.display="none";setTimeout(() => app?app.showPage():document.body.style.removeProperty("display"),500)</script><header class="tsd-page-toolbar"><div class="tsd-toolbar-contents container"><div class="table-cell" id="tsd-search" data-base="."><div class="field"><label for="tsd-search-field" class="tsd-widget tsd-toolbar-icon search no-caption"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><use href="assets/icons.svg#icon-search"></use></svg></label><input type="text" id="tsd-search-field" aria-label="Search"/></div><div class="field"><div id="tsd-toolbar-links"></div></div><ul class="results"><li class="state loading">Preparing search index...</li><li class="state failure">The search index is not available</li></ul><a href="index.html" class="title">TrueNorth Agent System API - v1.0.0</a></div><div class="table-cell" id="tsd-widgets"><a href="#" class="tsd-widget tsd-toolbar-icon menu no-caption" data-toggle="menu" aria-label="Menu"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><use href="assets/icons.svg#icon-menu"></use></svg></a></div></div></header><div class="container container-main"><div class="col-content"><div class="tsd-page-title"><h2>TrueNorth Agent System API - v1.0.0</h2></div><div class="tsd-panel tsd-typography"><a id="md:true-north-development-assistant---vscode-extension" class="tsd-anchor"></a><h1><a href="#md:true-north-development-assistant---vscode-extension">True North Development Assistant - VSCode Extension</a></h1><a id="md:🚀-what-is-true-north" class="tsd-anchor"></a><h2><a href="#md:🚀-what-is-true-north">🚀 What is True North?</a></h2><p>True North is an intelligent AI-powered development assistant that analyzes your codebase and generates 125+ specialized agents to systematically improve your project. This VSCode extension integrates with the standalone True North system to provide a seamless development experience directly in your IDE.</p>
+<a id="md:✨-features" class="tsd-anchor"></a><h2><a href="#md:✨-features">✨ Features</a></h2><ul>
+<li><strong>🔍 Dynamic Project Analysis</strong>: Analyzes any codebase and generates custom agents specific to your project</li>
+<li><strong>🤖 125+ Specialized Agents</strong>: Custom agents across 5 phases for comprehensive project enhancement</li>
+<li><strong>📊 Real-time Dashboard</strong>: Beautiful web dashboard showing live progress of all agents</li>
+<li><strong>⚡ Parallel Execution</strong>: Runs multiple Claude CLI sessions simultaneously for maximum efficiency</li>
+<li><strong>📋 5-Phase Methodology</strong>: Systematic execution with 25 agents per phase</li>
+<li><strong>🔄 Smart Retry System</strong>: Automatically retries failed agents with exponential backoff</li>
+<li><strong>📝 Inter-Agent Communication</strong>: Agents communicate through detailed markdown reports</li>
+<li><strong>🎯 Zero Project Pollution</strong>: No files added to your project - everything stored in extension</li>
+</ul>
+<a id="md:🛠️-prerequisites" class="tsd-anchor"></a><h2><a href="#md:🛠️-prerequisites">🛠️ Prerequisites</a></h2><ol>
+<li><p><strong>Claude Code CLI</strong> installed and configured:</p>
+<pre><code class="language-bash"><span class="hl-0"># Install Claude Code CLI first</span><br/><span class="hl-1">curl</span><span class="hl-2"> </span><span class="hl-3">-sSL</span><span class="hl-2"> </span><span class="hl-4">https://claude.ai/install</span><span class="hl-2"> | </span><span class="hl-1">bash</span>
+</code><button>Copy</button></pre>
+</li>
+<li><p><strong>VSCode</strong> version 1.74.0 or higher</p>
+</li>
+</ol>
+<a id="md:📦-installation" class="tsd-anchor"></a><h2><a href="#md:📦-installation">📦 Installation</a></h2><a id="md:option-1-install-from-vsix-file" class="tsd-anchor"></a><h3><a href="#md:option-1-install-from-vsix-file">Option 1: Install from VSIX file</a></h3><pre><code class="language-bash"><span class="hl-1">code</span><span class="hl-2"> </span><span class="hl-3">--install-extension</span><span class="hl-2"> </span><span class="hl-4">truenorth-dev-assistant-1.0.0.vsix</span>
+</code><button>Copy</button></pre>
+<a id="md:option-2-install-from-source" class="tsd-anchor"></a><h3><a href="#md:option-2-install-from-source">Option 2: Install from source</a></h3><pre><code class="language-bash"><span class="hl-1">git</span><span class="hl-2"> </span><span class="hl-4">clone</span><span class="hl-2"> &lt;</span><span class="hl-4">rep</span><span class="hl-2">o&gt;</span><br/><span class="hl-1">cd</span><span class="hl-2"> </span><span class="hl-4">extension</span><br/><span class="hl-1">npm</span><span class="hl-2"> </span><span class="hl-4">install</span><br/><span class="hl-1">npm</span><span class="hl-2"> </span><span class="hl-4">run</span><span class="hl-2"> </span><span class="hl-4">compile</span><br/><span class="hl-1">npm</span><span class="hl-2"> </span><span class="hl-4">run</span><span class="hl-2"> </span><span class="hl-4">package</span><br/><span class="hl-1">code</span><span class="hl-2"> </span><span class="hl-3">--install-extension</span><span class="hl-2"> </span><span class="hl-4">truenorth-dev-assistant-1.0.0.vsix</span>
+</code><button>Copy</button></pre>
+<a id="md:🚀-quick-start" class="tsd-anchor"></a><h2><a href="#md:🚀-quick-start">🚀 Quick Start</a></h2><ol>
+<li><strong>Open any project</strong> in VSCode</li>
+<li><strong>Press <code>Ctrl+Shift+W</code></strong> (or <code>Cmd+Shift+W</code> on Mac) to open True North Dashboard</li>
+<li><strong>Click &quot;Analyze Project&quot;</strong> to generate 125 custom agents for your codebase</li>
+<li><strong>Click &quot;Start Deployment&quot;</strong> to begin the 5-phase improvement process</li>
+<li><strong>Watch the magic happen</strong> in real-time!</li>
+</ol>
+<a id="md:🎮-usage" class="tsd-anchor"></a><h2><a href="#md:🎮-usage">🎮 Usage</a></h2><a id="md:command-palette-commands" class="tsd-anchor"></a><h3><a href="#md:command-palette-commands">Command Palette Commands</a></h3><ul>
+<li><code>True North: Open Dashboard</code> - Open the main dashboard</li>
+<li><code>True North: Analyze Project &amp; Generate Agents</code> - Analyze current project and create custom agents</li>
+<li><code>True North: Start Agent Deployment</code> - Begin the 6-phase agent deployment</li>
+<li><code>True North: Stop All Agents</code> - Stop all running agents</li>
+<li><code>True North: Retry Failed Agents</code> - Retry any failed agents</li>
+<li><code>True North: True North Settings</code> - Open extension settings</li>
+</ul>
+<a id="md:keyboard-shortcuts" class="tsd-anchor"></a><h3><a href="#md:keyboard-shortcuts">Keyboard Shortcuts</a></h3><ul>
+<li><code>Ctrl+Shift+W</code> (Mac: <code>Cmd+Shift+W</code>) - Open True North Dashboard</li>
+<li><code>Ctrl+Shift+Alt+A</code> (Mac: <code>Cmd+Shift+Alt+A</code>) - Analyze Project</li>
+</ul>
+<a id="md:status-bar" class="tsd-anchor"></a><h3><a href="#md:status-bar">Status Bar</a></h3><p>The True North status bar shows:</p>
+<ul>
+<li><strong>Left</strong>: Current True North status (Ready, Analyzing, Deploying, etc.)</li>
+<li><strong>Right</strong>: Agent count (Running/Total agents)</li>
+</ul>
+<a id="md:⚙️-configuration" class="tsd-anchor"></a><h2><a href="#md:⚙️-configuration">⚙️ Configuration</a></h2><p>Access settings via <code>File &gt; Preferences &gt; Settings &gt; Extensions &gt; True North</code></p>
+<table>
+<thead>
+<tr>
+<th>Setting</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>truenorth.claudeCommand</code></td>
+<td><code>claude</code></td>
+<td>Path to Claude CLI command</td>
+</tr>
+<tr>
+<td><code>truenorth.maxParallelAgents</code></td>
+<td><code>8</code></td>
+<td>Maximum agents running simultaneously</td>
+</tr>
+<tr>
+<td><code>truenorth.dashboardPort</code></td>
+<td><code>7777</code></td>
+<td>Port for True North dashboard (if needed)</td>
+</tr>
+<tr>
+<td><code>truenorth.audioNotifications</code></td>
+<td><code>true</code></td>
+<td>Enable audio notifications</td>
+</tr>
+<tr>
+<td><code>truenorth.autoAnalyzeOnOpen</code></td>
+<td><code>false</code></td>
+<td>Auto-analyze project when opening workspace</td>
+</tr>
+</tbody></table>
+<a id="md:🏗️-how-it-works" class="tsd-anchor"></a><h2><a href="#md:🏗️-how-it-works">🏗️ How It Works</a></h2><a id="md:1-project-analysis" class="tsd-anchor"></a><h3><a href="#md:1-project-analysis">1. Project Analysis</a></h3><p>True North uses Claude CLI to deeply analyze your codebase:</p>
+<ul>
+<li>Scans file structure and detects technologies</li>
+<li>Understands architecture patterns and business logic</li>
+<li>Identifies improvement opportunities and technical debt</li>
+<li>Generates 50 specialized agents tailored to YOUR project</li>
+</ul>
+<a id="md:2-agent-generation" class="tsd-anchor"></a><h3><a href="#md:2-agent-generation">2. Agent Generation</a></h3><p>Each project gets unique agents based on its needs:</p>
+<ul>
+<li><strong>Core Features</strong>: Complete missing functionality</li>
+<li><strong>Architecture</strong>: Optimize performance and scalability</li>
+<li><strong>Security</strong>: Implement security best practices</li>
+<li><strong>Testing</strong>: Add comprehensive test coverage</li>
+<li><strong>Documentation</strong>: Create and update documentation</li>
+<li><strong>DevOps</strong>: Improve deployment and CI/CD</li>
+</ul>
+<a id="md:3-5-phase-execution" class="tsd-anchor"></a><h3><a href="#md:3-5-phase-execution">3. 5-Phase Execution</a></h3><ul>
+<li><strong>Phase 1</strong>: Foundation (25 agents implement core improvements)</li>
+<li><strong>Phase 2</strong>: Enhancement (25 agents add advanced features)</li>
+<li><strong>Phase 3</strong>: Optimization (25 agents optimize performance and quality)</li>
+<li><strong>Phase 4</strong>: Security &amp; Testing (25 agents add security and comprehensive testing)</li>
+<li><strong>Phase 5</strong>: Finalization (25 agents polish and prepare for production)</li>
+</ul>
+<a id="md:4-inter-agent-communication" class="tsd-anchor"></a><h3><a href="#md:4-inter-agent-communication">4. Inter-Agent Communication</a></h3><p>Agents communicate through markdown reports:</p>
+<pre><code><span class="hl-5">logs</span><span class="hl-2">/</span><span class="hl-5">TrueNorth</span><span class="hl-2">/</span><br/><span class="hl-2">├── </span><span class="hl-5">phase1</span><span class="hl-2">-</span><span class="hl-5">foundation</span><span class="hl-2">-</span><span class="hl-5">reports</span><span class="hl-2">/</span><br/><span class="hl-2">├── </span><span class="hl-5">phase2</span><span class="hl-2">-</span><span class="hl-5">enhancement</span><span class="hl-2">-</span><span class="hl-5">reports</span><span class="hl-2">/</span><br/><span class="hl-2">├── </span><span class="hl-5">phase3</span><span class="hl-2">-</span><span class="hl-5">optimization</span><span class="hl-2">-</span><span class="hl-5">reports</span><span class="hl-2">/</span><br/><span class="hl-2">├── </span><span class="hl-5">phase4</span><span class="hl-2">-</span><span class="hl-5">security</span><span class="hl-2">-</span><span class="hl-5">testing</span><span class="hl-2">-</span><span class="hl-5">reports</span><span class="hl-2">/</span><br/><span class="hl-2">└── </span><span class="hl-5">phase5</span><span class="hl-2">-</span><span class="hl-5">finalization</span><span class="hl-2">-</span><span class="hl-5">reports</span><span class="hl-2">/</span>
+</code><button>Copy</button></pre>
+<a id="md:🎯-example-agent-types" class="tsd-anchor"></a><h2><a href="#md:🎯-example-agent-types">🎯 Example Agent Types</a></h2><p>Your project might get agents like:</p>
+<ul>
+<li><strong>Database Optimization Agent</strong> - Optimizes queries and schema</li>
+<li><strong>Security Hardening Agent</strong> - Implements security best practices</li>
+<li><strong>Performance Monitoring Agent</strong> - Adds monitoring and metrics</li>
+<li><strong>API Documentation Agent</strong> - Creates comprehensive API docs</li>
+<li><strong>Test Coverage Agent</strong> - Adds missing test cases</li>
+<li><strong>Mobile Responsiveness Agent</strong> - Improves mobile experience</li>
+<li><strong>Accessibility Agent</strong> - Ensures WCAG compliance</li>
+<li><strong>SEO Optimization Agent</strong> - Improves search engine optimization</li>
+</ul>
+<a id="md:🔧-troubleshooting" class="tsd-anchor"></a><h2><a href="#md:🔧-troubleshooting">🔧 Troubleshooting</a></h2><a id="md:extension-not-working" class="tsd-anchor"></a><h3><a href="#md:extension-not-working">Extension not working?</a></h3><ol>
+<li>Ensure Claude CLI is installed: <code>claude --version</code></li>
+<li>Check VSCode version: <code>code --version</code> (needs 1.74.0+)</li>
+<li>Open VSCode Developer Console: <code>Help &gt; Toggle Developer Tools</code></li>
+</ol>
+<a id="md:agents-failing" class="tsd-anchor"></a><h3><a href="#md:agents-failing">Agents failing?</a></h3><ol>
+<li>Check Claude CLI configuration and API keys</li>
+<li>Ensure project has proper file permissions</li>
+<li>Check the True North Dashboard for detailed error messages</li>
+<li>Use &quot;Retry Failed Agents&quot; command</li>
+</ol>
+<a id="md:dashboard-not-loading" class="tsd-anchor"></a><h3><a href="#md:dashboard-not-loading">Dashboard not loading?</a></h3><ol>
+<li>Try closing and reopening the dashboard</li>
+<li>Reload VSCode window: <code>Ctrl+R</code> (Mac: <code>Cmd+R</code>)</li>
+<li>Check for extension updates</li>
+</ol>
+<a id="md:🤝-support" class="tsd-anchor"></a><h2><a href="#md:🤝-support">🤝 Support</a></h2><ul>
+<li><strong>Issues</strong>: Report bugs or request features</li>
+<li><strong>Documentation</strong>: Check the built-in help in the dashboard</li>
+<li><strong>Claude CLI</strong>: Visit <a href="https://claude.ai/code">claude.ai/code</a> for CLI setup help</li>
+</ul>
+<a id="md:🔮-what-makes-true-north-special" class="tsd-anchor"></a><h2><a href="#md:🔮-what-makes-true-north-special">🔮 What Makes True North Special?</a></h2><p>Unlike generic development tools, True North:</p>
+<ul>
+<li><strong>Understands YOUR codebase</strong> specifically</li>
+<li><strong>Generates custom agents</strong> tailored to your project&#39;s needs</li>
+<li><strong>Works with existing tools</strong> (uses your Claude CLI setup)</li>
+<li><strong>Provides actionable insights</strong> with real code changes</li>
+<li><strong>Scales to any project size</strong> from small apps to enterprise systems</li>
+<li><strong>Learns and adapts</strong> as your project evolves</li>
+</ul>
+<p><strong>True North = Having 125 senior developers working on your project simultaneously</strong> 🚀</p>
+<hr>
+<p>Built with ❤️ for developers who want to ship better code faster.</p>
+</div></div><div class="col-sidebar"><div class="page-menu"><div class="tsd-navigation settings"><details class="tsd-index-accordion"><summary class="tsd-accordion-summary"><h3><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><use href="assets/icons.svg#icon-chevronDown"></use></svg>Settings</h3></summary><div class="tsd-accordion-details"><div class="tsd-filter-visibility"><h4 class="uppercase">Member Visibility</h4><form><ul id="tsd-filter-options"><li class="tsd-filter-item"><label class="tsd-filter-input"><input type="checkbox" id="tsd-filter-protected" name="protected"/><svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><rect class="tsd-checkbox-background" width="30" height="30" x="1" y="1" rx="6" fill="none"></rect><path class="tsd-checkbox-checkmark" d="M8.35422 16.8214L13.2143 21.75L24.6458 10.25" stroke="none" stroke-width="3.5" stroke-linejoin="round" fill="none"></path></svg><span>Protected</span></label></li><li class="tsd-filter-item"><label class="tsd-filter-input"><input type="checkbox" id="tsd-filter-private" name="private"/><svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><rect class="tsd-checkbox-background" width="30" height="30" x="1" y="1" rx="6" fill="none"></rect><path class="tsd-checkbox-checkmark" d="M8.35422 16.8214L13.2143 21.75L24.6458 10.25" stroke="none" stroke-width="3.5" stroke-linejoin="round" fill="none"></path></svg><span>Private</span></label></li><li class="tsd-filter-item"><label class="tsd-filter-input"><input type="checkbox" id="tsd-filter-inherited" name="inherited" checked/><svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><rect class="tsd-checkbox-background" width="30" height="30" x="1" y="1" rx="6" fill="none"></rect><path class="tsd-checkbox-checkmark" d="M8.35422 16.8214L13.2143 21.75L24.6458 10.25" stroke="none" stroke-width="3.5" stroke-linejoin="round" fill="none"></path></svg><span>Inherited</span></label></li><li class="tsd-filter-item"><label class="tsd-filter-input"><input type="checkbox" id="tsd-filter-external" name="external"/><svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><rect class="tsd-checkbox-background" width="30" height="30" x="1" y="1" rx="6" fill="none"></rect><path class="tsd-checkbox-checkmark" d="M8.35422 16.8214L13.2143 21.75L24.6458 10.25" stroke="none" stroke-width="3.5" stroke-linejoin="round" fill="none"></path></svg><span>External</span></label></li></ul></form></div><div class="tsd-theme-toggle"><h4 class="uppercase">Theme</h4><select id="tsd-theme"><option value="os">OS</option><option value="light">Light</option><option value="dark">Dark</option></select></div></div></details></div><details open class="tsd-index-accordion tsd-page-navigation"><summary class="tsd-accordion-summary"><h3><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><use href="assets/icons.svg#icon-chevronDown"></use></svg>On This Page</h3></summary><div class="tsd-accordion-details"><a href="#md:true-north-development-assistant---vscode-extension"><span>True <wbr/>North <wbr/>Development <wbr/>Assistant -<wbr/> VSCode <wbr/>Extension</span></a><ul><li><a href="#md:🚀-what-is-true-north"><span>🚀 <wbr/>What is <wbr/>True <wbr/>North?</span></a></li><li><a href="#md:✨-features"><span>✨ <wbr/>Features</span></a></li><li><a href="#md:🛠️-prerequisites"><span>🛠️ <wbr/>Prerequisites</span></a></li><li><a href="#md:📦-installation"><span>📦 <wbr/>Installation</span></a></li><li><ul><li><a href="#md:option-1-install-from-vsix-file"><span>Option 1: <wbr/>Install from VSIX file</span></a></li><li><a href="#md:option-2-install-from-source"><span>Option 2: <wbr/>Install from source</span></a></li></ul></li><li><a href="#md:🚀-quick-start"><span>🚀 <wbr/>Quick <wbr/>Start</span></a></li><li><a href="#md:🎮-usage"><span>🎮 <wbr/>Usage</span></a></li><li><ul><li><a href="#md:command-palette-commands"><span>Command <wbr/>Palette <wbr/>Commands</span></a></li><li><a href="#md:keyboard-shortcuts"><span>Keyboard <wbr/>Shortcuts</span></a></li><li><a href="#md:status-bar"><span>Status <wbr/>Bar</span></a></li></ul></li><li><a href="#md:⚙️-configuration"><span>⚙️ <wbr/>Configuration</span></a></li><li><a href="#md:🏗️-how-it-works"><span>🏗️ <wbr/>How <wbr/>It <wbr/>Works</span></a></li><li><ul><li><a href="#md:1-project-analysis"><span>1. <wbr/>Project <wbr/>Analysis</span></a></li><li><a href="#md:2-agent-generation"><span>2. <wbr/>Agent <wbr/>Generation</span></a></li><li><a href="#md:3-5-phase-execution"><span>3. 5-<wbr/>Phase <wbr/>Execution</span></a></li><li><a href="#md:4-inter-agent-communication"><span>4. <wbr/>Inter-<wbr/>Agent <wbr/>Communication</span></a></li></ul></li><li><a href="#md:🎯-example-agent-types"><span>🎯 <wbr/>Example <wbr/>Agent <wbr/>Types</span></a></li><li><a href="#md:🔧-troubleshooting"><span>🔧 <wbr/>Troubleshooting</span></a></li><li><ul><li><a href="#md:extension-not-working"><span>Extension not working?</span></a></li><li><a href="#md:agents-failing"><span>Agents failing?</span></a></li><li><a href="#md:dashboard-not-loading"><span>Dashboard not loading?</span></a></li></ul></li><li><a href="#md:🤝-support"><span>🤝 <wbr/>Support</span></a></li><li><a href="#md:🔮-what-makes-true-north-special"><span>🔮 <wbr/>What <wbr/>Makes <wbr/>True <wbr/>North <wbr/>Special?</span></a></li></ul></div></details></div><div class="site-menu"><nav class="tsd-navigation"><a href="index.html" class="current"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="assets/icons.svg#icon-1"></use></svg><span>TrueNorth Agent System API - v1.0.0</span></a><ul class="tsd-small-nested-navigation" id="tsd-nav-container" data-base="."><li>Loading...</li></ul></nav></div></div></div><footer><p class="tsd-generator">Generated using <a href="https://typedoc.org/" target="_blank">TypeDoc</a></p></footer><div class="overlay"></div></body></html>

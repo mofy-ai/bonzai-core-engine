@@ -1,0 +1,391 @@
+# ==================================================
+# 🚨 TrueNorth Prometheus Alert Rules
+# ==================================================
+
+groups:
+  # ==========================================
+  # Application Health Alerts
+  # ==========================================
+  - name: truenorth.application.health
+    rules:
+      - alert: TrueNorthApplicationDown
+        expr: up{job="truenorth-app"} == 0
+        for: 1m
+        labels:
+          severity: critical
+          service: truenorth-app
+          team: devops
+        annotations:
+          summary: "TrueNorth application is down"
+          description: "The TrueNorth application has been down for more than 1 minute."
+          runbook_url: "https://truenorth.dev/runbooks/application-down"
+          
+      - alert: TrueNorthHighResponseTime
+        expr: http_request_duration_seconds{quantile="0.95"} > 2
+        for: 5m
+        labels:
+          severity: warning
+          service: truenorth-app
+          team: devops
+        annotations:
+          summary: "High response time detected"
+          description: "95th percentile response time is {{ $value }}s, which is above the 2s threshold."
+          
+      - alert: TrueNorthHighErrorRate
+        expr: rate(http_requests_total{status=~"5.."}[5m]) / rate(http_requests_total[5m]) > 0.05
+        for: 3m
+        labels:
+          severity: critical
+          service: truenorth-app
+          team: devops
+        annotations:
+          summary: "High error rate detected"
+          description: "Error rate is {{ $value | humanizePercentage }} which is above 5%."
+          
+      - alert: TrueNorthWebSocketConnectionFailure
+        expr: websocket_connections_failed_total > 10
+        for: 2m
+        labels:
+          severity: warning
+          service: truenorth-app
+          team: devops
+        annotations:
+          summary: "WebSocket connection failures detected"
+          description: "{{ $value }} WebSocket connection failures in the last 2 minutes."
+
+  # ==========================================
+  # System Resource Alerts
+  # ==========================================
+  - name: truenorth.system.resources
+    rules:
+      - alert: TrueNorthHighCPUUsage
+        expr: container_cpu_usage_seconds_total{container="truenorth-app"} > 0.8
+        for: 5m
+        labels:
+          severity: warning
+          service: truenorth-app
+          team: devops
+        annotations:
+          summary: "High CPU usage detected"
+          description: "CPU usage is {{ $value | humanizePercentage }} for more than 5 minutes."
+          
+      - alert: TrueNorthHighMemoryUsage
+        expr: container_memory_usage_bytes{container="truenorth-app"} / container_spec_memory_limit_bytes > 0.9
+        for: 3m
+        labels:
+          severity: critical
+          service: truenorth-app
+          team: devops
+        annotations:
+          summary: "High memory usage detected"
+          description: "Memory usage is {{ $value | humanizePercentage }} of available memory."
+          
+      - alert: TrueNorthDiskSpaceLow
+        expr: (container_fs_limit_bytes - container_fs_usage_bytes) / container_fs_limit_bytes < 0.1
+        for: 5m
+        labels:
+          severity: warning
+          service: truenorth-app
+          team: devops
+        annotations:
+          summary: "Low disk space detected"
+          description: "Only {{ $value | humanizePercentage }} disk space remaining."
+
+  # ==========================================
+  # Database Alerts
+  # ==========================================
+  - name: truenorth.database
+    rules:
+      - alert: TrueNorthDatabaseDown
+        expr: up{job="postgresql"} == 0
+        for: 1m
+        labels:
+          severity: critical
+          service: postgresql
+          team: devops
+        annotations:
+          summary: "PostgreSQL database is down"
+          description: "The PostgreSQL database has been unreachable for more than 1 minute."
+          
+      - alert: TrueNorthDatabaseConnectionsHigh
+        expr: postgresql_connections_active / postgresql_connections_max > 0.8
+        for: 5m
+        labels:
+          severity: warning
+          service: postgresql
+          team: devops
+        annotations:
+          summary: "High database connection usage"
+          description: "Database connection usage is {{ $value | humanizePercentage }}."
+          
+      - alert: TrueNorthDatabaseSlowQueries
+        expr: postgresql_slow_queries_total > 10
+        for: 3m
+        labels:
+          severity: warning
+          service: postgresql
+          team: devops
+        annotations:
+          summary: "Slow database queries detected"
+          description: "{{ $value }} slow queries detected in the last 3 minutes."
+          
+      - alert: TrueNorthRedisDown
+        expr: up{job="redis"} == 0
+        for: 1m
+        labels:
+          severity: critical
+          service: redis
+          team: devops
+        annotations:
+          summary: "Redis cache is down"
+          description: "Redis cache has been unreachable for more than 1 minute."
+          
+      - alert: TrueNorthRedisMemoryHigh
+        expr: redis_memory_used_bytes / redis_memory_max_bytes > 0.9
+        for: 5m
+        labels:
+          severity: warning
+          service: redis
+          team: devops
+        annotations:
+          summary: "High Redis memory usage"
+          description: "Redis memory usage is {{ $value | humanizePercentage }}."
+
+  # ==========================================
+  # Agent System Alerts
+  # ==========================================
+  - name: truenorth.agents
+    rules:
+      - alert: TrueNorthAgentExecutionFailure
+        expr: increase(agent_execution_failures_total[5m]) > 5
+        for: 2m
+        labels:
+          severity: warning
+          service: truenorth-app
+          team: devops
+        annotations:
+          summary: "High agent execution failure rate"
+          description: "{{ $value }} agent execution failures in the last 5 minutes."
+          
+      - alert: TrueNorthAgentQueueBacklog
+        expr: agent_queue_size > 100
+        for: 10m
+        labels:
+          severity: warning
+          service: truenorth-app
+          team: devops
+        annotations:
+          summary: "Agent queue backlog detected"
+          description: "Agent queue has {{ $value }} pending tasks for more than 10 minutes."
+          
+      - alert: TrueNorthClaudeAPIFailure
+        expr: increase(claude_api_errors_total[5m]) > 3
+        for: 2m
+        labels:
+          severity: critical
+          service: truenorth-app
+          team: devops
+        annotations:
+          summary: "Claude API failures detected"
+          description: "{{ $value }} Claude API failures in the last 5 minutes."
+          
+      - alert: TrueNorthAgentOrchestrationDown
+        expr: up{job="agent-orchestrator"} == 0
+        for: 2m
+        labels:
+          severity: critical
+          service: truenorth-app
+          team: devops
+        annotations:
+          summary: "Agent orchestration system is down"
+          description: "Agent orchestration has been down for more than 2 minutes."
+
+  # ==========================================
+  # Security Alerts
+  # ==========================================
+  - name: truenorth.security
+    rules:
+      - alert: TrueNorthUnauthorizedAccess
+        expr: increase(http_requests_total{status="401"}[5m]) > 10
+        for: 2m
+        labels:
+          severity: warning
+          service: truenorth-app
+          team: security
+        annotations:
+          summary: "High number of unauthorized access attempts"
+          description: "{{ $value }} unauthorized access attempts in the last 5 minutes."
+          
+      - alert: TrueNorthSuspiciousActivity
+        expr: increase(http_requests_total{status="403"}[1m]) > 5
+        for: 1m
+        labels:
+          severity: critical
+          service: truenorth-app
+          team: security
+        annotations:
+          summary: "Suspicious activity detected"
+          description: "{{ $value }} forbidden requests in the last minute."
+          
+      - alert: TrueNorthSSLCertificateExpiring
+        expr: ssl_certificate_expiry_days < 30
+        for: 1h
+        labels:
+          severity: warning
+          service: truenorth-app
+          team: devops
+        annotations:
+          summary: "SSL certificate expiring soon"
+          description: "SSL certificate expires in {{ $value }} days."
+
+  # ==========================================
+  # Performance Alerts
+  # ==========================================
+  - name: truenorth.performance
+    rules:
+      - alert: TrueNorthHighLatency
+        expr: histogram_quantile(0.95, rate(http_request_duration_seconds_bucket[5m])) > 1
+        for: 5m
+        labels:
+          severity: warning
+          service: truenorth-app
+          team: devops
+        annotations:
+          summary: "High latency detected"
+          description: "95th percentile latency is {{ $value }}s."
+          
+      - alert: TrueNorthLowThroughput
+        expr: rate(http_requests_total[5m]) < 10
+        for: 10m
+        labels:
+          severity: warning
+          service: truenorth-app
+          team: devops
+        annotations:
+          summary: "Low throughput detected"
+          description: "Request rate is {{ $value }} requests/second."
+          
+      - alert: TrueNorthMemoryLeak
+        expr: increase(container_memory_usage_bytes{container="truenorth-app"}[1h]) > 100*1024*1024
+        for: 30m
+        labels:
+          severity: warning
+          service: truenorth-app
+          team: devops
+        annotations:
+          summary: "Potential memory leak detected"
+          description: "Memory usage increased by {{ $value | humanizeBytes }} in the last hour."
+
+  # ==========================================
+  # Business Logic Alerts
+  # ==========================================
+  - name: truenorth.business
+    rules:
+      - alert: TrueNorthLowUserEngagement
+        expr: active_users_last_hour < 5
+        for: 30m
+        labels:
+          severity: warning
+          service: truenorth-app
+          team: product
+        annotations:
+          summary: "Low user engagement detected"
+          description: "Only {{ $value }} active users in the last hour."
+          
+      - alert: TrueNorthProjectAnalysisFailure
+        expr: increase(project_analysis_failures_total[10m]) > 2
+        for: 5m
+        labels:
+          severity: warning
+          service: truenorth-app
+          team: devops
+        annotations:
+          summary: "Project analysis failures detected"
+          description: "{{ $value }} project analysis failures in the last 10 minutes."
+          
+      - alert: TrueNorthCodeQualityDegraded
+        expr: code_quality_score < 0.7
+        for: 15m
+        labels:
+          severity: warning
+          service: truenorth-app
+          team: engineering
+        annotations:
+          summary: "Code quality score degraded"
+          description: "Code quality score is {{ $value }}, below the 0.7 threshold."
+
+  # ==========================================
+  # Infrastructure Alerts
+  # ==========================================
+  - name: truenorth.infrastructure
+    rules:
+      - alert: TrueNorthLoadBalancerDown
+        expr: up{job="load-balancer"} == 0
+        for: 1m
+        labels:
+          severity: critical
+          service: load-balancer
+          team: devops
+        annotations:
+          summary: "Load balancer is down"
+          description: "Load balancer has been unreachable for more than 1 minute."
+          
+      - alert: TrueNorthHighNetworkLatency
+        expr: network_latency_seconds > 0.1
+        for: 5m
+        labels:
+          severity: warning
+          service: truenorth-app
+          team: devops
+        annotations:
+          summary: "High network latency detected"
+          description: "Network latency is {{ $value }}s."
+          
+      - alert: TrueNorthServiceMeshDown
+        expr: envoy_cluster_upstream_rq_retry_overflow > 0
+        for: 2m
+        labels:
+          severity: critical
+          service: service-mesh
+          team: devops
+        annotations:
+          summary: "Service mesh connectivity issues"
+          description: "Service mesh is experiencing connectivity issues."
+
+  # ==========================================
+  # Monitoring System Alerts
+  # ==========================================
+  - name: truenorth.monitoring
+    rules:
+      - alert: PrometheusDown
+        expr: up{job="prometheus"} == 0
+        for: 1m
+        labels:
+          severity: critical
+          service: prometheus
+          team: devops
+        annotations:
+          summary: "Prometheus monitoring is down"
+          description: "Prometheus has been down for more than 1 minute."
+          
+      - alert: GrafanaDown
+        expr: up{job="grafana"} == 0
+        for: 1m
+        labels:
+          severity: warning
+          service: grafana
+          team: devops
+        annotations:
+          summary: "Grafana dashboard is down"
+          description: "Grafana has been down for more than 1 minute."
+          
+      - alert: AlertManagerDown
+        expr: up{job="alertmanager"} == 0
+        for: 1m
+        labels:
+          severity: critical
+          service: alertmanager
+          team: devops
+        annotations:
+          summary: "AlertManager is down"
+          description: "AlertManager has been down for more than 1 minute."

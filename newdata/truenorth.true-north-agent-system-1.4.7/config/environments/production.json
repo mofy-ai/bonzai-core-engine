@@ -1,0 +1,41 @@
+{
+  "$schema": "../schemas/config.schema.json",
+  "environment": "production",
+  "claudeCommand": "claude",
+  "maxParallelAgents": 12,
+  "audioNotifications": false,
+  "dashboardPort": 3893,
+  "autoAnalyzeOnOpen": false,
+  "sessionTimeout": 600000,
+  "maxRetries": 5,
+  "logLevel": "warn",
+  "hotReload": false,
+  "accessibility": {
+    "screenReader": true,
+    "highContrast": false,
+    "largeText": false,
+    "reducedMotion": false,
+    "voiceControl": false,
+    "keyboardNavigation": true,
+    "colorBlindnessFilter": "none",
+    "theme": "default",
+    "focusIndicatorStyle": "default"
+  },
+  "monitoring": {
+    "enabled": true,
+    "metricsCollection": true,
+    "performanceTracking": true,
+    "errorReporting": true
+  },
+  "security": {
+    "encryptionEnabled": true,
+    "auditLogging": true,
+    "sensitiveDataMasking": true
+  },
+  "performance": {
+    "cacheEnabled": true,
+    "cacheTtl": 300000,
+    "maxCacheSize": 1000,
+    "compressionEnabled": true
+  }
+}

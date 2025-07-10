@@ -1,0 +1,250 @@
+{
+  "extension": {
+    "displayName": "Sistema de Agentes True North",
+    "description": "🧭 Orquestación de agentes impulsados por IA para análisis y mejora inteligente de código"
+  },
+  "commands": {
+    "cleanCodebase": {
+      "title": "🧹 Limpiar Base de Código",
+      "tooltip": "Eliminar código no utilizado y optimizar importaciones"
+    },
+    "selectTask": {
+      "title": "🎯 Seleccionar Tarea TrueNorth",
+      "tooltip": "Elegir una tarea específica para ejecutar"
+    },
+    "cancelExecution": {
+      "title": "🛑 Cancelar Ejecución",
+      "tooltip": "Detener todos los agentes en ejecución"
+    },
+    "analyzeProject": {
+      "title": "🔍 Analizar Proyecto y Generar Agentes",
+      "tooltip": "Analizar estructura del proyecto y generar agentes inteligentes"
+    },
+    "deployAgents": {
+      "title": "🚀 Desplegar Agentes IA",
+      "tooltip": "Desplegar y ejecutar todos los agentes generados"
+    },
+    "analyzeSecurity": {
+      "title": "🔒 Analizar Seguridad",
+      "tooltip": "Escanear vulnerabilidades de seguridad"
+    },
+    "analyzeSustainability": {
+      "title": "🌱 Analizar Sostenibilidad",
+      "tooltip": "Analizar uso de recursos y optimizaciones ecológicas"
+    },
+    "openDashboard": {
+      "title": "🧭 Abrir Panel de Control",
+      "tooltip": "Lanzar centro de control TrueNorth"
+    },
+    "optimizePerformance": {
+      "title": "⚡ Optimizar Rendimiento",
+      "tooltip": "Mejorar rendimiento de la aplicación"
+    },
+    "retryFailed": {
+      "title": "🔄 Reintentar Fallidos",
+      "tooltip": "Reintentar agentes que fallaron durante la ejecución"
+    },
+    "stopDeployment": {
+      "title": "🛑 Detener Despliegue",
+      "tooltip": "Detener todos los agentes en ejecución inmediatamente"
+    }
+  },
+  "status": {
+    "ready": "Listo",
+    "analyzing": "Analizando proyecto...",
+    "deploying": "Desplegando agentes...",
+    "running": "Ejecutándose",
+    "completed": "Completado",
+    "failed": "Falló",
+    "stopped": "Detenido",
+    "error": "Error: {message}",
+    "warning": "Advertencia: {message}",
+    "success": "Éxito: {message}",
+    "agentCount": "{count} agentes",
+    "activeAgents": "Agentes TrueNorth activos - clic para ver panel",
+    "noActiveAgents": "Sin agentes activos",
+    "readyToLaunch": "True North Listo - Clic para abrir panel"
+  },
+  "ui": {
+    "sidebar": {
+      "projectStatus": "🧭 Estado del Proyecto",
+      "quickActions": "⚡ Acciones Rápidas",
+      "analysis": "🔍 Análisis",
+      "improvement": "✨ Mejoras",
+      "deployment": "🚀 Despliegue",
+      "quickAnalysis": "Análisis Rápido",
+      "openDashboard": "Abrir Panel",
+      "analyzeProject": "Analizar Proyecto",
+      "securityScan": "Escaneo Seguridad",
+      "sustainability": "Sostenibilidad",
+      "cleanCode": "Código Limpio",
+      "performance": "Rendimiento",
+      "deployAgents": "Desplegar Agentes",
+      "retryFailed": "Reintentar Fallidos",
+      "stopAll": "Detener Todo"
+    },
+    "descriptions": {
+      "quickAnalysis": "Analiza la estructura de tu proyecto y genera agentes inteligentes para optimización",
+      "dashboard": "Abre el panel completo de TrueNorth en tu navegador para monitoreo y control avanzado",
+      "analyzeProject": "Analiza toda la estructura de tu proyecto y genera agentes de optimización completos",
+      "securityScan": "Escanea tu código en busca de vulnerabilidades de seguridad y problemas de cumplimiento",
+      "sustainability": "Analiza el uso de recursos y sugiere optimizaciones ecológicas",
+      "cleanCode": "Elimina código no utilizado, optimiza importaciones y limpia tu código para mejor mantenimiento",
+      "performance": "Identifica cuellos de botella de rendimiento y optimiza la ejecución del código para mayor velocidad",
+      "deployAgents": "Ejecuta todos los agentes generados en una secuencia de despliegue optimizada para máxima eficiencia",
+      "retryFailed": "Re-ejecuta cualquier agente que falló durante la ejecución anterior con manejo de errores mejorado",
+      "stopAll": "Detiene inmediatamente todos los agentes en ejecución y cancela tareas pendientes para apagado de emergencia"
+    },
+    "actions": {
+      "generateAgents": "Analizar y generar agentes",
+      "launchControlCenter": "Lanzar centro de control",
+      "findVulnerabilities": "Encontrar vulnerabilidades",
+      "optimizeResources": "Optimizar recursos",
+      "removeUnusedCode": "Eliminar código no usado",
+      "improveSpeed": "Mejorar velocidad",
+      "runAllAgents": "Ejecutar todos los agentes",
+      "reRunFailed": "Re-ejecutar fallidos",
+      "cancelExecution": "Cancelar ejecución"
+    }
+  },
+  "notifications": {
+    "agentStarted": "Ejecución de Agente Iniciada",
+    "agentCompleted": "Ejecución de Agente Completada",
+    "agentFailed": "Ejecución de Agente Falló",
+    "phaseStarted": "Fase {phaseNumber}: {phaseName} ha comenzado con {agentCount} agentes",
+    "systemError": "Ocurrió un error del sistema: {error}. Se están intentando acciones de recuperación.",
+    "connectionRestored": "La conexión al panel de TrueNorth ha sido restaurada",
+    "criticalError": "Múltiples errores críticos detectados",
+    "emergencyProtocol": "Protocolo de emergencia activado",
+    "languageChanged": "Idioma cambiado a {language}",
+    "configurationUpdated": "Configuración actualizada exitosamente"
+  },
+  "errors": {
+    "claudeCliNotFound": "Claude CLI no encontrado",
+    "installationInvalid": "Verificar instalación de Claude CLI",
+    "pathEnvironmentIssue": "Revisar variable de entorno PATH",
+    "resourcesLow": "Reducir cantidad de agentes por fase",
+    "systemResourcesLow": "Revisar recursos del sistema",
+    "configurationInvalid": "Configuración inválida: {details}",
+    "workspaceNotFound": "No hay carpeta de espacio de trabajo abierta",
+    "fileNotFound": "Archivo no encontrado: {path}",
+    "permissionDenied": "Permiso denegado: {operation}",
+    "networkError": "Error de red: {details}",
+    "timeout": "Operación agotó tiempo después de {seconds} segundos"
+  },
+  "configuration": {
+    "claudeCommand": {
+      "title": "Comando Claude CLI",
+      "description": "Ruta al comando Claude CLI"
+    },
+    "maxParallelAgents": {
+      "title": "Máximo Agentes Paralelos",
+      "description": "Número máximo de agentes ejecutándose simultáneamente"
+    },
+    "audioNotifications": {
+      "title": "Notificaciones de Audio",
+      "description": "Habilitar notificaciones de audio para estado de agentes"
+    },
+    "dashboardPort": {
+      "title": "Puerto del Panel",
+      "description": "Puerto para la interfaz web del panel"
+    },
+    "autoAnalyzeOnOpen": {
+      "title": "Auto Analizar al Abrir",
+      "description": "Analizar automáticamente el proyecto cuando se abre el espacio de trabajo"
+    },
+    "sessionTimeout": {
+      "title": "Tiempo de Espera de Sesión",
+      "description": "Tiempo de espera de sesión predeterminado en milisegundos"
+    },
+    "maxRetries": {
+      "title": "Máximo Reintentos",
+      "description": "Número máximo de intentos de reintento predeterminado"
+    },
+    "language": {
+      "title": "Idioma",
+      "description": "Idioma de la interfaz para el Sistema de Agentes TrueNorth"
+    },
+    "accessibility": {
+      "enableScreenReader": {
+        "title": "Soporte para Lector de Pantalla",
+        "description": "Habilitar soporte para lector de pantalla y anuncios"
+      },
+      "highContrast": {
+        "title": "Modo de Alto Contraste",
+        "description": "Habilitar colores de alto contraste para mejor visibilidad"
+      },
+      "reducedMotion": {
+        "title": "Movimiento Reducido",
+        "description": "Reducir animaciones y efectos de movimiento"
+      },
+      "fontSize": {
+        "title": "Tamaño de Fuente",
+        "description": "Ajustar tamaño de fuente para mejor legibilidad"
+      }
+    }
+  },
+  "accessibility": {
+    "sidebarLoaded": "Barra lateral de TrueNorth cargada y lista",
+    "focusCleared": "Foco eliminado del botón",
+    "launching": "Lanzando agente {agentName}",
+    "openingDashboard": "Abriendo panel de TrueNorth en el navegador",
+    "statusUpdated": "Estado de agente actualizado: {changes}",
+    "keyboardShortcuts": {
+      "alt1": "Alt+1: Enfocar Acciones Rápidas",
+      "alt2": "Alt+2: Enfocar Sección de Análisis",
+      "enter": "Enter/Espacio: Activar botón",
+      "escape": "Escape: Limpiar foco"
+    }
+  },
+  "dashboard": {
+    "title": "Panel de TrueNorth",
+    "sections": {
+      "overview": "Resumen",
+      "agents": "Agentes",
+      "performance": "Rendimiento",
+      "logs": "Registros",
+      "settings": "Configuración"
+    },
+    "metrics": {
+      "totalAgents": "Total de Agentes",
+      "runningAgents": "Agentes Ejecutándose",
+      "completedTasks": "Tareas Completadas",
+      "errorRate": "Tasa de Error",
+      "averageExecutionTime": "Tiempo Promedio de Ejecución",
+      "memoryUsage": "Uso de Memoria",
+      "cpuUsage": "Uso de CPU"
+    }
+  },
+  "dateTime": {
+    "formats": {
+      "short": "d/M/yyyy",
+      "medium": "d MMM yyyy",
+      "long": "d 'de' MMMM 'de' yyyy",
+      "full": "EEEE, d 'de' MMMM 'de' yyyy",
+      "time": "H:mm:ss",
+      "timeShort": "H:mm",
+      "dateTime": "d/M/yyyy H:mm:ss"
+    },
+    "relative": {
+      "now": "ahora",
+      "secondsAgo": "hace {count} segundos",
+      "minutesAgo": "hace {count} minutos",
+      "hoursAgo": "hace {count} horas",
+      "daysAgo": "hace {count} días",
+      "weeksAgo": "hace {count} semanas",
+      "monthsAgo": "hace {count} meses",
+      "yearsAgo": "hace {count} años"
+    }
+  },
+  "numbers": {
+    "decimal": ",",
+    "thousands": ".",
+    "percentage": "{number}%",
+    "currency": "${amount}",
+    "bytes": "{size} bytes",
+    "kilobytes": "{size} KB",
+    "megabytes": "{size} MB",
+    "gigabytes": "{size} GB"
+  }
+}

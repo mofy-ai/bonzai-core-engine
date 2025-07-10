@@ -1,0 +1,162 @@
+{
+  "name": "🧭 TrueNorth Agent System Development",
+  "dockerComposeFile": "../docker-compose.yml",
+  "service": "truenorth-dev",
+  "workspaceFolder": "/app",
+  
+  "settings": {
+    "terminal.integrated.defaultProfile.linux": "bash",
+    "typescript.preferences.useAliasesForRenames": false,
+    "typescript.updateImportsOnFileMove.enabled": "always",
+    "editor.formatOnSave": true,
+    "editor.codeActionsOnSave": {
+      "source.fixAll.eslint": true,
+      "source.organizeImports": true
+    },
+    "files.exclude": {
+      "**/node_modules": true,
+      "**/out": true,
+      "**/.git": true,
+      "**/.DS_Store": true,
+      "**/Thumbs.db": true
+    },
+    "search.exclude": {
+      "**/node_modules": true,
+      "**/out": true
+    },
+    "emmet.includeLanguages": {
+      "typescript": "javascript"
+    },
+    "git.autofetch": true,
+    "git.enableSmartCommit": true,
+    "explorer.confirmDelete": false,
+    "explorer.confirmDragAndDrop": false
+  },
+
+  "extensions": [
+    "ms-vscode.vscode-typescript-next",
+    "ms-vscode.vscode-eslint",
+    "esbenp.prettier-vscode",
+    "ms-vscode.vscode-json",
+    "redhat.vscode-yaml",
+    "ms-azuretools.vscode-docker",
+    "ms-vscode-remote.remote-containers",
+    "GitHub.copilot",
+    "GitHub.copilot-chat",
+    "ms-vscode.test-adapter-converter",
+    "hbenl.vscode-test-explorer",
+    "kavod-io.vscode-jest-test-adapter",
+    "streetsidesoftware.code-spell-checker",
+    "bradlc.vscode-tailwindcss",
+    "formulahendry.auto-rename-tag",
+    "christian-kohler.path-intellisense",
+    "ms-vscode.wordcount",
+    "alefragnani.Bookmarks",
+    "gruntfuggly.todo-tree",
+    "ms-vscode.vscode-github-issue-notebooks",
+    "eamodio.gitlens",
+    "ms-kubernetes-tools.vscode-kubernetes-tools",
+    "hashicorp.terraform",
+    "ms-python.python",
+    "ms-toolsai.jupyter"
+  ],
+
+  "forwardPorts": [3000, 8080, 9090, 3003],
+  "portsAttributes": {
+    "3000": {
+      "label": "TrueNorth App",
+      "onAutoForward": "notify"
+    },
+    "8080": {
+      "label": "Code Server",
+      "onAutoForward": "silent"
+    },
+    "9090": {
+      "label": "Prometheus",
+      "onAutoForward": "silent"
+    },
+    "3003": {
+      "label": "Grafana",
+      "onAutoForward": "silent"
+    }
+  },
+
+  "postCreateCommand": "npm install && npm run compile",
+  "postStartCommand": "git config --global --add safe.directory /app",
+
+  "remoteUser": "node",
+
+  "features": {
+    "ghcr.io/devcontainers/features/common-utils:2": {
+      "installZsh": true,
+      "installOhMyZsh": true,
+      "upgradePackages": true,
+      "username": "node",
+      "uid": "1000",
+      "gid": "1000"
+    },
+    "ghcr.io/devcontainers/features/node:1": {
+      "nodeGypDependencies": true,
+      "version": "18"
+    },
+    "ghcr.io/devcontainers/features/git:1": {
+      "ppa": true,
+      "version": "latest"
+    },
+    "ghcr.io/devcontainers/features/docker-in-docker:2": {
+      "version": "latest",
+      "dockerDashComposeVersion": "v2"
+    },
+    "ghcr.io/devcontainers/features/kubectl-helm-minikube:1": {
+      "version": "latest",
+      "helm": "latest",
+      "minikube": "latest"
+    }
+  },
+
+  "customizations": {
+    "vscode": {
+      "settings": {
+        "editor.fontFamily": "'Fira Code', 'Cascadia Code', 'JetBrains Mono', Consolas, 'Courier New', monospace",
+        "editor.fontLigatures": true,
+        "editor.fontSize": 14,
+        "editor.lineHeight": 1.5,
+        "editor.rulers": [80, 120],
+        "editor.wordWrap": "wordWrapColumn",
+        "editor.wordWrapColumn": 120,
+        "workbench.colorTheme": "GitHub Dark Default",
+        "workbench.iconTheme": "material-icon-theme",
+        "terminal.integrated.fontSize": 12,
+        "debug.console.fontSize": 12,
+        "markdown.preview.fontSize": 14,
+        "editor.minimap.enabled": true,
+        "editor.minimap.showSlider": "always",
+        "breadcrumbs.enabled": true,
+        "problems.showCurrentInStatus": true,
+        "git.decorations.enabled": true,
+        "scm.diffDecorations": "all",
+        "workbench.editor.enablePreview": false,
+        "workbench.startupEditor": "welcomePageInEmptyWorkbench",
+        "files.autoSave": "afterDelay",
+        "files.autoSaveDelay": 1000
+      }
+    }
+  },
+
+  "mounts": [
+    "source=${localWorkspaceFolder}/.git,target=/app/.git,type=bind,consistency=cached",
+    "source=truenorth-node-modules,target=/app/node_modules,type=volume"
+  ],
+
+  "runArgs": [
+    "--name",
+    "truenorth-devcontainer",
+    "--hostname",
+    "truenorth-dev"
+  ],
+
+  "initializeCommand": "echo '🚀 Initializing TrueNorth development environment...'",
+  "onCreateCommand": "echo '📦 Installing dependencies...' && npm ci",
+  "updateContentCommand": "echo '🔄 Updating development environment...' && npm update",
+  "postAttachCommand": "echo '✅ TrueNorth development environment ready! 🧭'"
+}

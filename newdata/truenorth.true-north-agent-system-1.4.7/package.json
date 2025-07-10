@@ -1,0 +1,518 @@
+{
+	"name": "true-north-agent-system",
+	"displayName": "TrueNorth Agent System",
+	"description": "World's first AI agent system with 8 specialized development modes, 125+ agents, and Tesla-inspired UI. Intelligent mode detection, TypeScript error resolution, and systematic execution framework.",
+	"version": "1.4.7",
+	"publisher": "truenorth",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/bkingery3/true-north-ai-assistant"
+	},
+	"license": "MIT",
+	"homepage": "https://github.com/bkingery3/true-north-ai-assistant#readme",
+	"bugs": {
+		"url": "https://github.com/bkingery3/true-north-ai-assistant/issues"
+	},
+	"qna": "marketplace",
+	"engines": {
+		"vscode": "^1.101.0"
+	},
+	"categories": [
+		"AI",
+		"Productivity",
+		"Developer Tools"
+	],
+	"keywords": [
+		"claude",
+		"claude-cli",
+		"ai-agents",
+		"typescript",
+		"error-resolution",
+		"automated-fixes",
+		"type-safety",
+		"compilation-errors",
+		"125-agent-system",
+		"premium",
+		"modern",
+		"ui",
+		"dashboard",
+		"minimalist",
+		"tesla-style",
+		"apple-design",
+		"code-analysis",
+		"automation",
+		"orchestration",
+		"productivity",
+		"development-tools",
+		"workflow",
+		"claude-sonnet",
+		"task-management",
+		"professional"
+	],
+	"activationEvents": [
+		"onStartupFinished"
+	],
+	"main": "./out/extension.js",
+	"contributes": {
+		"commands": [
+			{
+				"command": "truenorth.launchAgents",
+				"title": "🚀 Launch Agents",
+				"category": "True North",
+				"icon": "$(rocket)"
+			},
+			{
+				"command": "truenorth.analyzeProject",
+				"title": "🔍 Analyze Project",
+				"category": "True North",
+				"icon": "$(search)"
+			},
+			{
+				"command": "truenorth.openDashboard",
+				"title": "🎛️ Open Dashboard",
+				"category": "True North",
+				"icon": "$(dashboard)"
+			},
+			{
+				"command": "truenorth.stopAllAgents",
+				"title": "🛑 Stop All Agents",
+				"category": "True North",
+				"icon": "$(stop-circle)"
+			},
+			{
+				"command": "truenorth.testClaude",
+				"title": "🤖 Test Claude CLI",
+				"category": "True North",
+				"icon": "$(debug-alt)"
+			},
+			{
+				"command": "truenorth.showOutput",
+				"title": "📄 Show Output Panel",
+				"category": "True North",
+				"icon": "$(output)"
+			},
+			{
+				"command": "truenorth.clearOutput",
+				"title": "🗑️ Clear Output",
+				"category": "True North",
+				"icon": "$(trash)"
+			},
+			{
+				"command": "truenorth.launch5PhaseSystem",
+				"title": "🎯 Launch 5-Phase System",
+				"category": "True North",
+				"icon": "$(target)"
+			},
+			{
+				"command": "truenorth.launchPhase1",
+				"title": "🔥 Phase 1: Core Execution",
+				"category": "True North",
+				"icon": "$(flame)"
+			},
+			{
+				"command": "truenorth.launchPhase2",
+				"title": "🔍 Phase 2: Comprehensive Audit",
+				"category": "True North",
+				"icon": "$(search-fuzzy)"
+			},
+			{
+				"command": "truenorth.launchPhase3",
+				"title": "🔧 Phase 3: Targeted Execution",
+				"category": "True North",
+				"icon": "$(tools)"
+			},
+			{
+				"command": "truenorth.launchPhase4",
+				"title": "🔍 Phase 4: Final Audit",
+				"category": "True North",
+				"icon": "$(verified)"
+			},
+			{
+				"command": "truenorth.launchPhase5",
+				"title": "🎯 Phase 5: Finalization",
+				"category": "True North",
+				"icon": "$(check-all)"
+			},
+			{
+				"command": "truenorth.show5PhaseStatus",
+				"title": "📊 Show 5-Phase Status",
+				"category": "True North",
+				"icon": "$(graph)"
+			},
+			{
+				"command": "truenorth.generatePhaseReport",
+				"title": "📋 Generate Phase Report",
+				"category": "True North",
+				"icon": "$(file-text)"
+			},
+			{
+				"command": "truenorth.showErrorReport",
+				"title": "📊 Show Error Report",
+				"category": "True North",
+				"icon": "$(report)"
+			},
+			{
+				"command": "truenorth.clearErrorHistory",
+				"title": "🧹 Clear Error History",
+				"category": "True North",
+				"icon": "$(clear-all)"
+			},
+			{
+				"command": "truenorth.runDiagnostics",
+				"title": "🔍 Run System Diagnostics",
+				"category": "True North",
+				"icon": "$(pulse)"
+			},
+			{
+				"command": "truenorth.launchTypeScriptFixer",
+				"title": "🔧 Launch TypeScript Error Fixer",
+				"category": "True North",
+				"icon": "$(wrench)"
+			},
+			{
+				"command": "truenorth.showTypeScriptStatus",
+				"title": "📊 Show TypeScript Error Status",
+				"category": "True North",
+				"icon": "$(graph-line)"
+			},
+			{
+				"command": "truenorth.checkTypeScriptErrors",
+				"title": "🔍 Check TypeScript Errors",
+				"category": "True North",
+				"icon": "$(type-hierarchy)"
+			},
+			{
+				"command": "truenorth.generateTypeScriptReport",
+				"title": "📋 Generate TypeScript Fix Report",
+				"category": "True North",
+				"icon": "$(file-code)"
+			}
+		],
+		"keybindings": [
+			{
+				"command": "truenorth.launchAgents",
+				"key": "ctrl+alt+l",
+				"mac": "cmd+alt+l",
+				"when": "workspaceFolderCount > 0"
+			},
+			{
+				"command": "truenorth.analyzeProject",
+				"key": "ctrl+alt+a",
+				"mac": "cmd+alt+a",
+				"when": "workspaceFolderCount > 0"
+			},
+			{
+				"command": "truenorth.openDashboard",
+				"key": "ctrl+alt+d",
+				"mac": "cmd+alt+d",
+				"when": "workspaceFolderCount > 0"
+			},
+			{
+				"command": "truenorth.testClaude",
+				"key": "ctrl+alt+t",
+				"mac": "cmd+alt+t",
+				"when": "workspaceFolderCount > 0"
+			},
+			{
+				"command": "truenorth.showOutput",
+				"key": "ctrl+alt+o",
+				"mac": "cmd+alt+o",
+				"when": "workspaceFolderCount > 0"
+			},
+			{
+				"command": "truenorth.launch5PhaseSystem",
+				"key": "ctrl+alt+5",
+				"mac": "cmd+alt+5",
+				"when": "workspaceFolderCount > 0"
+			},
+			{
+				"command": "truenorth.show5PhaseStatus",
+				"key": "ctrl+alt+s",
+				"mac": "cmd+alt+s",
+				"when": "workspaceFolderCount > 0"
+			},
+			{
+				"command": "truenorth.runDiagnostics",
+				"key": "ctrl+alt+r",
+				"mac": "cmd+alt+r",
+				"when": "workspaceFolderCount > 0"
+			},
+			{
+				"command": "truenorth.launchTypeScriptFixer",
+				"key": "ctrl+alt+f",
+				"mac": "cmd+alt+f",
+				"when": "workspaceFolderCount > 0"
+			},
+			{
+				"command": "truenorth.showTypeScriptStatus",
+				"key": "ctrl+alt+shift+t",
+				"mac": "cmd+alt+shift+t",
+				"when": "workspaceFolderCount > 0"
+			},
+			{
+				"command": "truenorth.checkTypeScriptErrors",
+				"key": "ctrl+alt+e",
+				"mac": "cmd+alt+e",
+				"when": "workspaceFolderCount > 0"
+			}
+		],
+		"menus": {
+			"commandPalette": [
+				{
+					"command": "truenorth.launchAgents",
+					"when": "workspaceFolderCount > 0"
+				},
+				{
+					"command": "truenorth.analyzeProject",
+					"when": "workspaceFolderCount > 0"
+				},
+				{
+					"command": "truenorth.openDashboard",
+					"when": "workspaceFolderCount > 0"
+				},
+				{
+					"command": "truenorth.stopAllAgents",
+					"when": "workspaceFolderCount > 0"
+				},
+				{
+					"command": "truenorth.testClaude",
+					"when": "workspaceFolderCount > 0"
+				},
+				{
+					"command": "truenorth.showOutput",
+					"when": "workspaceFolderCount > 0"
+				},
+				{
+					"command": "truenorth.clearOutput",
+					"when": "workspaceFolderCount > 0"
+				},
+				{
+					"command": "truenorth.launch5PhaseSystem",
+					"when": "workspaceFolderCount > 0"
+				},
+				{
+					"command": "truenorth.launchPhase1",
+					"when": "workspaceFolderCount > 0"
+				},
+				{
+					"command": "truenorth.launchPhase2",
+					"when": "workspaceFolderCount > 0"
+				},
+				{
+					"command": "truenorth.launchPhase3",
+					"when": "workspaceFolderCount > 0"
+				},
+				{
+					"command": "truenorth.launchPhase4",
+					"when": "workspaceFolderCount > 0"
+				},
+				{
+					"command": "truenorth.launchPhase5",
+					"when": "workspaceFolderCount > 0"
+				},
+				{
+					"command": "truenorth.show5PhaseStatus",
+					"when": "workspaceFolderCount > 0"
+				},
+				{
+					"command": "truenorth.generatePhaseReport",
+					"when": "workspaceFolderCount > 0"
+				},
+				{
+					"command": "truenorth.showErrorReport"
+				},
+				{
+					"command": "truenorth.clearErrorHistory"
+				},
+				{
+					"command": "truenorth.runDiagnostics"
+				},
+				{
+					"command": "truenorth.launchTypeScriptFixer",
+					"when": "workspaceFolderCount > 0"
+				},
+				{
+					"command": "truenorth.showTypeScriptStatus",
+					"when": "workspaceFolderCount > 0"
+				},
+				{
+					"command": "truenorth.checkTypeScriptErrors",
+					"when": "workspaceFolderCount > 0"
+				},
+				{
+					"command": "truenorth.generateTypeScriptReport",
+					"when": "workspaceFolderCount > 0"
+				}
+			],
+			"explorer/context": [
+				{
+					"command": "truenorth.analyzeProject",
+					"group": "truenorth@1",
+					"when": "explorerResourceIsFolder"
+				},
+				{
+					"command": "truenorth.launchAgents",
+					"group": "truenorth@2",
+					"when": "explorerResourceIsFolder"
+				},
+				{
+					"command": "truenorth.openDashboard",
+					"group": "truenorth@3",
+					"when": "explorerResourceIsFolder"
+				}
+			]
+		},
+		"configuration": {
+			"title": "True North Agent System",
+			"properties": {
+				"truenorth.claudeCommand": {
+					"type": "string",
+					"default": "claude",
+					"description": "Path to Claude CLI command"
+				},
+				"truenorth.maxAgents": {
+					"type": "number",
+					"default": 5,
+					"description": "Maximum number of agents running simultaneously"
+				},
+				"truenorth.dashboardPort": {
+					"type": "number",
+					"default": 8080,
+					"description": "Port for dashboard server"
+				},
+				"truenorth.timeout": {
+					"type": "number",
+					"default": 120000,
+					"description": "Default timeout for Claude CLI commands in milliseconds"
+				}
+			}
+		},
+		"viewsContainers": {
+			"activitybar": [
+				{
+					"id": "truenorth",
+					"title": "TrueNorth",
+					"icon": "$(compass)"
+				}
+			]
+		},
+		"views": {
+			"truenorth": [
+				{
+					"id": "truenorth-sidebar",
+					"name": "Agent Control",
+					"type": "webview",
+					"when": "workspaceFolderCount > 0"
+				}
+			]
+		}
+	},
+	"scripts": {
+		"vscode:prepublish": "npm run compile",
+		"compile": "tsc -p ./ --skipLibCheck",
+		"compile:prod": "tsc -p ./tsconfig.prod.json --skipLibCheck --noEmitOnError false",
+		"compile:check": "tsc --noEmit --skipLibCheck --incremental",
+		"watch": "tsc -watch -p ./",
+		"clean": "rimraf out",
+		"prebuild": "npm run clean && npm run lint:fix",
+		"build": "npm run compile",
+		"build:prod": "npm run clean && npm run lint:check && npm run typecheck && npm run compile:prod",
+		"lint": "eslint src --ext ts",
+		"lint:fix": "eslint src --ext ts --fix",
+		"lint:check": "eslint src --ext ts --max-warnings 0",
+		"typecheck": "tsc --noEmit --skipLibCheck",
+		"package": "npm run build:prod && vsce package",
+		"docs:generate": "typedoc",
+		"docs:serve": "npx http-server docs/api -p 8080 -o",
+		"docs:build": "npm run docs:generate && npm run docs:validate",
+		"docs:validate": "npm run lint && npm run compile",
+		"docs:clean": "rimraf docs/api && mkdir -p docs/api",
+		"docs:auto": "node scripts/generate-docs.js",
+		"docs:watch": "nodemon --watch src --ext ts --exec \"npm run docs:auto\"",
+		"test": "jest",
+		"test:watch": "jest --watch",
+		"test:coverage": "jest --coverage",
+		"test:integration": "jest --testPathPatterns=integration",
+		"test:error-handling": "cd out && node test/runErrorTests.js",
+		"test:error-handling-compile": "npm run compile && npm run test:error-handling",
+		"test:unit": "jest --testPathPatterns=unit",
+		"test:e2e": "jest --testPathPatterns=e2e",
+		"test:performance": "jest --testPathPatterns=performance",
+		"test:security": "jest --testPathPatterns=security",
+		"test:suite": "ts-node tests/test-runner.ts --suite",
+		"test:all": "jest",
+		"test:ci": "npm run test:all -- --ci --coverage --watchAll=false --verbose=false",
+		"package:install": "npm run package && code --install-extension *.vsix",
+		"audit": "npm audit",
+		"audit:fix": "npm audit fix",
+		"outdated": "npm outdated",
+		"security:scan": "npm audit --audit-level=moderate",
+		"deps:check": "npm run outdated && npm run audit",
+		"deps:update": "npm update",
+		"precommit": "npm run lint:check && npm run typecheck && npm run test:unit",
+		"prepush": "npm run ci && npm run security:scan",
+		"prepare": "husky",
+		"ci": "npm run clean && npm run lint:check && npm run typecheck && npm run test:ci && npm run build:prod && npm run package:validate",
+		"validate": "npm run lint:check && npm run typecheck && npm run test:unit",
+		"package:validate": "npm run package --dry-run",
+		"build:analyze": "npm run build:prod && npm run package:validate",
+		"dev:compile": "tsc -p ./ --watch --preserveWatchOutput",
+		"build:fast": "tsc -p ./ --skipLibCheck --incremental"
+	},
+	"dependencies": {
+		"@types/chokidar": "^1.7.5",
+		"ajv": "^8.17.1",
+		"ajv-formats": "^3.0.1",
+		"chokidar": "^4.0.3",
+		"vscode-nls": "^5.2.0",
+		"ws": "^8.18.0"
+	},
+	"devDependencies": {
+		"@types/jest": "^30.0.0",
+		"@types/jsdom": "^21.1.7",
+		"@types/node": "^24.0.3",
+		"@types/vscode": "^1.101.0",
+		"@types/ws": "^8.5.8",
+		"@typescript-eslint/eslint-plugin": "^8.34.1",
+		"@typescript-eslint/parser": "^8.34.1",
+		"@vscode/vsce": "^3.5.0",
+		"eslint": "^9.29.0",
+		"husky": "^9.1.7",
+		"jest": "^30.0.2",
+		"jest-environment-node": "^30.0.2",
+		"jsdom": "^26.1.0",
+		"lint-staged": "^16.1.2",
+		"prettier": "^3.5.3",
+		"rimraf": "^6.0.1",
+		"ts-jest": "^29.2.5",
+		"ts-node": "^10.9.2",
+		"typedoc": "^0.28.5",
+		"typescript": "^5.8.3"
+	},
+	"overrides": {
+		"semver": ">=7.0.0"
+	},
+	"funding": {
+		"type": "individual",
+		"url": "https://github.com/sponsors/bkingery3"
+	},
+	"npm": {
+		"audit": {
+			"level": "moderate"
+		}
+	},
+	"lint-staged": {
+		"*.{ts,tsx}": [
+			"eslint --fix",
+			"prettier --write"
+		],
+		"*.{js,jsx,json,md}": [
+			"prettier --write"
+		]
+	},
+	"__metadata": {
+		"installedTimestamp": 1751230691752,
+		"targetPlatform": "undefined",
+		"size": 3185687
+	}
+}

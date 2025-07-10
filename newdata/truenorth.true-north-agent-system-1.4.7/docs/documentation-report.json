@@ -1,0 +1,58 @@
+{
+  "timestamp": "2025-06-20T23:22:15.230Z",
+  "coverage": {
+    "files": {
+      "documented": 54,
+      "total": 134,
+      "percentage": "40.3"
+    },
+    "functions": {
+      "documented": 65,
+      "total": 642,
+      "percentage": "10.1"
+    }
+  },
+  "issues": [
+    "Broken link in /Users/truenorth/docs/README.md: ./api/classes/TrueNorthOrchestrator.html",
+    "Broken link in /Users/truenorth/docs/README.md: ./api/classes/ClaudeCliManager.html",
+    "Broken link in /Users/truenorth/docs/README.md: ./guides/installation.md",
+    "Broken link in /Users/truenorth/docs/README.md: ./guides/dashboard.md",
+    "Broken link in /Users/truenorth/docs/README.md: ./tutorials/first-deployment.md",
+    "Broken link in /Users/truenorth/docs/README.md: ./tutorials/advanced-configuration.md",
+    "Broken link in /Users/truenorth/docs/README.md: ./tutorials/performance-optimization.md",
+    "Broken link in /Users/truenorth/docs/README.md: ./tutorials/troubleshooting.md",
+    "Broken link in /Users/truenorth/docs/README.md: ./developer/architecture.md",
+    "Broken link in /Users/truenorth/docs/README.md: ./developer/development-setup.md",
+    "Broken link in /Users/truenorth/docs/README.md: ./developer/testing.md",
+    "Broken link in /Users/truenorth/docs/README.md: ./developer/release-process.md",
+    "Broken link in /Users/truenorth/docs/README.md: ./architecture/system-overview.md",
+    "Broken link in /Users/truenorth/docs/README.md: ./architecture/agent-system.md",
+    "Broken link in /Users/truenorth/docs/README.md: ./architecture/claude-integration.md",
+    "Broken link in /Users/truenorth/docs/README.md: ./architecture/dashboard.md",
+    "Broken link in /Users/truenorth/docs/README.md: ./architecture/error-handling.md",
+    "Broken link in /Users/truenorth/docs/README.md: ./troubleshooting/common-issues.md",
+    "Broken link in /Users/truenorth/docs/README.md: ./troubleshooting/performance.md",
+    "Broken link in /Users/truenorth/docs/README.md: ./troubleshooting/configuration.md",
+    "Broken link in /Users/truenorth/docs/README.md: ./troubleshooting/claude-cli.md",
+    "Broken link in /Users/truenorth/docs/README.md: ./troubleshooting/common-issues.md#frequently-asked-questions",
+    "Broken link in /Users/truenorth/docs/developer/contributing.md: ./development-setup.md",
+    "Broken link in /Users/truenorth/docs/developer/contributing.md: ../architecture/system-overview.md",
+    "Broken link in /Users/truenorth/docs/developer/contributing.md: ./testing.md",
+    "Broken link in /Users/truenorth/docs/guides/configuration.md: ./dashboard.md",
+    "Broken link in /Users/truenorth/docs/guides/configuration.md: ../tutorials/performance-optimization.md",
+    "Broken link in /Users/truenorth/docs/guides/configuration.md: ../troubleshooting/configuration.md",
+    "Broken link in /Users/truenorth/docs/guides/quick-start.md: ./dashboard.md",
+    "Broken link in /Users/truenorth/docs/guides/quick-start.md: ../tutorials/advanced-configuration.md",
+    "Broken link in /Users/truenorth/docs/guides/quick-start.md: ../troubleshooting/common-issues.md",
+    "Broken link in /Users/truenorth/docs/guides/quick-start.md: ../troubleshooting/common-issues.md#frequently-asked-questions"
+  ],
+  "files": {
+    "total": 5,
+    "apiGenerated": true
+  },
+  "recommendations": [
+    "Consider adding JSDoc comments to more files",
+    "Document more functions with JSDoc comments",
+    "Fix broken documentation links"
+  ]
+}

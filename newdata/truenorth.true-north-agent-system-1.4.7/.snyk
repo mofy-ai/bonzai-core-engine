@@ -1,0 +1,19 @@
+# Snyk (https://snyk.io) policy file
+version: v1.0.0
+
+# Ignore specific vulnerabilities
+ignore:
+  # Example: Ignore prototype pollution in development dependencies
+  # SNYK-JS-LODASH-567746:
+  #   - '*':
+  #       reason: Development dependency only
+  #       expires: 2025-12-31T23:59:59.000Z
+
+# Patches to apply
+patch: {}
+
+# Language settings
+language-settings:
+  javascript:
+    # Include devDependencies in scan
+    includeDevDependencies: true

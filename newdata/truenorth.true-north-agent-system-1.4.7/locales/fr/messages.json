@@ -1,0 +1,250 @@
+{
+  "extension": {
+    "displayName": "Système d'Agents True North",
+    "description": "🧭 Orchestration d'agents alimentés par IA pour l'analyse et l'amélioration intelligente du code"
+  },
+  "commands": {
+    "cleanCodebase": {
+      "title": "🧹 Nettoyer la Base de Code",
+      "tooltip": "Supprimer le code inutilisé et optimiser les importations"
+    },
+    "selectTask": {
+      "title": "🎯 Sélectionner une Tâche TrueNorth",
+      "tooltip": "Choisir une tâche spécifique à exécuter"
+    },
+    "cancelExecution": {
+      "title": "🛑 Annuler l'Exécution",
+      "tooltip": "Arrêter tous les agents en cours d'exécution"
+    },
+    "analyzeProject": {
+      "title": "🔍 Analyser le Projet et Générer des Agents",
+      "tooltip": "Analyser la structure du projet et générer des agents intelligents"
+    },
+    "deployAgents": {
+      "title": "🚀 Déployer les Agents IA",
+      "tooltip": "Déployer et exécuter tous les agents générés"
+    },
+    "analyzeSecurity": {
+      "title": "🔒 Analyser la Sécurité",
+      "tooltip": "Scanner les vulnérabilités de sécurité"
+    },
+    "analyzeSustainability": {
+      "title": "🌱 Analyser la Durabilité",
+      "tooltip": "Analyser l'utilisation des ressources et les optimisations écologiques"
+    },
+    "openDashboard": {
+      "title": "🧭 Ouvrir le Tableau de Bord",
+      "tooltip": "Lancer le centre de contrôle TrueNorth"
+    },
+    "optimizePerformance": {
+      "title": "⚡ Optimiser les Performances",
+      "tooltip": "Améliorer les performances de l'application"
+    },
+    "retryFailed": {
+      "title": "🔄 Réessayer les Échecs",
+      "tooltip": "Réessayer les agents qui ont échoué pendant l'exécution"
+    },
+    "stopDeployment": {
+      "title": "🛑 Arrêter le Déploiement",
+      "tooltip": "Arrêter immédiatement tous les agents en cours d'exécution"
+    }
+  },
+  "status": {
+    "ready": "Prêt",
+    "analyzing": "Analyse du projet en cours...",
+    "deploying": "Déploiement des agents...",
+    "running": "En cours d'exécution",
+    "completed": "Terminé",
+    "failed": "Échec",
+    "stopped": "Arrêté",
+    "error": "Erreur : {message}",
+    "warning": "Avertissement : {message}",
+    "success": "Succès : {message}",
+    "agentCount": "{count} agents",
+    "activeAgents": "Agents TrueNorth actifs - cliquez pour voir le tableau de bord",
+    "noActiveAgents": "Aucun agent actif",
+    "readyToLaunch": "True North Prêt - Cliquez pour ouvrir le tableau de bord"
+  },
+  "ui": {
+    "sidebar": {
+      "projectStatus": "🧭 État du Projet",
+      "quickActions": "⚡ Actions Rapides",
+      "analysis": "🔍 Analyse",
+      "improvement": "✨ Amélioration",
+      "deployment": "🚀 Déploiement",
+      "quickAnalysis": "Analyse Rapide",
+      "openDashboard": "Ouvrir le Tableau de Bord",
+      "analyzeProject": "Analyser le Projet",
+      "securityScan": "Scan de Sécurité",
+      "sustainability": "Durabilité",
+      "cleanCode": "Code Propre",
+      "performance": "Performance",
+      "deployAgents": "Déployer les Agents",
+      "retryFailed": "Réessayer les Échecs",
+      "stopAll": "Tout Arrêter"
+    },
+    "descriptions": {
+      "quickAnalysis": "Analyse la structure de votre projet et génère des agents intelligents pour l'optimisation",
+      "dashboard": "Ouvre le tableau de bord complet TrueNorth dans votre navigateur pour une surveillance et un contrôle avancés",
+      "analyzeProject": "Analyse toute la structure de votre projet et génère des agents d'optimisation complets",
+      "securityScan": "Scanne votre code pour les vulnérabilités de sécurité et les problèmes de conformité",
+      "sustainability": "Analyse l'utilisation des ressources et suggère des optimisations écologiques",
+      "cleanCode": "Supprime le code inutilisé, optimise les importations et nettoie votre code pour une meilleure maintenabilité",
+      "performance": "Identifie les goulots d'étranglement de performance et optimise l'exécution du code pour une vitesse plus rapide",
+      "deployAgents": "Exécute tous les agents générés dans une séquence de déploiement optimisée pour une efficacité maximale",
+      "retryFailed": "Re-exécute tous les agents qui ont échoué lors de l'exécution précédente avec une gestion d'erreur améliorée",
+      "stopAll": "Arrête immédiatement tous les agents en cours d'exécution et annule les tâches en attente pour un arrêt d'urgence"
+    },
+    "actions": {
+      "generateAgents": "Analyser et générer des agents",
+      "launchControlCenter": "Lancer le centre de contrôle",
+      "findVulnerabilities": "Trouver les vulnérabilités",
+      "optimizeResources": "Optimiser les ressources",
+      "removeUnusedCode": "Supprimer le code inutilisé",
+      "improveSpeed": "Améliorer la vitesse",
+      "runAllAgents": "Exécuter tous les agents",
+      "reRunFailed": "Re-exécuter les échecs",
+      "cancelExecution": "Annuler l'exécution"
+    }
+  },
+  "notifications": {
+    "agentStarted": "Exécution d'Agent Démarrée",
+    "agentCompleted": "Exécution d'Agent Terminée",
+    "agentFailed": "Exécution d'Agent Échouée",
+    "phaseStarted": "Phase {phaseNumber} : {phaseName} a commencé avec {agentCount} agents",
+    "systemError": "Une erreur système s'est produite : {error}. Des actions de récupération sont tentées.",
+    "connectionRestored": "La connexion au tableau de bord TrueNorth a été restaurée",
+    "criticalError": "Plusieurs erreurs critiques détectées",
+    "emergencyProtocol": "Protocole d'urgence activé",
+    "languageChanged": "Langue changée en {language}",
+    "configurationUpdated": "Configuration mise à jour avec succès"
+  },
+  "errors": {
+    "claudeCliNotFound": "Claude CLI non trouvé",
+    "installationInvalid": "Vérifier l'installation de Claude CLI",
+    "pathEnvironmentIssue": "Vérifier la variable d'environnement PATH",
+    "resourcesLow": "Réduire le nombre d'agents par phase",
+    "systemResourcesLow": "Vérifier les ressources système",
+    "configurationInvalid": "Configuration invalide : {details}",
+    "workspaceNotFound": "Aucun dossier d'espace de travail ouvert",
+    "fileNotFound": "Fichier non trouvé : {path}",
+    "permissionDenied": "Permission refusée : {operation}",
+    "networkError": "Erreur réseau : {details}",
+    "timeout": "L'opération a expiré après {seconds} secondes"
+  },
+  "configuration": {
+    "claudeCommand": {
+      "title": "Commande Claude CLI",
+      "description": "Chemin vers la commande Claude CLI"
+    },
+    "maxParallelAgents": {
+      "title": "Maximum d'Agents Parallèles",
+      "description": "Nombre maximum d'agents s'exécutant simultanément"
+    },
+    "audioNotifications": {
+      "title": "Notifications Audio",
+      "description": "Activer les notifications audio pour l'état des agents"
+    },
+    "dashboardPort": {
+      "title": "Port du Tableau de Bord",
+      "description": "Port pour l'interface web du tableau de bord"
+    },
+    "autoAnalyzeOnOpen": {
+      "title": "Analyse Auto à l'Ouverture",
+      "description": "Analyser automatiquement le projet à l'ouverture de l'espace de travail"
+    },
+    "sessionTimeout": {
+      "title": "Délai d'Expiration de Session",
+      "description": "Délai d'expiration de session par défaut en millisecondes"
+    },
+    "maxRetries": {
+      "title": "Maximum de Tentatives",
+      "description": "Nombre maximum de tentatives de réessai par défaut"
+    },
+    "language": {
+      "title": "Langue",
+      "description": "Langue de l'interface pour le Système d'Agents TrueNorth"
+    },
+    "accessibility": {
+      "enableScreenReader": {
+        "title": "Support de Lecteur d'Écran",
+        "description": "Activer le support de lecteur d'écran et les annonces"
+      },
+      "highContrast": {
+        "title": "Mode Haut Contraste",
+        "description": "Activer les couleurs à haut contraste pour une meilleure visibilité"
+      },
+      "reducedMotion": {
+        "title": "Mouvement Réduit",
+        "description": "Réduire les animations et les effets de mouvement"
+      },
+      "fontSize": {
+        "title": "Taille de Police",
+        "description": "Ajuster la taille de police pour une meilleure lisibilité"
+      }
+    }
+  },
+  "accessibility": {
+    "sidebarLoaded": "Barre latérale TrueNorth chargée et prête",
+    "focusCleared": "Focus supprimé du bouton",
+    "launching": "Lancement de l'agent {agentName}",
+    "openingDashboard": "Ouverture du tableau de bord TrueNorth dans le navigateur",
+    "statusUpdated": "État de l'agent mis à jour : {changes}",
+    "keyboardShortcuts": {
+      "alt1": "Alt+1 : Focaliser les Actions Rapides",
+      "alt2": "Alt+2 : Focaliser la Section d'Analyse",
+      "enter": "Entrée/Espace : Activer le bouton",
+      "escape": "Échap : Effacer le focus"
+    }
+  },
+  "dashboard": {
+    "title": "Tableau de Bord TrueNorth",
+    "sections": {
+      "overview": "Aperçu",
+      "agents": "Agents",
+      "performance": "Performance",
+      "logs": "Journaux",
+      "settings": "Paramètres"
+    },
+    "metrics": {
+      "totalAgents": "Total d'Agents",
+      "runningAgents": "Agents en Cours",
+      "completedTasks": "Tâches Terminées",
+      "errorRate": "Taux d'Erreur",
+      "averageExecutionTime": "Temps d'Exécution Moyen",
+      "memoryUsage": "Utilisation Mémoire",
+      "cpuUsage": "Utilisation CPU"
+    }
+  },
+  "dateTime": {
+    "formats": {
+      "short": "dd/MM/yyyy",
+      "medium": "d MMM yyyy",
+      "long": "d MMMM yyyy",
+      "full": "EEEE d MMMM yyyy",
+      "time": "HH:mm:ss",
+      "timeShort": "HH:mm",
+      "dateTime": "dd/MM/yyyy HH:mm:ss"
+    },
+    "relative": {
+      "now": "maintenant",
+      "secondsAgo": "il y a {count} secondes",
+      "minutesAgo": "il y a {count} minutes",
+      "hoursAgo": "il y a {count} heures",
+      "daysAgo": "il y a {count} jours",
+      "weeksAgo": "il y a {count} semaines",
+      "monthsAgo": "il y a {count} mois",
+      "yearsAgo": "il y a {count} années"
+    }
+  },
+  "numbers": {
+    "decimal": ",",
+    "thousands": " ",
+    "percentage": "{number} %",
+    "currency": "{amount} €",
+    "bytes": "{size} octets",
+    "kilobytes": "{size} Ko",
+    "megabytes": "{size} Mo",
+    "gigabytes": "{size} Go"
+  }
+}

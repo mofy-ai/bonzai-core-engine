@@ -1,0 +1,270 @@
+{
+  "extension": {
+    "displayName": "True North Agent System",
+    "description": "🧭 Claude CLI-powered agent orchestration for intelligent code analysis and enhancement"
+  },
+  "commands": {
+    "cleanCodebase": {
+      "title": "🧹 Clean Codebase",
+      "tooltip": "Remove unused code and optimize imports"
+    },
+    "selectTask": {
+      "title": "🎯 Select TrueNorth Task",
+      "tooltip": "Choose a specific task to execute"
+    },
+    "cancelExecution": {
+      "title": "🛑 Cancel Execution",
+      "tooltip": "Stop all running agents"
+    },
+    "analyzeProject": {
+      "title": "🔍 Analyze Project & Generate Agents",
+      "tooltip": "Analyze project structure and generate intelligent agents"
+    },
+    "deployAgents": {
+      "title": "🚀 Deploy AI Agents",
+      "tooltip": "Deploy and run all generated agents"
+    },
+    "analyzeSecurity": {
+      "title": "🔒 Analyze Security",
+      "tooltip": "Scan for security vulnerabilities"
+    },
+    "analyzeSustainability": {
+      "title": "🌱 Analyze Sustainability",
+      "tooltip": "Analyze resource usage and eco-friendly optimizations"
+    },
+    "openDashboard": {
+      "title": "🧭 Open Dashboard",
+      "tooltip": "Launch TrueNorth control center"
+    },
+    "optimizePerformance": {
+      "title": "⚡ Optimize Performance",
+      "tooltip": "Improve application performance"
+    },
+    "retryFailed": {
+      "title": "🔄 Retry Failed",
+      "tooltip": "Retry agents that failed during execution"
+    },
+    "stopDeployment": {
+      "title": "🛑 Stop Deployment",
+      "tooltip": "Stop all running agents immediately"
+    }
+  },
+  "status": {
+    "ready": "Ready",
+    "analyzing": "Analyzing project...",
+    "deploying": "Agents deploying...",
+    "running": "Running",
+    "completed": "Completed",
+    "failed": "Failed",
+    "stopped": "Stopped",
+    "error": "Error: {message}",
+    "warning": "Warning: {message}",
+    "success": "Success: {message}",
+    "agentCount": "{count} agents",
+    "activeAgents": "Active TrueNorth agents - click to view dashboard",
+    "noActiveAgents": "No active agents",
+    "readyToLaunch": "True North Ready - Click to open dashboard",
+    "cleaningCodebase": "🧹 Cleaning Codebase..."
+  },
+  "ui": {
+    "sidebar": {
+      "projectStatus": "🧭 Project Status",
+      "quickActions": "⚡ Quick Actions", 
+      "analysis": "🔍 Analysis",
+      "improvement": "✨ Improvement",
+      "deployment": "🚀 Deployment",
+      "quickAnalysis": "Quick Analysis",
+      "openDashboard": "Open Dashboard",
+      "analyzeProject": "Analyze Project",
+      "securityScan": "Security Scan",
+      "sustainability": "Sustainability",
+      "cleanCode": "Clean Code",
+      "performance": "Performance",
+      "deployAgents": "Deploy Agents",
+      "retryFailed": "Retry Failed",
+      "stopAll": "Stop All"
+    },
+    "descriptions": {
+      "quickAnalysis": "Analyzes your project structure and generates intelligent agents for optimization",
+      "dashboard": "Opens the full TrueNorth dashboard in your browser for advanced monitoring and control",
+      "analyzeProject": "Analyzes your entire project structure and generates comprehensive optimization agents",
+      "securityScan": "Scans your codebase for security vulnerabilities and compliance issues",
+      "sustainability": "Analyzes resource usage and suggests eco-friendly optimizations",
+      "cleanCode": "Removes unused code, optimizes imports, and cleans up your codebase for better maintainability",
+      "performance": "Identifies performance bottlenecks and optimizes code execution for faster performance",
+      "deployAgents": "Runs all generated agents in an optimized deployment sequence for maximum efficiency",
+      "retryFailed": "Re-runs any agents that failed during previous execution with improved error handling",
+      "stopAll": "Immediately stops all running agents and cancels pending tasks for emergency shutdown"
+    },
+    "actions": {
+      "generateAgents": "Analyze & generate agents",
+      "launchControlCenter": "Launch control center",
+      "findVulnerabilities": "Find vulnerabilities",
+      "optimizeResources": "Optimize resources",
+      "removeUnusedCode": "Remove unused code",
+      "improveSpeed": "Improve speed",
+      "runAllAgents": "Run all agents",
+      "reRunFailed": "Re-run failed",
+      "cancelExecution": "Cancel execution",
+      "learnMore": "Learn More",
+      "dismiss": "Dismiss",
+      "viewConsole": "View Console",
+      "openDashboard": "📈 Open Dashboard",
+      "analyzeProject": "🔍 Analyze Project",
+      "gotIt": "✅ Got It"
+    }
+  },
+  "notifications": {
+    "agentStarted": "Agent Execution Started",
+    "agentCompleted": "Agent Execution Completed",
+    "agentFailed": "Agent Execution Failed",
+    "phaseStarted": "Phase {phaseNumber}: {phaseName} has started with {agentCount} agents",
+    "systemError": "A system error occurred: {error}. Recovery actions are being attempted.",
+    "connectionRestored": "Connection to the TrueNorth dashboard has been restored",
+    "criticalError": "Multiple critical errors detected",
+    "emergencyProtocol": "Emergency protocol activated",
+    "languageChanged": "Language changed to {language}",
+    "configurationUpdated": "Configuration updated successfully",
+    "codebaseCleaningComplete": "🧹 Codebase Cleaning Complete!\n\n✅ Successfully optimized your project structure\n📊 Enhanced code quality and maintainability\n🚀 Ready for advanced development workflows\n\n💡 What would you like to do next?",
+    "quickTip": "💡 Quick Tip: Use the TrueNorth status bar to monitor progress or access the dashboard anytime!"
+  },
+  "errors": {
+    "claudeCliNotFound": "Claude CLI not found",
+    "installationInvalid": "Verify Claude CLI installation", 
+    "pathEnvironmentIssue": "Check PATH environment variable",
+    "resourcesLow": "Reduce agent count per phase",
+    "systemResourcesLow": "Check system resources",
+    "configurationInvalid": "Invalid configuration: {details}",
+    "workspaceNotFound": "No workspace folder open",
+    "fileNotFound": "File not found: {path}",
+    "permissionDenied": "Permission denied: {operation}",
+    "networkError": "Network error: {details}",
+    "timeout": "Operation timed out after {seconds} seconds",
+    "aiInitializationFailed": "AI features may be limited due to initialization error",
+    "cryptoUnavailable": "Enterprise security features are disabled due to crypto API limitations. Basic functionality remains available.",
+    "enterpriseInitializationFailed": "Enterprise features may be limited due to initialization error. Check console for details."
+  },
+  "configuration": {
+    "claudeCommand": {
+      "title": "Claude CLI Command",
+      "description": "Path to Claude CLI command"
+    },
+    "maxParallelAgents": {
+      "title": "Maximum Parallel Agents",
+      "description": "Maximum number of agents running simultaneously"
+    },
+    "audioNotifications": {
+      "title": "Audio Notifications", 
+      "description": "Enable audio notifications for agent status"
+    },
+    "dashboardPort": {
+      "title": "Dashboard Port",
+      "description": "Port for the dashboard web interface"
+    },
+    "autoAnalyzeOnOpen": {
+      "title": "Auto Analyze on Open",
+      "description": "Automatically analyze project when workspace opens"
+    },
+    "sessionTimeout": {
+      "title": "Session Timeout",
+      "description": "Default session timeout in milliseconds"
+    },
+    "maxRetries": {
+      "title": "Maximum Retries",
+      "description": "Default maximum retry attempts"
+    },
+    "language": {
+      "title": "Language",
+      "description": "Interface language for TrueNorth Agent System"
+    },
+    "accessibility": {
+      "enableScreenReader": {
+        "title": "Screen Reader Support",
+        "description": "Enable screen reader support and announcements"
+      },
+      "highContrast": {
+        "title": "High Contrast Mode",
+        "description": "Enable high contrast colors for better visibility"
+      },
+      "reducedMotion": {
+        "title": "Reduced Motion",
+        "description": "Reduce animations and motion effects"
+      },
+      "fontSize": {
+        "title": "Font Size",
+        "description": "Adjust font size for better readability"
+      }
+    }
+  },
+  "accessibility": {
+    "sidebarLoaded": "TrueNorth sidebar loaded and ready",
+    "focusCleared": "Focus cleared from button",
+    "launching": "Launching {agentName} agent",
+    "openingDashboard": "Opening TrueNorth dashboard in browser",
+    "statusUpdated": "Agent status updated: {changes}",
+    "keyboardShortcuts": {
+      "alt1": "Alt+1: Focus Quick Actions",
+      "alt2": "Alt+2: Focus Analysis Section",
+      "enter": "Enter/Space: Activate button",
+      "escape": "Escape: Clear focus"
+    }
+  },
+  "dashboard": {
+    "title": "TrueNorth Dashboard",
+    "sections": {
+      "overview": "Overview",
+      "agents": "Agents",
+      "performance": "Performance",
+      "logs": "Logs",
+      "settings": "Settings"
+    },
+    "metrics": {
+      "totalAgents": "Total Agents",
+      "runningAgents": "Running Agents",
+      "completedTasks": "Completed Tasks",
+      "errorRate": "Error Rate",
+      "averageExecutionTime": "Average Execution Time",
+      "memoryUsage": "Memory Usage",
+      "cpuUsage": "CPU Usage"
+    }
+  },
+  "dateTime": {
+    "formats": {
+      "short": "M/d/yyyy",
+      "medium": "MMM d, yyyy",
+      "long": "MMMM d, yyyy",
+      "full": "EEEE, MMMM d, yyyy",
+      "time": "h:mm:ss a",
+      "timeShort": "h:mm a",
+      "dateTime": "M/d/yyyy h:mm:ss a"
+    },
+    "relative": {
+      "now": "now",
+      "secondsAgo": "{count} seconds ago",
+      "minutesAgo": "{count} minutes ago",
+      "hoursAgo": "{count} hours ago",
+      "daysAgo": "{count} days ago",
+      "weeksAgo": "{count} weeks ago",
+      "monthsAgo": "{count} months ago",
+      "yearsAgo": "{count} years ago"
+    },
+    "duration": {
+      "days": "{count} days",
+      "hours": "{count} hours",
+      "minutes": "{count} minutes",
+      "seconds": "{count} seconds"
+    },
+    "sameDayRange": "{date} from {startTime} to {endTime}",
+    "dateRange": "{startDate} to {endDate}"
+  },
+  "numbers": {
+    "decimal": ".",
+    "thousands": ",",
+    "percentage": "{number}%",
+    "currency": "${amount}",
+    "bytes": "{size} bytes",
+    "kilobytes": "{size} KB",
+    "megabytes": "{size} MB",
+    "gigabytes": "{size} GB"
+  }
+}

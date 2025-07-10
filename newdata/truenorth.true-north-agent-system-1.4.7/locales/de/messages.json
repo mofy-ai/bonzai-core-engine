@@ -1,0 +1,250 @@
+{
+  "extension": {
+    "displayName": "True North Agenten System",
+    "description": "🧭 KI-gesteuerte Agent-Orchestrierung für intelligente Code-Analyse und -Verbesserung"
+  },
+  "commands": {
+    "cleanCodebase": {
+      "title": "🧹 Code-Basis Bereinigen",
+      "tooltip": "Ungenutzten Code entfernen und Importe optimieren"
+    },
+    "selectTask": {
+      "title": "🎯 TrueNorth-Aufgabe Auswählen",
+      "tooltip": "Eine spezifische Aufgabe zur Ausführung wählen"
+    },
+    "cancelExecution": {
+      "title": "🛑 Ausführung Abbrechen",
+      "tooltip": "Alle laufenden Agenten stoppen"
+    },
+    "analyzeProject": {
+      "title": "🔍 Projekt Analysieren & Agenten Generieren",
+      "tooltip": "Projektstruktur analysieren und intelligente Agenten generieren"
+    },
+    "deployAgents": {
+      "title": "🚀 KI-Agenten Bereitstellen",
+      "tooltip": "Alle generierten Agenten bereitstellen und ausführen"
+    },
+    "analyzeSecurity": {
+      "title": "🔒 Sicherheit Analysieren",
+      "tooltip": "Nach Sicherheitslücken scannen"
+    },
+    "analyzeSustainability": {
+      "title": "🌱 Nachhaltigkeit Analysieren",
+      "tooltip": "Ressourcenverbrauch und umweltfreundliche Optimierungen analysieren"
+    },
+    "openDashboard": {
+      "title": "🧭 Dashboard Öffnen",
+      "tooltip": "TrueNorth-Kontrollzentrum starten"
+    },
+    "optimizePerformance": {
+      "title": "⚡ Leistung Optimieren",
+      "tooltip": "Anwendungsleistung verbessern"
+    },
+    "retryFailed": {
+      "title": "🔄 Fehlgeschlagene Wiederholen",
+      "tooltip": "Agenten wiederholen, die während der Ausführung fehlgeschlagen sind"
+    },
+    "stopDeployment": {
+      "title": "🛑 Bereitstellung Stoppen",
+      "tooltip": "Alle laufenden Agenten sofort stoppen"
+    }
+  },
+  "status": {
+    "ready": "Bereit",
+    "analyzing": "Projekt wird analysiert...",
+    "deploying": "Agenten werden bereitgestellt...",
+    "running": "Läuft",
+    "completed": "Abgeschlossen",
+    "failed": "Fehlgeschlagen",
+    "stopped": "Gestoppt",
+    "error": "Fehler: {message}",
+    "warning": "Warnung: {message}",
+    "success": "Erfolg: {message}",
+    "agentCount": "{count} Agenten",
+    "activeAgents": "Aktive TrueNorth-Agenten - klicken Sie, um das Dashboard anzuzeigen",
+    "noActiveAgents": "Keine aktiven Agenten",
+    "readyToLaunch": "True North Bereit - Klicken Sie, um das Dashboard zu öffnen"
+  },
+  "ui": {
+    "sidebar": {
+      "projectStatus": "🧭 Projektstatus",
+      "quickActions": "⚡ Schnellaktionen",
+      "analysis": "🔍 Analyse",
+      "improvement": "✨ Verbesserung",
+      "deployment": "🚀 Bereitstellung",
+      "quickAnalysis": "Schnellanalyse",
+      "openDashboard": "Dashboard Öffnen",
+      "analyzeProject": "Projekt Analysieren",
+      "securityScan": "Sicherheitsscan",
+      "sustainability": "Nachhaltigkeit",
+      "cleanCode": "Code Bereinigen",
+      "performance": "Leistung",
+      "deployAgents": "Agenten Bereitstellen",
+      "retryFailed": "Fehlgeschlagene Wiederholen",
+      "stopAll": "Alle Stoppen"
+    },
+    "descriptions": {
+      "quickAnalysis": "Analysiert Ihre Projektstruktur und generiert intelligente Agenten zur Optimierung",
+      "dashboard": "Öffnet das vollständige TrueNorth-Dashboard in Ihrem Browser für erweiterte Überwachung und Kontrolle",
+      "analyzeProject": "Analysiert Ihre gesamte Projektstruktur und generiert umfassende Optimierungsagenten",
+      "securityScan": "Durchsucht Ihren Code nach Sicherheitslücken und Compliance-Problemen",
+      "sustainability": "Analysiert Ressourcenverbrauch und schlägt umweltfreundliche Optimierungen vor",
+      "cleanCode": "Entfernt ungenutzten Code, optimiert Importe und bereinigt Ihren Code für bessere Wartbarkeit",
+      "performance": "Identifiziert Leistungsengpässe und optimiert Code-Ausführung für höhere Geschwindigkeit",
+      "deployAgents": "Führt alle generierten Agenten in einer optimierten Bereitstellungssequenz für maximale Effizienz aus",
+      "retryFailed": "Führt alle Agenten erneut aus, die bei der vorherigen Ausführung mit verbesserter Fehlerbehandlung fehlgeschlagen sind",
+      "stopAll": "Stoppt sofort alle laufenden Agenten und bricht ausstehende Aufgaben für Notabschaltung ab"
+    },
+    "actions": {
+      "generateAgents": "Analysieren & Agenten generieren",
+      "launchControlCenter": "Kontrollzentrum starten",
+      "findVulnerabilities": "Schwachstellen finden",
+      "optimizeResources": "Ressourcen optimieren",
+      "removeUnusedCode": "Ungenutzten Code entfernen",
+      "improveSpeed": "Geschwindigkeit verbessern",
+      "runAllAgents": "Alle Agenten ausführen",
+      "reRunFailed": "Fehlgeschlagene erneut ausführen",
+      "cancelExecution": "Ausführung abbrechen"
+    }
+  },
+  "notifications": {
+    "agentStarted": "Agent-Ausführung Gestartet",
+    "agentCompleted": "Agent-Ausführung Abgeschlossen",
+    "agentFailed": "Agent-Ausführung Fehlgeschlagen",
+    "phaseStarted": "Phase {phaseNumber}: {phaseName} hat mit {agentCount} Agenten begonnen",
+    "systemError": "Ein Systemfehler ist aufgetreten: {error}. Wiederherstellungsaktionen werden versucht.",
+    "connectionRestored": "Die Verbindung zum TrueNorth-Dashboard wurde wiederhergestellt",
+    "criticalError": "Mehrere kritische Fehler erkannt",
+    "emergencyProtocol": "Notfallprotokoll aktiviert",
+    "languageChanged": "Sprache geändert zu {language}",
+    "configurationUpdated": "Konfiguration erfolgreich aktualisiert"
+  },
+  "errors": {
+    "claudeCliNotFound": "Claude CLI nicht gefunden",
+    "installationInvalid": "Claude CLI-Installation überprüfen",
+    "pathEnvironmentIssue": "PATH-Umgebungsvariable überprüfen",
+    "resourcesLow": "Agent-Anzahl pro Phase reduzieren",
+    "systemResourcesLow": "Systemressourcen überprüfen",
+    "configurationInvalid": "Ungültige Konfiguration: {details}",
+    "workspaceNotFound": "Kein Arbeitsbereich-Ordner geöffnet",
+    "fileNotFound": "Datei nicht gefunden: {path}",
+    "permissionDenied": "Berechtigung verweigert: {operation}",
+    "networkError": "Netzwerkfehler: {details}",
+    "timeout": "Operation nach {seconds} Sekunden zeitüberschritten"
+  },
+  "configuration": {
+    "claudeCommand": {
+      "title": "Claude CLI-Befehl",
+      "description": "Pfad zum Claude CLI-Befehl"
+    },
+    "maxParallelAgents": {
+      "title": "Maximale Parallele Agenten",
+      "description": "Maximale Anzahl gleichzeitig laufender Agenten"
+    },
+    "audioNotifications": {
+      "title": "Audio-Benachrichtigungen",
+      "description": "Audio-Benachrichtigungen für Agent-Status aktivieren"
+    },
+    "dashboardPort": {
+      "title": "Dashboard-Port",
+      "description": "Port für die Dashboard-Web-Schnittstelle"
+    },
+    "autoAnalyzeOnOpen": {
+      "title": "Auto-Analyse beim Öffnen",
+      "description": "Projekt automatisch analysieren, wenn Arbeitsbereich geöffnet wird"
+    },
+    "sessionTimeout": {
+      "title": "Sitzungs-Timeout",
+      "description": "Standard-Sitzungs-Timeout in Millisekunden"
+    },
+    "maxRetries": {
+      "title": "Maximale Wiederholungen",
+      "description": "Standard-maximale Anzahl von Wiederholungsversuchen"
+    },
+    "language": {
+      "title": "Sprache",
+      "description": "Schnittstellensprache für das TrueNorth Agent System"
+    },
+    "accessibility": {
+      "enableScreenReader": {
+        "title": "Bildschirmleser-Unterstützung",
+        "description": "Bildschirmleser-Unterstützung und Ansagen aktivieren"
+      },
+      "highContrast": {
+        "title": "Hoher Kontrast-Modus",
+        "description": "Hohe Kontrastfarben für bessere Sichtbarkeit aktivieren"
+      },
+      "reducedMotion": {
+        "title": "Reduzierte Bewegung",
+        "description": "Animationen und Bewegungseffekte reduzieren"
+      },
+      "fontSize": {
+        "title": "Schriftgröße",
+        "description": "Schriftgröße für bessere Lesbarkeit anpassen"
+      }
+    }
+  },
+  "accessibility": {
+    "sidebarLoaded": "TrueNorth-Seitenleiste geladen und bereit",
+    "focusCleared": "Fokus vom Button entfernt",
+    "launching": "Agent {agentName} wird gestartet",
+    "openingDashboard": "TrueNorth-Dashboard wird im Browser geöffnet",
+    "statusUpdated": "Agent-Status aktualisiert: {changes}",
+    "keyboardShortcuts": {
+      "alt1": "Alt+1: Schnellaktionen fokussieren",
+      "alt2": "Alt+2: Analyse-Bereich fokussieren",
+      "enter": "Enter/Leertaste: Button aktivieren",
+      "escape": "Escape: Fokus löschen"
+    }
+  },
+  "dashboard": {
+    "title": "TrueNorth Dashboard",
+    "sections": {
+      "overview": "Übersicht",
+      "agents": "Agenten",
+      "performance": "Leistung",
+      "logs": "Protokolle",
+      "settings": "Einstellungen"
+    },
+    "metrics": {
+      "totalAgents": "Agenten Gesamt",
+      "runningAgents": "Laufende Agenten",
+      "completedTasks": "Abgeschlossene Aufgaben",
+      "errorRate": "Fehlerrate",
+      "averageExecutionTime": "Durchschnittliche Ausführungszeit",
+      "memoryUsage": "Speicherverbrauch",
+      "cpuUsage": "CPU-Verbrauch"
+    }
+  },
+  "dateTime": {
+    "formats": {
+      "short": "dd.MM.yyyy",
+      "medium": "d. MMM yyyy",
+      "long": "d. MMMM yyyy",
+      "full": "EEEE, d. MMMM yyyy",
+      "time": "HH:mm:ss",
+      "timeShort": "HH:mm",
+      "dateTime": "dd.MM.yyyy HH:mm:ss"
+    },
+    "relative": {
+      "now": "jetzt",
+      "secondsAgo": "vor {count} Sekunden",
+      "minutesAgo": "vor {count} Minuten",
+      "hoursAgo": "vor {count} Stunden",
+      "daysAgo": "vor {count} Tagen",
+      "weeksAgo": "vor {count} Wochen",
+      "monthsAgo": "vor {count} Monaten",
+      "yearsAgo": "vor {count} Jahren"
+    }
+  },
+  "numbers": {
+    "decimal": ",",
+    "thousands": ".",
+    "percentage": "{number} %",
+    "currency": "{amount} €",
+    "bytes": "{size} Bytes",
+    "kilobytes": "{size} KB",
+    "megabytes": "{size} MB",
+    "gigabytes": "{size} GB"
+  }
+}

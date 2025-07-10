@@ -1,0 +1,442 @@
+# GitLeaks Configuration for TypeScript VS Code Extension Project
+# This configuration scans for secrets while avoiding false positives in test files and build artifacts
+
+title = "TrueNorth Agent System - GitLeaks Configuration"
+
+# Global settings
+[extend]
+# useDefault = true  # Uncomment to extend default rules
+
+# Paths to ignore during scanning
+[allowlist]
+paths = [
+    # Build and dependency directories
+    "node_modules/",
+    "out/",
+    "dist/",
+    "build/",
+    "coverage/",
+    ".nyc_output/",
+    
+    # VS Code specific directories
+    ".vscode/",
+    
+    # Package manager files
+    "package-lock.json",
+    "yarn.lock",
+    "pnpm-lock.yaml",
+    
+    # Test directories and files
+    "test/",
+    "tests/",
+    "spec/",
+    "__tests__/",
+    "*.test.ts",
+    "*.test.js",
+    "*.spec.ts",
+    "*.spec.js",
+    
+    # Mock and fixture files
+    "mocks/",
+    "fixtures/",
+    "test-data/",
+    "sample-data/",
+    
+    # Documentation and config files
+    "*.md",
+    "*.txt",
+    "*.log",
+    ".gitignore",
+    ".editorconfig",
+    
+    # Mobile app directory if it contains separate configs
+    "mobile-app/",
+    
+    # Infrastructure as code (often contains example tokens)
+    "infrastructure/",
+    "terraform/",
+    "*.tf",
+    "*.tfvars",
+    
+    # CI/CD files (may contain template tokens)
+    ".github/",
+    ".gitlab-ci.yml",
+    "azure-pipelines.yml",
+    "Dockerfile*",
+    "docker-compose*.yml"
+]
+
+# Regexes to ignore
+regexes = [
+    # Common false positives
+    "password.*=.*password",
+    "password.*=.*123456",
+    "token.*=.*test",
+    "key.*=.*test",
+    "secret.*=.*test",
+    "api.*key.*=.*demo",
+    
+    # TypeScript/JavaScript specific false positives
+    "const.*token.*=.*'test'",
+    "const.*key.*=.*'example'",
+    "let.*password.*=.*'password'",
+    "var.*secret.*=.*'secret'",
+    
+    # VS Code extension specific false positives
+    "extensionId.*=.*'test'",
+    "publisherId.*=.*'example'",
+    
+    # Common placeholder patterns
+    "YOUR_.*_HERE",
+    "REPLACE_.*_WITH",
+    "EXAMPLE_.*_TOKEN",
+    "PLACEHOLDER_.*",
+    
+    # Base64 encoded test strings
+    "dGVzdA==",  # "test" in base64
+    "ZXhhbXBsZQ==",  # "example" in base64
+]
+
+# VS Code Extension Publishing Token (VSCE Personal Access Token)
+[[rules]]
+id = "vsce-pat-token"
+description = "VS Code Extension Publishing Personal Access Token"
+regex = '''(?i)(vsce_pat|vsce.token|vsce.personal.access.token)['"]*\s*[:=]\s*['"]?([a-zA-Z0-9]{52})['"]?'''
+tags = ["vscode", "publishing", "token"]
+keywords = [
+    "vsce_pat",
+    "vsce-token",
+    "vsce_token",
+    "vsce_personal_access_token"
+]
+
+# Azure DevOps Personal Access Token
+[[rules]]
+id = "azure-devops-pat"
+description = "Azure DevOps Personal Access Token"
+regex = '''(?i)(azure.devops|ado|azdo).*(pat|token|personal.access.token)['"]*\s*[:=]\s*['"]?([a-zA-Z0-9]{52})['"]?'''
+tags = ["azure", "devops", "token"]
+keywords = [
+    "azure_devops_pat",
+    "ado_token",
+    "azdo_pat",
+    "azure_pat"
+]
+
+# GitHub Personal Access Token (Classic)
+[[rules]]
+id = "github-pat-classic"
+description = "GitHub Personal Access Token (Classic)"
+regex = '''(?i)(github|gh).*(pat|token|personal.access.token)['"]*\s*[:=]\s*['"]?(ghp_[a-zA-Z0-9]{36})['"]?'''
+tags = ["github", "token"]
+keywords = [
+    "github_token",
+    "gh_token",
+    "github_pat",
+    "gh_pat"
+]
+
+# GitHub Personal Access Token (Fine-grained)
+[[rules]]
+id = "github-pat-fine-grained"
+description = "GitHub Personal Access Token (Fine-grained)"
+regex = '''(?i)(github|gh).*(pat|token|personal.access.token)['"]*\s*[:=]\s*['"]?(github_pat_[a-zA-Z0-9]{22}_[a-zA-Z0-9]{59})['"]?'''
+tags = ["github", "token"]
+keywords = [
+    "github_token",
+    "gh_token",
+    "github_pat",
+    "gh_pat"
+]
+
+# GitHub OAuth Token
+[[rules]]
+id = "github-oauth-token"
+description = "GitHub OAuth Token"
+regex = '''(?i)(github|gh).*(oauth|access.token)['"]*\s*[:=]\s*['"]?(gho_[a-zA-Z0-9]{36})['"]?'''
+tags = ["github", "oauth", "token"]
+keywords = [
+    "github_oauth",
+    "gh_oauth",
+    "github_access_token"
+]
+
+# GitHub App Installation Token
+[[rules]]
+id = "github-app-token"
+description = "GitHub App Installation Token"
+regex = '''(?i)(github|gh).*(app|installation).*(token)['"]*\s*[:=]\s*['"]?(ghs_[a-zA-Z0-9]{36})['"]?'''
+tags = ["github", "app", "token"]
+keywords = [
+    "github_app_token",
+    "gh_app_token",
+    "github_installation_token"
+]
+
+# GitHub Refresh Token
+[[rules]]
+id = "github-refresh-token"
+description = "GitHub Refresh Token"
+regex = '''(?i)(github|gh).*(refresh).*(token)['"]*\s*[:=]\s*['"]?(ghr_[a-zA-Z0-9]{76})['"]?'''
+tags = ["github", "refresh", "token"]
+keywords = [
+    "github_refresh_token",
+    "gh_refresh_token"
+]
+
+# NPM Access Token
+[[rules]]
+id = "npm-access-token"
+description = "NPM Access Token"
+regex = '''(?i)(npm|npmjs).*(token|access.token|auth.token)['"]*\s*[:=]\s*['"]?(npm_[a-zA-Z0-9]{36})['"]?'''
+tags = ["npm", "token"]
+keywords = [
+    "npm_token",
+    "npm_access_token",
+    "npm_auth_token",
+    "npmjs_token"
+]
+
+# NPM Legacy Token
+[[rules]]
+id = "npm-legacy-token"
+description = "NPM Legacy Authentication Token"
+regex = '''(?i)(npm|npmjs).*(token|auth)['"]*\s*[:=]\s*['"]?([a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12})['"]?'''
+tags = ["npm", "legacy", "token"]
+keywords = [
+    "npm_token",
+    "npm_auth",
+    "_authToken"
+]
+
+# Azure Storage Account Key
+[[rules]]
+id = "azure-storage-key"
+description = "Azure Storage Account Key"
+regex = '''(?i)(azure|storage).*(key|access.key|account.key)['"]*\s*[:=]\s*['"]?([a-zA-Z0-9+/]{88}==)['"]?'''
+tags = ["azure", "storage", "key"]
+keywords = [
+    "azure_storage_key",
+    "storage_account_key",
+    "azure_key"
+]
+
+# Azure Service Principal Secret
+[[rules]]
+id = "azure-service-principal"
+description = "Azure Service Principal Client Secret"
+regex = '''(?i)(azure|service.principal).*(secret|client.secret)['"]*\s*[:=]\s*['"]?([a-zA-Z0-9~._-]{34,40})['"]?'''
+tags = ["azure", "service-principal", "secret"]
+keywords = [
+    "azure_client_secret",
+    "service_principal_secret",
+    "azure_secret"
+]
+
+# OpenAI API Key
+[[rules]]
+id = "openai-api-key"
+description = "OpenAI API Key"
+regex = '''(?i)(openai|open.ai).*(key|api.key|token)['"]*\s*[:=]\s*['"]?(sk-[a-zA-Z0-9]{48})['"]?'''
+tags = ["openai", "api", "key"]
+keywords = [
+    "openai_api_key",
+    "openai_key",
+    "open_ai_key"
+]
+
+# Anthropic API Key (Claude)
+[[rules]]
+id = "anthropic-api-key"
+description = "Anthropic API Key (Claude)"
+regex = '''(?i)(anthropic|claude).*(key|api.key|token)['"]*\s*[:=]\s*['"]?(sk-ant-[a-zA-Z0-9-_]{95})['"]?'''
+tags = ["anthropic", "claude", "api", "key"]
+keywords = [
+    "anthropic_api_key",
+    "claude_api_key",
+    "anthropic_key"
+]
+
+# Slack Bot Token
+[[rules]]
+id = "slack-bot-token"
+description = "Slack Bot Token"
+regex = '''(?i)(slack).*(bot|token)['"]*\s*[:=]\s*['"]?(xoxb-[a-zA-Z0-9-]{10,48})['"]?'''
+tags = ["slack", "bot", "token"]
+keywords = [
+    "slack_bot_token",
+    "slack_token",
+    "xoxb"
+]
+
+# Discord Bot Token
+[[rules]]
+id = "discord-bot-token"
+description = "Discord Bot Token"
+regex = '''(?i)(discord).*(bot|token)['"]*\s*[:=]\s*['"]?([MN][A-Za-z\d]{23}\.[\w-]{6}\.[\w-]{27})['"]?'''
+tags = ["discord", "bot", "token"]
+keywords = [
+    "discord_bot_token",
+    "discord_token"
+]
+
+# JWT Tokens (High entropy)
+[[rules]]
+id = "jwt-token"
+description = "JSON Web Token (JWT)"
+regex = '''(?i)(jwt|token)['"]*\s*[:=]\s*['"]?(eyJ[a-zA-Z0-9+/=]+\.eyJ[a-zA-Z0-9+/=]+\.[a-zA-Z0-9+/=_-]+)['"]?'''
+tags = ["jwt", "token"]
+keywords = [
+    "jwt",
+    "jwt_token",
+    "access_token",
+    "id_token"
+]
+
+# Generic High Entropy Strings (Base64)
+[[rules]]
+id = "high-entropy-base64"
+description = "High Entropy Base64 String"
+regex = '''(?i)(secret|key|token|password|pass|pwd)['"]*\s*[:=]\s*['"]?([a-zA-Z0-9+/]{32,}={0,2})['"]?'''
+entropy = 4.3
+tags = ["entropy", "base64"]
+keywords = [
+    "secret",
+    "key",
+    "token",
+    "password"
+]
+
+# Generic API Keys
+[[rules]]
+id = "generic-api-key"
+description = "Generic API Key Pattern"
+regex = '''(?i)(api.key|apikey|access.key|secret.key)['"]*\s*[:=]\s*['"]?([a-zA-Z0-9]{32,})['"]?'''
+tags = ["api", "key", "generic"]
+keywords = [
+    "api_key",
+    "apikey",
+    "access_key",
+    "secret_key"
+]
+
+# Connection Strings
+[[rules]]
+id = "connection-string"
+description = "Database Connection String"
+regex = '''(?i)(connection.string|conn.str|database.url)['"]*\s*[:=]\s*['"]?([^'"\s]{20,})['"]?'''
+tags = ["database", "connection"]
+keywords = [
+    "connection_string",
+    "conn_str",
+    "database_url",
+    "db_connection"
+]
+
+# Private Keys
+[[rules]]
+id = "private-key"
+description = "Private Key"
+regex = '''-----BEGIN[A-Z ]*PRIVATE KEY-----'''
+tags = ["private", "key", "pem"]
+keywords = [
+    "private_key",
+    "BEGIN PRIVATE KEY",
+    "BEGIN RSA PRIVATE KEY"
+]
+
+# AWS Access Keys
+[[rules]]
+id = "aws-access-key"
+description = "AWS Access Key ID"
+regex = '''(?i)(aws|amazon).*(access.key|key.id)['"]*\s*[:=]\s*['"]?(AKIA[0-9A-Z]{16})['"]?'''
+tags = ["aws", "access", "key"]
+keywords = [
+    "aws_access_key_id",
+    "aws_key_id",
+    "amazon_access_key"
+]
+
+# AWS Secret Keys
+[[rules]]
+id = "aws-secret-key"
+description = "AWS Secret Access Key"
+regex = '''(?i)(aws|amazon).*(secret|secret.key|secret.access.key)['"]*\s*[:=]\s*['"]?([a-zA-Z0-9+/]{40})['"]?'''
+tags = ["aws", "secret", "key"]
+keywords = [
+    "aws_secret_access_key",
+    "aws_secret_key",
+    "amazon_secret"
+]
+
+# Google API Keys
+[[rules]]
+id = "google-api-key"
+description = "Google API Key"
+regex = '''(?i)(google|gcp).*(api.key|key)['"]*\s*[:=]\s*['"]?(AIza[0-9A-Za-z\\-_]{35})['"]?'''
+tags = ["google", "gcp", "api", "key"]
+keywords = [
+    "google_api_key",
+    "gcp_api_key",
+    "google_key"
+]
+
+# Stripe API Keys
+[[rules]]
+id = "stripe-api-key"
+description = "Stripe API Key"
+regex = '''(?i)(stripe).*(key|api.key|secret.key|publishable.key)['"]*\s*[:=]\s*['"]?(sk_live_[0-9a-zA-Z]{24}|pk_live_[0-9a-zA-Z]{24}|rk_live_[0-9a-zA-Z]{24})['"]?'''
+tags = ["stripe", "payment", "api", "key"]
+keywords = [
+    "stripe_api_key",
+    "stripe_secret_key",
+    "stripe_publishable_key"
+]
+
+# Twilio Auth Token
+[[rules]]
+id = "twilio-auth-token"
+description = "Twilio Auth Token"
+regex = '''(?i)(twilio).*(auth.token|token|secret)['"]*\s*[:=]\s*['"]?([a-f0-9]{32})['"]?'''
+tags = ["twilio", "auth", "token"]
+keywords = [
+    "twilio_auth_token",
+    "twilio_token",
+    "twilio_secret"
+]
+
+# SendGrid API Key
+[[rules]]
+id = "sendgrid-api-key"
+description = "SendGrid API Key"
+regex = '''(?i)(sendgrid).*(api.key|key)['"]*\s*[:=]\s*['"]?(SG\.[a-zA-Z0-9\-_]{22}\.[a-zA-Z0-9\-_]{43})['"]?'''
+tags = ["sendgrid", "email", "api", "key"]
+keywords = [
+    "sendgrid_api_key",
+    "sendgrid_key"
+]
+
+# Mailgun API Key
+[[rules]]
+id = "mailgun-api-key"
+description = "Mailgun API Key"
+regex = '''(?i)(mailgun).*(api.key|key)['"]*\s*[:=]\s*['"]?(key-[a-f0-9]{32})['"]?'''
+tags = ["mailgun", "email", "api", "key"]
+keywords = [
+    "mailgun_api_key",
+    "mailgun_key"
+]
+
+# Environment variable patterns
+[[rules]]
+id = "env-secrets"
+description = "Environment Variable Secrets"
+regex = '''(?i)(export\s+|^|\s+)([A-Z_]+)=(["']?)([a-zA-Z0-9+/=]{20,})\3'''
+tags = ["environment", "variable", "secret"]
+keywords = [
+    "export",
+    "_TOKEN",
+    "_KEY",
+    "_SECRET",
+    "_PASSWORD"
+]
