@@ -1,7 +1,6 @@
-# 🚀 SIMPLIFIED REQUIREMENTS FOR RAILWAY DEPLOYMENT
-# Essential packages only - guaranteed to work
+# 🚀 BONZAI ULTIMATE MEM0 BACKEND REQUIREMENTS
+# For Railway deployment with full enterprise features
 
-<<<<<<< Updated upstream
 # ===== CORE FLASK ECOSYSTEM =====
 flask==3.1.1
 flask-cors==6.0.1
@@ -45,13 +44,3 @@ python-dateutil==2.9.0
 # ===== ASYNC & CONCURRENCY =====
 httpx==0.28.1
 anyio==4.9.0
-
-# ===== PRODUCTION SERVER =====
-gunicorn==21.2.0
-=======
-Flask==2.3.3
-flask-cors==4.0.0
-gunicorn==21.2.0
-python-dotenv==1.0.0
-requests==2.31.0
->>>>>>> Stashed changes
