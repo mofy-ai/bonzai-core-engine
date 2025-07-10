@@ -1,6 +1,8 @@
 # Ignore everything that's causing chaos
 logs/
 venv/
+test_venv/
+ultimate_mem0_env/
 __pycache__/
 *.pyc
 *.pyo
