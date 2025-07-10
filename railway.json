@@ -4,11 +4,7 @@
     "builder": "NIXPACKS"
   },
   "deploy": {
-<<<<<<< Updated upstream
     "startCommand": "python app_ultimate_mem0.py",
-=======
-    "startCommand": "python app_simple.py",
->>>>>>> Stashed changes
     "healthcheckPath": "/api/health",
     "healthcheckTimeout": 120,
     "restartPolicyType": "ON_FAILURE",
