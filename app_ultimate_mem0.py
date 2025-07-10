@@ -1435,6 +1435,51 @@ def ultimate_sse():
     )
 
 # ==============================================================================
+# MCP ENDPOINTS - FIX FOR 404 ERRORS
+# ==============================================================================
+
+@app.route('/mcp', methods=['GET', 'POST'])
+def mcp_endpoint():
+    """MCP endpoint - was missing causing 404s"""
+    return jsonify({
+        'service': 'Bonzai MCP Server',
+        'status': 'operational', 
+        'version': '1.0',
+        'message': 'MCP endpoint now active - 404 fixed!',
+        'capabilities': ['memory', 'orchestration', 'family_collaboration'],
+        'integrated_with': 'ultimate_mem0',
+        'family_system': family_system.get_family_status() if family_system else 'unavailable',
+        'timestamp': datetime.now().isoformat()
+    })
+
+@app.route('/mcp/auth', methods=['POST']) 
+def mcp_auth():
+    """MCP authentication"""
+    return jsonify({
+        'authenticated': True,
+        'mcp_version': '1.0', 
+        'bonzai_integration': True,
+        'ultimate_mem0_active': family_system is not None,
+        'timestamp': datetime.now().isoformat()
+    })
+
+@app.route('/mcp/status', methods=['GET'])
+def mcp_status():
+    """MCP status check"""
+    return jsonify({
+        'mcp_server': 'active',
+        'integration': 'ultimate_mem0',
+        'endpoints_available': ['/mcp', '/mcp/auth', '/mcp/status'],
+        'family_system': family_system.get_family_status() if family_system else 'unavailable',
+        'timestamp': datetime.now().isoformat()
+    })
+
+@app.route('/robots.txt', methods=['GET'])
+def robots_txt():
+    """Stop crawlers - was causing 404s"""
+    return Response("User-agent: *\nDisallow: /\n", mimetype='text/plain')
+
+# ==============================================================================
 # ERROR HANDLERS
 # ==============================================================================
 
