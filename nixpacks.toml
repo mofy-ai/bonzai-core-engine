@@ -1,13 +1,12 @@
 # Nixpacks configuration for Railway
-# Force Python detection and ignore Node.js files
+# Match the successful build pattern exactly
 
 [start]
-cmd = "py3 app_ultimate_mem0.py"
+cmd = "python app_ultimate_mem0.py"
 
 [phases.build]
 cmds = ["pip install -r requirements.txt"]
 
 [variables]
 NIXPACKS_PYTHON_VERSION = "3.11"
-NIXPACKS_BUILD_SYSTEM = "pip"
 
