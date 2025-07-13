@@ -1,0 +1,676 @@
+"use client";
+
+import React, { useState, useRef, useCallback, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { 
+  Mic, 
+  MicOff, 
+  Send, 
+  Paperclip, 
+  Settings, 
+  Smile, 
+  AtSign,
+  FileText,
+  Image,
+  Code,
+  Terminal,
+  BookOpen,
+  Globe,
+  Brain,
+  Users,
+  X,
+  ChevronDown,
+  Rocket,
+  Sparkles,
+  Heart,
+  Star,
+  Flame,
+  Target,
+  Zap,
+  Coffee
+} from 'lucide-react';
+
+interface ChatMessage {
+  text: string;
+  attachments: FileAttachment[];
+  mentions: Mention[];
+  emotions: EmotionalState[];
+  voiceData?: VoiceInput;
+  metadata: MessageMetadata;
+}
+
+interface FileAttachment {
+  id: string;
+  name: string;
+  type: string;
+  size: number;
+  url: string;
+}
+
+interface Mention {
+  type: 'codebase' | 'files' | 'symbols' | 'terminal' | 'docs' | 'web' | 'memory' | 'family';
+  query: string;
+  results: any[];
+}
+
+interface EmotionalState {
+  type: string;
+  intensity: number;
+}
+
+interface VoiceInput {
+  transcript: string;
+  confidence: number;
+  duration: number;
+}
+
+interface MessageMetadata {
+  timestamp: Date;
+  model: string;
+  settings: any;
+}
+
+interface AIModel {
+  id: string;
+  name: string;
+  provider: string;
+}
+
+interface ChatSettings {
+  includeOpenFiles: boolean;
+  autoScroll: boolean;
+  detailLevel: 'low' | 'medium' | 'high';
+  voiceEnabled: boolean;
+  privacyMode: boolean;
+}
+
+interface MamaBearChatInputProps {
+  onSendMessage?: (message: ChatMessage) => void;
+  onFileUpload?: (files: File[]) => void;
+  onVoiceInput?: (transcript: string) => void;
+  onMentionSelect?: (mention: Mention) => void;
+  availableModels?: AIModel[];
+  currentModel?: AIModel;
+  settings?: ChatSettings;
+  isLoading?: boolean;
+  disabled?: boolean;
+}
+
+const defaultModels: AIModel[] = [
+  { id: 'claude-3.5-sonnet', name: 'Claude 3.5 Sonnet', provider: 'Anthropic' },
+  { id: 'gemini-2.5-flash', name: 'Gemini 2.5 Flash', provider: 'Google' },
+  { id: 'gpt-4-1', name: 'GPT-4-1', provider: 'OpenAI' },
+  { id: 'gpt-4-1-mini', name: 'GPT-4-1 Mini', provider: 'OpenAI' },
+];
+
+const defaultSettings: ChatSettings = {
+  includeOpenFiles: true,
+  autoScroll: true,
+  detailLevel: 'medium',
+  voiceEnabled: true,
+  privacyMode: false,
+};
+
+const mentionTypes = [
+  { type: 'codebase', icon: Code, label: '@codebase', description: 'Search entire project' },
+  { type: 'files', icon: FileText, label: '@files', description: 'Select specific files/folders' },
+  { type: 'symbols', icon: Target, label: '@symbols', description: 'Find functions, classes, variables' },
+  { type: 'terminal', icon: Terminal, label: '@terminal', description: 'Reference terminal output' },
+  { type: 'docs', icon: BookOpen, label: '@docs', description: 'Search documentation' },
+  { type: 'web', icon: Globe, label: '@web', description: 'Web search results' },
+  { type: 'memory', icon: Brain, label: '@memory', description: 'Enterprise memory search' },
+  { type: 'family', icon: Users, label: '@family', description: 'Coordinate with AI family members' },
+];
+
+const quickEmojis = ['💜', '🚀', '✨', '🎉', '🔥', '💻', '🎯', '🌟'];
+const mamaBearEmojis = ['🤗', '😊', '🥰', '😍', '🤩', '💖'];
+
+const quickActions = [
+  'Generate code',
+  'Explain selection',
+  'Fix errors',
+  'Optimize performance',
+  'Add documentation',
+  'Create tests'
+];
+
+const encouragementMessages = [
+  "You've got this! 💜",
+  "Amazing work! 🎉",
+  "Keep going, superstar! ✨",
+  "Brilliant thinking! 🧠",
+  "You're doing great! 🌟"
+];
+
+export function MamaBearChatInput({
+  onSendMessage,
+  onFileUpload,
+  onVoiceInput,
+  onMentionSelect,
+  availableModels = defaultModels,
+  currentModel = defaultModels[0],
+  settings = defaultSettings,
+  isLoading = false,
+  disabled = false
+}: MamaBearChatInputProps) {
+  const [message, setMessage] = useState('');
+  const [attachments, setAttachments] = useState<FileAttachment[]>([]);
+  const [showMentions, setShowMentions] = useState(false);
+  const [showEmojis, setShowEmojis] = useState(false);
+  const [showSettings, setShowSettings] = useState(false);
+  const [isRecording, setIsRecording] = useState(false);
+  const [voiceLevel, setVoiceLevel] = useState(0);
+  const [selectedModel, setSelectedModel] = useState(currentModel);
+  const [currentSettings, setCurrentSettings] = useState(settings);
+  const [showQuickActions, setShowQuickActions] = useState(false);
+  const [encouragementIndex, setEncouragementIndex] = useState(0);
+  const [showEncouragement, setShowEncouragement] = useState(false);
+
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const adjustTextareaHeight = useCallback(() => {
+    const textarea = textareaRef.current;
+    if (textarea) {
+      textarea.style.height = 'auto';
+      const newHeight = Math.min(textarea.scrollHeight, 200);
+      textarea.style.height = `${newHeight}px`;
+    }
+  }, []);
+
+  useEffect(() => {
+    adjustTextareaHeight();
+  }, [message, adjustTextareaHeight]);
+
+  const handleSend = () => {
+    if (!message.trim() && attachments.length === 0) return;
+
+    const chatMessage: ChatMessage = {
+      text: message,
+      attachments,
+      mentions: [],
+      emotions: [],
+      metadata: {
+        timestamp: new Date(),
+        model: selectedModel.id,
+        settings: currentSettings
+      }
+    };
+
+    onSendMessage?.(chatMessage);
+    setMessage('');
+    setAttachments([]);
+    
+    // Show encouragement
+    setShowEncouragement(true);
+    setTimeout(() => setShowEncouragement(false), 3000);
+    setEncouragementIndex((prev) => (prev + 1) % encouragementMessages.length);
+  };
+
+  const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const files = Array.from(event.target.files || []);
+    if (files.length > 0) {
+      onFileUpload?.(files);
+      const newAttachments: FileAttachment[] = files.map(file => ({
+        id: Math.random().toString(36).substr(2, 9),
+        name: file.name,
+        type: file.type,
+        size: file.size,
+        url: URL.createObjectURL(file)
+      }));
+      setAttachments(prev => [...prev, ...newAttachments]);
+    }
+  };
+
+  const removeAttachment = (id: string) => {
+    setAttachments(prev => prev.filter(att => att.id !== id));
+  };
+
+  const handleMentionClick = (type: string) => {
+    const mention: Mention = {
+      type: type as any,
+      query: '',
+      results: []
+    };
+    onMentionSelect?.(mention);
+    setMessage(prev => prev + `@${type} `);
+    setShowMentions(false);
+  };
+
+  const handleEmojiClick = (emoji: string) => {
+    setMessage(prev => prev + emoji);
+    setShowEmojis(false);
+  };
+
+  const handleVoiceToggle = () => {
+    if (isRecording) {
+      setIsRecording(false);
+      setVoiceLevel(0);
+    } else {
+      setIsRecording(true);
+      // Simulate voice level animation
+      const interval = setInterval(() => {
+        setVoiceLevel(Math.random() * 100);
+      }, 100);
+      
+      setTimeout(() => {
+        clearInterval(interval);
+        setIsRecording(false);
+        setVoiceLevel(0);
+        onVoiceInput?.("Voice input simulated");
+      }, 3000);
+    }
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      handleSend();
+    }
+  };
+
+  return (
+    <div className="w-full max-w-4xl mx-auto">
+      {/* Encouragement Message */}
+      <AnimatePresence>
+        {showEncouragement && (
+          <motion.div
+            initial={{ opacity: 0, y: -20, scale: 0.9 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: -20, scale: 0.9 }}
+            className="mb-4 text-center"
+          >
+            <div className="inline-block bg-gradient-to-r from-purple-500 to-pink-500 text-white px-4 py-2 rounded-full text-sm font-medium shadow-lg">
+              {encouragementMessages[encouragementIndex]}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Main Input Container */}
+      <div className="relative">
+        <div className="bg-white/10 backdrop-blur-xl border border-purple-300/30 rounded-3xl shadow-2xl overflow-hidden">
+          {/* Glassmorphism overlay */}
+          <div className="absolute inset-0 bg-gradient-to-br from-purple-500/20 via-transparent to-pink-500/20 pointer-events-none" />
+          
+          {/* Attachments */}
+          {attachments.length > 0 && (
+            <div className="p-4 border-b border-purple-300/20">
+              <div className="flex flex-wrap gap-2">
+                {attachments.map((attachment) => (
+                  <motion.div
+                    key={attachment.id}
+                    initial={{ opacity: 0, scale: 0.8 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    className="flex items-center gap-2 bg-white/20 backdrop-blur-sm rounded-lg px-3 py-2 text-sm"
+                  >
+                    <FileText className="w-4 h-4 text-purple-300" />
+                    <span className="text-white/90">{attachment.name}</span>
+                    <button
+                      onClick={() => removeAttachment(attachment.id)}
+                      className="text-white/60 hover:text-white/90 transition-colors"
+                    >
+                      <X className="w-4 h-4" />
+                    </button>
+                  </motion.div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Main Input Area */}
+          <div className="relative p-6">
+            <textarea
+              ref={textareaRef}
+              value={message}
+              onChange={(e) => setMessage(e.target.value)}
+              onKeyDown={handleKeyDown}
+              placeholder="Ask Mama Bear anything... 💜 (@codebase, @files, @docs, @web)"
+              className="w-full bg-transparent text-white placeholder-white/50 resize-none outline-none text-lg leading-relaxed min-h-[60px]"
+              disabled={disabled || isLoading}
+              style={{ height: 'auto' }}
+            />
+
+            {/* Voice Visualization */}
+            {isRecording && (
+              <motion.div
+                className="absolute right-6 top-6 flex items-center gap-1"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+              >
+                {[...Array(5)].map((_, i) => (
+                  <motion.div
+                    key={i}
+                    className="w-1 bg-purple-400 rounded-full"
+                    animate={{
+                      height: [4, voiceLevel * 0.3 + 10, 4],
+                    }}
+                    transition={{
+                      duration: 0.3,
+                      repeat: Infinity,
+                      delay: i * 0.1,
+                    }}
+                  />
+                ))}
+              </motion.div>
+            )}
+          </div>
+
+          {/* Controls */}
+          <div className="flex items-center justify-between p-4 border-t border-purple-300/20">
+            <div className="flex items-center gap-2">
+              {/* @ Mentions */}
+              <div className="relative">
+                <button
+                  onClick={() => setShowMentions(!showMentions)}
+                  className="p-2 rounded-xl bg-white/10 hover:bg-white/20 transition-colors text-white/80 hover:text-white"
+                >
+                  <AtSign className="w-5 h-5" />
+                </button>
+                
+                <AnimatePresence>
+                  {showMentions && (
+                    <motion.div
+                      initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                      animate={{ opacity: 1, y: 0, scale: 1 }}
+                      exit={{ opacity: 0, y: 10, scale: 0.95 }}
+                      className="absolute bottom-full mb-2 left-0 bg-white/95 backdrop-blur-xl rounded-xl shadow-xl border border-purple-300/30 p-2 min-w-[280px]"
+                    >
+                      {mentionTypes.map((mention) => (
+                        <button
+                          key={mention.type}
+                          onClick={() => handleMentionClick(mention.type)}
+                          className="w-full flex items-center gap-3 p-3 rounded-lg hover:bg-purple-100/50 transition-colors text-left"
+                        >
+                          <mention.icon className="w-5 h-5 text-purple-600" />
+                          <div>
+                            <div className="font-medium text-gray-900">{mention.label}</div>
+                            <div className="text-sm text-gray-600">{mention.description}</div>
+                          </div>
+                        </button>
+                      ))}
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
+
+              {/* File Upload */}
+              <button
+                onClick={() => fileInputRef.current?.click()}
+                className="p-2 rounded-xl bg-white/10 hover:bg-white/20 transition-colors text-white/80 hover:text-white"
+              >
+                <Paperclip className="w-5 h-5" />
+              </button>
+              <input
+                ref={fileInputRef}
+                type="file"
+                multiple
+                onChange={handleFileSelect}
+                className="hidden"
+                accept=".js,.ts,.py,.md,.json,.css,.html,.txt,image/*"
+              />
+
+              {/* Emoji Picker */}
+              <div className="relative">
+                <button
+                  onClick={() => setShowEmojis(!showEmojis)}
+                  className="p-2 rounded-xl bg-white/10 hover:bg-white/20 transition-colors text-white/80 hover:text-white"
+                >
+                  <Smile className="w-5 h-5" />
+                </button>
+                
+                <AnimatePresence>
+                  {showEmojis && (
+                    <motion.div
+                      initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                      animate={{ opacity: 1, y: 0, scale: 1 }}
+                      exit={{ opacity: 0, y: 10, scale: 0.95 }}
+                      className="absolute bottom-full mb-2 left-0 bg-white/95 backdrop-blur-xl rounded-xl shadow-xl border border-purple-300/30 p-4"
+                    >
+                      <div className="mb-3">
+                        <div className="text-sm font-medium text-gray-700 mb-2">Quick Reactions</div>
+                        <div className="flex gap-2">
+                          {quickEmojis.map((emoji) => (
+                            <button
+                              key={emoji}
+                              onClick={() => handleEmojiClick(emoji)}
+                              className="p-2 rounded-lg hover:bg-purple-100/50 transition-colors text-xl"
+                            >
+                              {emoji}
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+                      <div>
+                        <div className="text-sm font-medium text-gray-700 mb-2">Mama Bear Emotions</div>
+                        <div className="flex gap-2">
+                          {mamaBearEmojis.map((emoji) => (
+                            <button
+                              key={emoji}
+                              onClick={() => handleEmojiClick(emoji)}
+                              className="p-2 rounded-lg hover:bg-purple-100/50 transition-colors text-xl"
+                            >
+                              {emoji}
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
+
+              {/* Voice Input */}
+              <button
+                onClick={handleVoiceToggle}
+                className={`p-2 rounded-xl transition-colors ${
+                  isRecording 
+                    ? 'bg-red-500/20 text-red-400' 
+                    : 'bg-white/10 hover:bg-white/20 text-white/80 hover:text-white'
+                }`}
+              >
+                {isRecording ? <MicOff className="w-5 h-5" /> : <Mic className="w-5 h-5" />}
+              </button>
+
+              {/* Settings */}
+              <div className="relative">
+                <button
+                  onClick={() => setShowSettings(!showSettings)}
+                  className="p-2 rounded-xl bg-white/10 hover:bg-white/20 transition-colors text-white/80 hover:text-white"
+                >
+                  <Settings className="w-5 h-5" />
+                </button>
+                
+                <AnimatePresence>
+                  {showSettings && (
+                    <motion.div
+                      initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                      animate={{ opacity: 1, y: 0, scale: 1 }}
+                      exit={{ opacity: 0, y: 10, scale: 0.95 }}
+                      className="absolute bottom-full mb-2 left-0 bg-white/95 backdrop-blur-xl rounded-xl shadow-xl border border-purple-300/30 p-4 min-w-[300px]"
+                    >
+                      <div className="space-y-4">
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-2">
+                            AI Model
+                          </label>
+                          <select
+                            value={selectedModel.id}
+                            onChange={(e) => {
+                              const model = availableModels.find(m => m.id === e.target.value);
+                              if (model) setSelectedModel(model);
+                            }}
+                            className="w-full p-2 rounded-lg border border-gray-300 bg-white text-gray-900"
+                          >
+                            {availableModels.map((model) => (
+                              <option key={model.id} value={model.id}>
+                                {model.name}
+                              </option>
+                            ))}
+                          </select>
+                        </div>
+                        
+                        <div className="space-y-2">
+                          <label className="flex items-center gap-2">
+                            <input
+                              type="checkbox"
+                              checked={currentSettings.includeOpenFiles}
+                              onChange={(e) => setCurrentSettings(prev => ({
+                                ...prev,
+                                includeOpenFiles: e.target.checked
+                              }))}
+                              className="rounded"
+                            />
+                            <span className="text-sm text-gray-700">Include open files</span>
+                          </label>
+                          
+                          <label className="flex items-center gap-2">
+                            <input
+                              type="checkbox"
+                              checked={currentSettings.autoScroll}
+                              onChange={(e) => setCurrentSettings(prev => ({
+                                ...prev,
+                                autoScroll: e.target.checked
+                              }))}
+                              className="rounded"
+                            />
+                            <span className="text-sm text-gray-700">Auto-scroll</span>
+                          </label>
+                          
+                          <label className="flex items-center gap-2">
+                            <input
+                              type="checkbox"
+                              checked={currentSettings.privacyMode}
+                              onChange={(e) => setCurrentSettings(prev => ({
+                                ...prev,
+                                privacyMode: e.target.checked
+                              }))}
+                              className="rounded"
+                            />
+                            <span className="text-sm text-gray-700">Privacy mode</span>
+                          </label>
+                        </div>
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
+            </div>
+
+            {/* Send Button & Quick Actions */}
+            <div className="flex items-center gap-2">
+              {/* Quick Actions */}
+              <div className="relative">
+                <button
+                  onClick={() => setShowQuickActions(!showQuickActions)}
+                  className="p-2 rounded-xl bg-white/10 hover:bg-white/20 transition-colors text-white/80 hover:text-white"
+                >
+                  <ChevronDown className="w-5 h-5" />
+                </button>
+                
+                <AnimatePresence>
+                  {showQuickActions && (
+                    <motion.div
+                      initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                      animate={{ opacity: 1, y: 0, scale: 1 }}
+                      exit={{ opacity: 0, y: 10, scale: 0.95 }}
+                      className="absolute bottom-full mb-2 right-0 bg-white/95 backdrop-blur-xl rounded-xl shadow-xl border border-purple-300/30 p-2 min-w-[200px]"
+                    >
+                      {quickActions.map((action) => (
+                        <button
+                          key={action}
+                          onClick={() => {
+                            setMessage(action);
+                            setShowQuickActions(false);
+                          }}
+                          className="w-full text-left p-3 rounded-lg hover:bg-purple-100/50 transition-colors text-gray-900"
+                        >
+                          {action}
+                        </button>
+                      ))}
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
+
+              {/* Send Button */}
+              <motion.button
+                onClick={handleSend}
+                disabled={(!message.trim() && attachments.length === 0) || disabled || isLoading}
+                className={`p-3 rounded-xl transition-all ${
+                  (!message.trim() && attachments.length === 0) || disabled || isLoading
+                    ? 'bg-gray-400/20 text-gray-400 cursor-not-allowed'
+                    : 'bg-gradient-to-r from-purple-500 to-pink-500 text-white hover:from-purple-600 hover:to-pink-600 shadow-lg hover:shadow-xl'
+                }`}
+                whileHover={(!message.trim() && attachments.length === 0) || disabled || isLoading ? {} : { scale: 1.05 }}
+                whileTap={(!message.trim() && attachments.length === 0) || disabled || isLoading ? {} : { scale: 0.95 }}
+              >
+                {isLoading ? (
+                  <motion.div
+                    animate={{ rotate: 360 }}
+                    transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+                  >
+                    <Sparkles className="w-5 h-5" />
+                  </motion.div>
+                ) : (
+                  <Rocket className="w-5 h-5" />
+                )}
+              </motion.button>
+            </div>
+          </div>
+        </div>
+
+        {/* Loading State */}
+        {isLoading && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            className="mt-4 text-center"
+          >
+            <div className="inline-block bg-white/10 backdrop-blur-xl rounded-full px-4 py-2 text-white/80">
+              Mama Bear is thinking... 💜
+            </div>
+          </motion.div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+export default function Demo() {
+  const [isLoading, setIsLoading] = useState(false);
+
+  const handleSendMessage = (message: ChatMessage) => {
+    console.log('Sending message:', message);
+    setIsLoading(true);
+    
+    // Simulate processing
+    setTimeout(() => {
+      setIsLoading(false);
+    }, 2000);
+  };
+
+  const handleFileUpload = (files: File[]) => {
+    console.log('Uploading files:', files);
+  };
+
+  const handleVoiceInput = (transcript: string) => {
+    console.log('Voice input:', transcript);
+  };
+
+  const handleMentionSelect = (mention: Mention) => {
+    console.log('Mention selected:', mention);
+  };
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-purple-900 via-blue-900 to-indigo-900 flex items-center justify-center p-6">
+      <MamaBearChatInput
+        onSendMessage={handleSendMessage}
+        onFileUpload={handleFileUpload}
+        onVoiceInput={handleVoiceInput}
+        onMentionSelect={handleMentionSelect}
+        isLoading={isLoading}
+      />
+    </div>
+  );
+}

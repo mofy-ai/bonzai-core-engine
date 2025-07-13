@@ -1,0 +1,818 @@
+"use client";
+
+import React, { useState, useRef, useEffect, useCallback } from 'react';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
+import { Card } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { Separator } from '@/components/ui/separator';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Switch } from '@/components/ui/switch';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from '@/components/ui/command';
+import { Progress } from '@/components/ui/progress';
+import { 
+  Send, 
+  Paperclip, 
+  Smile, 
+  Mic, 
+  Settings, 
+  Rocket, 
+  Code, 
+  FileText, 
+  Terminal, 
+  Globe, 
+  Brain, 
+  Users, 
+  X,
+  Upload,
+  Play,
+  Pause,
+  Volume2
+} from 'lucide-react';
+
+interface AIModel {
+  id: string;
+  name: string;
+  provider: string;
+}
+
+interface ChatSettings {
+  includeOpenFiles: boolean;
+  autoScroll: boolean;
+  detailLevel: 'low' | 'medium' | 'high';
+  voiceMode: 'push-to-talk' | 'continuous';
+  privacyMode: boolean;
+}
+
+interface FileAttachment {
+  id: string;
+  name: string;
+  type: string;
+  size: number;
+  url: string;
+}
+
+interface Mention {
+  type: 'codebase' | 'files' | 'symbols' | 'terminal' | 'docs' | 'web' | 'memory' | 'family';
+  query: string;
+  data: any;
+}
+
+interface EmotionalState {
+  type: string;
+  intensity: number;
+}
+
+interface VoiceInput {
+  transcript: string;
+  confidence: number;
+  duration: number;
+}
+
+interface MessageMetadata {
+  timestamp: Date;
+  model: string;
+  context: string[];
+}
+
+interface ChatMessage {
+  text: string;
+  attachments: FileAttachment[];
+  mentions: Mention[];
+  emotions: EmotionalState[];
+  voiceData?: VoiceInput;
+  metadata: MessageMetadata;
+}
+
+interface MamaBearChatInputProps {
+  onSendMessage?: (message: ChatMessage) => void;
+  onFileUpload?: (files: File[]) => void;
+  onVoiceInput?: (transcript: string) => void;
+  onMentionSelect?: (mention: Mention) => void;
+  availableModels?: AIModel[];
+  currentModel?: AIModel;
+  settings?: ChatSettings;
+  isLoading?: boolean;
+  disabled?: boolean;
+}
+
+const defaultModels: AIModel[] = [
+  { id: 'claude', name: 'Claude 3.5', provider: 'Anthropic' },
+  { id: 'gemini', name: 'Gemini Pro', provider: 'Google' },
+  { id: 'gpt4', name: 'GPT-4', provider: 'OpenAI' },
+  { id: 'family', name: 'Family Consensus', provider: 'Mama Bear' }
+];
+
+const defaultSettings: ChatSettings = {
+  includeOpenFiles: true,
+  autoScroll: true,
+  detailLevel: 'medium',
+  voiceMode: 'push-to-talk',
+  privacyMode: false
+};
+
+const mentionTypes = [
+  { type: 'codebase', icon: Code, label: 'Search entire project', color: 'text-purple-400' },
+  { type: 'files', icon: FileText, label: 'Select specific files/folders', color: 'text-blue-400' },
+  { type: 'symbols', icon: Code, label: 'Find functions, classes, variables', color: 'text-green-400' },
+  { type: 'terminal', icon: Terminal, label: 'Reference terminal output', color: 'text-orange-400' },
+  { type: 'docs', icon: FileText, label: 'Search documentation', color: 'text-cyan-400' },
+  { type: 'web', icon: Globe, label: 'Web search results', color: 'text-pink-400' },
+  { type: 'memory', icon: Brain, label: 'Enterprise memory search', color: 'text-indigo-400' },
+  { type: 'family', icon: Users, label: 'Coordinate with AI family', color: 'text-purple-400' }
+];
+
+const quickEmojis = ['💜', '🚀', '✨', '🎉', '🔥', '💻', '🎯', '🌟'];
+const mamaBearEmojis = ['🤗', '😊', '🥰', '😍', '🤩', '💖'];
+
+const EmojiPicker: React.FC<{ onEmojiSelect: (emoji: string) => void }> = ({ onEmojiSelect }) => {
+  const allEmojis = [...quickEmojis, ...mamaBearEmojis, '😀', '😃', '😄', '😁', '😆', '😅', '🤣', '😂', '🙂', '🙃', '😉', '😊', '😇'];
+  
+  return (
+    <div className="p-4 w-80">
+      <div className="mb-3">
+        <h4 className="text-sm font-medium text-foreground mb-2">Quick Reactions</h4>
+        <div className="flex flex-wrap gap-2">
+          {quickEmojis.map((emoji) => (
+            <button
+              key={emoji}
+              onClick={() => onEmojiSelect(emoji)}
+              className="text-lg hover:bg-purple-500/20 p-1 rounded transition-colors"
+            >
+              {emoji}
+            </button>
+          ))}
+        </div>
+      </div>
+      <div className="mb-3">
+        <h4 className="text-sm font-medium text-foreground mb-2">Mama Bear Emotions</h4>
+        <div className="flex flex-wrap gap-2">
+          {mamaBearEmojis.map((emoji) => (
+            <button
+              key={emoji}
+              onClick={() => onEmojiSelect(emoji)}
+              className="text-lg hover:bg-purple-500/20 p-1 rounded transition-colors"
+            >
+              {emoji}
+            </button>
+          ))}
+        </div>
+      </div>
+      <div>
+        <h4 className="text-sm font-medium text-foreground mb-2">All Emojis</h4>
+        <div className="flex flex-wrap gap-1 max-h-32 overflow-y-auto">
+          {allEmojis.map((emoji, index) => (
+            <button
+              key={index}
+              onClick={() => onEmojiSelect(emoji)}
+              className="text-lg hover:bg-purple-500/20 p-1 rounded transition-colors"
+            >
+              {emoji}
+            </button>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+const VoiceInput: React.FC<{ 
+  isRecording: boolean; 
+  onToggleRecording: () => void;
+  mode: 'push-to-talk' | 'continuous';
+}> = ({ isRecording, onToggleRecording, mode }) => {
+  const [audioLevel, setAudioLevel] = useState(0);
+
+  useEffect(() => {
+    if (isRecording) {
+      const interval = setInterval(() => {
+        setAudioLevel(Math.random() * 100);
+      }, 100);
+      return () => clearInterval(interval);
+    } else {
+      setAudioLevel(0);
+    }
+  }, [isRecording]);
+
+  return (
+    <div className="flex items-center gap-2">
+      <Button
+        variant="ghost"
+        size="sm"
+        onClick={onToggleRecording}
+        className={`relative ${isRecording ? 'text-purple-400 bg-purple-500/20' : 'text-muted-foreground hover:text-purple-400'}`}
+      >
+        <Mic className="h-4 w-4" />
+        {isRecording && (
+          <div className="absolute inset-0 rounded-full animate-pulse bg-purple-500/30" />
+        )}
+      </Button>
+      {isRecording && (
+        <div className="flex items-center gap-1">
+          <div className="flex gap-1">
+            {[...Array(5)].map((_, i) => (
+              <div
+                key={i}
+                className="w-1 bg-purple-400 rounded-full transition-all duration-100"
+                style={{ height: `${Math.max(4, (audioLevel / 100) * 20)}px` }}
+              />
+            ))}
+          </div>
+          <span className="text-xs text-purple-400">Recording...</span>
+        </div>
+      )}
+    </div>
+  );
+};
+
+const FileUploadArea: React.FC<{
+  files: File[];
+  onFilesChange: (files: File[]) => void;
+  onRemoveFile: (index: number) => void;
+}> = ({ files, onFilesChange, onRemoveFile }) => {
+  const [isDragging, setIsDragging] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const handleDragOver = useCallback((e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDragging(true);
+  }, []);
+
+  const handleDragLeave = useCallback((e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDragging(false);
+  }, []);
+
+  const handleDrop = useCallback((e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDragging(false);
+    const droppedFiles = Array.from(e.dataTransfer.files);
+    onFilesChange([...files, ...droppedFiles]);
+  }, [files, onFilesChange]);
+
+  const handleFileSelect = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files) {
+      const selectedFiles = Array.from(e.target.files);
+      onFilesChange([...files, ...selectedFiles]);
+    }
+  }, [files, onFilesChange]);
+
+  const getFileIcon = (file: File) => {
+    if (file.type.startsWith('image/')) return '🖼️';
+    if (file.type.includes('javascript') || file.name.endsWith('.js')) return '📄';
+    if (file.type.includes('typescript') || file.name.endsWith('.ts')) return '📘';
+    if (file.name.endsWith('.py')) return '🐍';
+    if (file.name.endsWith('.md')) return '📝';
+    if (file.type.includes('json')) return '📋';
+    return '📄';
+  };
+
+  const formatFileSize = (bytes: number) => {
+    if (bytes === 0) return '0 Bytes';
+    const k = 1024;
+    const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+  };
+
+  return (
+    <div className="space-y-2">
+      <div
+        className={`border-2 border-dashed rounded-lg p-4 text-center transition-colors ${
+          isDragging 
+            ? 'border-purple-400 bg-purple-500/10' 
+            : 'border-border hover:border-purple-400/50'
+        }`}
+        onDragOver={handleDragOver}
+        onDragLeave={handleDragLeave}
+        onDrop={handleDrop}
+        onClick={() => fileInputRef.current?.click()}
+      >
+        <Upload className="h-6 w-6 mx-auto mb-2 text-muted-foreground" />
+        <p className="text-sm text-muted-foreground">
+          Drop files here or click to upload
+        </p>
+        <p className="text-xs text-muted-foreground mt-1">
+          Supports: .js, .ts, .py, .md, .json, .css, .html, .txt, images
+        </p>
+        <input
+          ref={fileInputRef}
+          type="file"
+          multiple
+          className="hidden"
+          onChange={handleFileSelect}
+          accept=".js,.ts,.py,.md,.json,.css,.html,.txt,image/*"
+        />
+      </div>
+      
+      {files.length > 0 && (
+        <div className="space-y-2">
+          {files.map((file, index) => (
+            <div key={index} className="flex items-center gap-2 p-2 bg-muted/50 rounded-lg">
+              <span className="text-lg">{getFileIcon(file)}</span>
+              <div className="flex-1 min-w-0">
+                <p className="text-sm font-medium truncate">{file.name}</p>
+                <p className="text-xs text-muted-foreground">{formatFileSize(file.size)}</p>
+              </div>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => onRemoveFile(index)}
+                className="text-muted-foreground hover:text-destructive"
+              >
+                <X className="h-3 w-3" />
+              </Button>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+};
+
+const MentionDropdown: React.FC<{
+  isOpen: boolean;
+  onSelect: (mention: Mention) => void;
+  onClose: () => void;
+  query: string;
+}> = ({ isOpen, onSelect, onClose, query }) => {
+  if (!isOpen) return null;
+
+  return (
+    <Card className="absolute bottom-full left-0 w-80 mb-2 p-2 bg-background/95 backdrop-blur-sm border-purple-500/20">
+      <Command>
+        <CommandInput placeholder="Search mentions..." value={query} />
+        <CommandList>
+          <CommandEmpty>No mentions found.</CommandEmpty>
+          <CommandGroup heading="Available Mentions">
+            {mentionTypes.map((mention) => {
+              const Icon = mention.icon;
+              return (
+                <CommandItem
+                  key={mention.type}
+                  onSelect={() => {
+                    onSelect({
+                      type: mention.type as any,
+                      query: query,
+                      data: {}
+                    });
+                    onClose();
+                  }}
+                  className="flex items-center gap-2 cursor-pointer"
+                >
+                  <Icon className={`h-4 w-4 ${mention.color}`} />
+                  <div>
+                    <div className="font-medium">@{mention.type}</div>
+                    <div className="text-xs text-muted-foreground">{mention.label}</div>
+                  </div>
+                </CommandItem>
+              );
+            })}
+          </CommandGroup>
+        </CommandList>
+      </Command>
+    </Card>
+  );
+};
+
+const SettingsPanel: React.FC<{
+  settings: ChatSettings;
+  onSettingsChange: (settings: ChatSettings) => void;
+  models: AIModel[];
+  currentModel: AIModel;
+  onModelChange: (model: AIModel) => void;
+}> = ({ settings, onSettingsChange, models, currentModel, onModelChange }) => {
+  return (
+    <div className="p-4 space-y-4 w-80">
+      <div>
+        <h4 className="text-sm font-medium mb-3">Model Selection</h4>
+        <Select value={currentModel.id} onValueChange={(value) => {
+          const model = models.find(m => m.id === value);
+          if (model) onModelChange(model);
+        }}>
+          <SelectTrigger>
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            {models.map((model) => (
+              <SelectItem key={model.id} value={model.id}>
+                <div>
+                  <div className="font-medium">{model.name}</div>
+                  <div className="text-xs text-muted-foreground">{model.provider}</div>
+                </div>
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      </div>
+
+      <Separator />
+
+      <div className="space-y-3">
+        <h4 className="text-sm font-medium">Context Settings</h4>
+        
+        <div className="flex items-center justify-between">
+          <label className="text-sm">Include open files</label>
+          <Switch
+            checked={settings.includeOpenFiles}
+            onCheckedChange={(checked) => 
+              onSettingsChange({ ...settings, includeOpenFiles: checked })
+            }
+          />
+        </div>
+
+        <div className="flex items-center justify-between">
+          <label className="text-sm">Auto-scroll</label>
+          <Switch
+            checked={settings.autoScroll}
+            onCheckedChange={(checked) => 
+              onSettingsChange({ ...settings, autoScroll: checked })
+            }
+          />
+        </div>
+
+        <div className="flex items-center justify-between">
+          <label className="text-sm">Privacy mode</label>
+          <Switch
+            checked={settings.privacyMode}
+            onCheckedChange={(checked) => 
+              onSettingsChange({ ...settings, privacyMode: checked })
+            }
+          />
+        </div>
+
+        <div>
+          <label className="text-sm block mb-2">Detail level</label>
+          <Select 
+            value={settings.detailLevel} 
+            onValueChange={(value: 'low' | 'medium' | 'high') => 
+              onSettingsChange({ ...settings, detailLevel: value })
+            }
+          >
+            <SelectTrigger>
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="low">Low</SelectItem>
+              <SelectItem value="medium">Medium</SelectItem>
+              <SelectItem value="high">High</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+
+        <div>
+          <label className="text-sm block mb-2">Voice mode</label>
+          <Select 
+            value={settings.voiceMode} 
+            onValueChange={(value: 'push-to-talk' | 'continuous') => 
+              onSettingsChange({ ...settings, voiceMode: value })
+            }
+          >
+            <SelectTrigger>
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="push-to-talk">Push to talk</SelectItem>
+              <SelectItem value="continuous">Continuous</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+const MamaBearChatInput: React.FC<MamaBearChatInputProps> = ({
+  onSendMessage = () => {},
+  onFileUpload = () => {},
+  onVoiceInput = () => {},
+  onMentionSelect = () => {},
+  availableModels = defaultModels,
+  currentModel = defaultModels[0],
+  settings = defaultSettings,
+  isLoading = false,
+  disabled = false
+}) => {
+  const [message, setMessage] = useState('');
+  const [files, setFiles] = useState<File[]>([]);
+  const [mentions, setMentions] = useState<Mention[]>([]);
+  const [showMentions, setShowMentions] = useState(false);
+  const [mentionQuery, setMentionQuery] = useState('');
+  const [isRecording, setIsRecording] = useState(false);
+  const [currentSettings, setCurrentSettings] = useState(settings);
+  const [selectedModel, setSelectedModel] = useState(currentModel);
+  const [encouragementMessage, setEncouragementMessage] = useState('');
+  
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
+
+  const encouragementMessages = [
+    "You've got this! 💜",
+    "Amazing work! 🎉",
+    "Keep coding with love! ✨",
+    "Mama Bear believes in you! 🤗",
+    "You're doing great! 🚀"
+  ];
+
+  useEffect(() => {
+    if (textareaRef.current) {
+      textareaRef.current.style.height = 'auto';
+      textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`;
+    }
+  }, [message]);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      if (Math.random() > 0.95) {
+        const randomMessage = encouragementMessages[Math.floor(Math.random() * encouragementMessages.length)];
+        setEncouragementMessage(randomMessage);
+        setTimeout(() => setEncouragementMessage(''), 3000);
+      }
+    }, 10000);
+
+    return () => clearInterval(interval);
+  }, []);
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    const value = e.target.value;
+    setMessage(value);
+
+    const lastAtIndex = value.lastIndexOf('@');
+    if (lastAtIndex !== -1 && lastAtIndex === value.length - 1) {
+      setShowMentions(true);
+      setMentionQuery('');
+    } else if (lastAtIndex !== -1 && value.slice(lastAtIndex).includes(' ')) {
+      setShowMentions(false);
+    } else if (showMentions && lastAtIndex !== -1) {
+      setMentionQuery(value.slice(lastAtIndex + 1));
+    }
+  };
+
+  const handleMentionSelect = (mention: Mention) => {
+    const lastAtIndex = message.lastIndexOf('@');
+    const newMessage = message.slice(0, lastAtIndex) + `@${mention.type} `;
+    setMessage(newMessage);
+    setMentions([...mentions, mention]);
+    setShowMentions(false);
+    onMentionSelect(mention);
+  };
+
+  const handleEmojiSelect = (emoji: string) => {
+    setMessage(prev => prev + emoji);
+  };
+
+  const handleSendMessage = () => {
+    if (!message.trim() && files.length === 0) return;
+
+    const chatMessage: ChatMessage = {
+      text: message,
+      attachments: files.map((file, index) => ({
+        id: `file-${index}`,
+        name: file.name,
+        type: file.type,
+        size: file.size,
+        url: URL.createObjectURL(file)
+      })),
+      mentions,
+      emotions: [{ type: 'excited', intensity: 0.8 }],
+      metadata: {
+        timestamp: new Date(),
+        model: selectedModel.id,
+        context: currentSettings.includeOpenFiles ? ['open-files'] : []
+      }
+    };
+
+    onSendMessage(chatMessage);
+    setMessage('');
+    setFiles([]);
+    setMentions([]);
+  };
+
+  const handleKeyPress = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      handleSendMessage();
+    }
+  };
+
+  const removeFile = (index: number) => {
+    setFiles(files.filter((_, i) => i !== index));
+  };
+
+  const toggleRecording = () => {
+    setIsRecording(!isRecording);
+    if (!isRecording) {
+      // Simulate voice input
+      setTimeout(() => {
+        const transcript = "This is a simulated voice input";
+        onVoiceInput(transcript);
+        setMessage(prev => prev + transcript);
+        setIsRecording(false);
+      }, 2000);
+    }
+  };
+
+  return (
+    <div className="relative">
+      {encouragementMessage && (
+        <div className="absolute -top-12 left-1/2 transform -translate-x-1/2 bg-purple-500/90 text-white px-3 py-1 rounded-full text-sm animate-pulse">
+          {encouragementMessage}
+        </div>
+      )}
+      
+      <Card className="relative bg-background/80 backdrop-blur-sm border-purple-500/20 shadow-lg">
+        <div className="p-4 space-y-4">
+          {/* File Upload Area */}
+          <FileUploadArea
+            files={files}
+            onFilesChange={setFiles}
+            onRemoveFile={removeFile}
+          />
+
+          {/* Main Input Area */}
+          <div className="relative">
+            <Textarea
+              ref={textareaRef}
+              value={message}
+              onChange={handleInputChange}
+              onKeyPress={handleKeyPress}
+              placeholder="Ask Mama Bear anything... 💜 (@codebase, @files, @docs, @web)"
+              disabled={disabled || isLoading}
+              className="min-h-[80px] max-h-[200px] resize-none bg-background/50 border-purple-500/30 focus:border-purple-500 focus:ring-purple-500/20 placeholder:text-muted-foreground/70"
+            />
+            
+            <MentionDropdown
+              isOpen={showMentions}
+              onSelect={handleMentionSelect}
+              onClose={() => setShowMentions(false)}
+              query={mentionQuery}
+            />
+          </div>
+
+          {/* Mentions Display */}
+          {mentions.length > 0 && (
+            <div className="flex flex-wrap gap-2">
+              {mentions.map((mention, index) => (
+                <Badge key={index} variant="secondary" className="bg-purple-500/20 text-purple-400">
+                  @{mention.type}
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => setMentions(mentions.filter((_, i) => i !== index))}
+                    className="ml-1 h-auto p-0 text-purple-400 hover:text-purple-300"
+                  >
+                    <X className="h-3 w-3" />
+                  </Button>
+                </Badge>
+              ))}
+            </div>
+          )}
+
+          {/* Action Bar */}
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              {/* File Upload */}
+              <Button variant="ghost" size="sm" className="text-muted-foreground hover:text-purple-400">
+                <Paperclip className="h-4 w-4" />
+              </Button>
+
+              {/* Emoji Picker */}
+              <Popover>
+                <PopoverTrigger asChild>
+                  <Button variant="ghost" size="sm" className="text-muted-foreground hover:text-purple-400">
+                    <Smile className="h-4 w-4" />
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-auto p-0" align="start">
+                  <EmojiPicker onEmojiSelect={handleEmojiSelect} />
+                </PopoverContent>
+              </Popover>
+
+              {/* Voice Input */}
+              <VoiceInput
+                isRecording={isRecording}
+                onToggleRecording={toggleRecording}
+                mode={currentSettings.voiceMode}
+              />
+
+              {/* Settings */}
+              <Popover>
+                <PopoverTrigger asChild>
+                  <Button variant="ghost" size="sm" className="text-muted-foreground hover:text-purple-400">
+                    <Settings className="h-4 w-4" />
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-auto p-0" align="start">
+                  <SettingsPanel
+                    settings={currentSettings}
+                    onSettingsChange={setCurrentSettings}
+                    models={availableModels}
+                    currentModel={selectedModel}
+                    onModelChange={setSelectedModel}
+                  />
+                </PopoverContent>
+              </Popover>
+            </div>
+
+            {/* Send Button */}
+            <Button
+              onClick={handleSendMessage}
+              disabled={disabled || isLoading || (!message.trim() && files.length === 0)}
+              className="bg-gradient-to-r from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700 text-white shadow-lg"
+            >
+              {isLoading ? (
+                <div className="flex items-center gap-2">
+                  <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                  <span>Thinking...</span>
+                </div>
+              ) : (
+                <div className="flex items-center gap-2">
+                  <Rocket className="h-4 w-4" />
+                  <span>Send</span>
+                </div>
+              )}
+            </Button>
+          </div>
+
+          {/* Loading Progress */}
+          {isLoading && (
+            <div className="space-y-2">
+              <div className="flex items-center gap-2 text-sm text-purple-400">
+                <span>Mama Bear is thinking... 💜</span>
+              </div>
+              <Progress value={33} className="h-1" />
+            </div>
+          )}
+        </div>
+      </Card>
+    </div>
+  );
+};
+
+// Usage Example
+const ChatInputExample: React.FC = () => {
+  const [messages, setMessages] = useState<ChatMessage[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const handleSendMessage = (message: ChatMessage) => {
+    setMessages(prev => [...prev, message]);
+    setIsLoading(true);
+    
+    // Simulate AI response
+    setTimeout(() => {
+      setIsLoading(false);
+      console.log('Message sent:', message);
+    }, 2000);
+  };
+
+  const handleFileUpload = (files: File[]) => {
+    console.log('Files uploaded:', files);
+  };
+
+  const handleVoiceInput = (transcript: string) => {
+    console.log('Voice input:', transcript);
+  };
+
+  const handleMentionSelect = (mention: Mention) => {
+    console.log('Mention selected:', mention);
+  };
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-purple-900/20 via-background to-purple-900/20 p-8">
+      <div className="max-w-4xl mx-auto space-y-8">
+        <div className="text-center space-y-2">
+          <h1 className="text-3xl font-bold bg-gradient-to-r from-purple-400 to-purple-600 bg-clip-text text-transparent">
+            Mama Bear Chat Input 💜
+          </h1>
+          <p className="text-muted-foreground">
+            The most advanced AI chat input with love and personality
+          </p>
+        </div>
+        
+        <div className="space-y-4">
+          {messages.map((message, index) => (
+            <Card key={index} className="p-4 bg-muted/50">
+              <p className="text-sm">{message.text}</p>
+              {message.attachments.length > 0 && (
+                <div className="mt-2 text-xs text-muted-foreground">
+                  {message.attachments.length} file(s) attached
+                </div>
+              )}
+            </Card>
+          ))}
+        </div>
+
+        <MamaBearChatInput
+          onSendMessage={handleSendMessage}
+          onFileUpload={handleFileUpload}
+          onVoiceInput={handleVoiceInput}
+          onMentionSelect={handleMentionSelect}
+          isLoading={isLoading}
+        />
+      </div>
+    </div>
+  );
+};
+
+export default ChatInputExample;

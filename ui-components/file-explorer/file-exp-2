@@ -1,0 +1,670 @@
+"use client";
+
+import React, { useState, useCallback, useRef, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import {
+  Folder,
+  FolderOpen,
+  File,
+  FileText,
+  FileImage,
+  FileVideo,
+  FileAudio,
+  FileCode,
+  Search,
+  Plus,
+  MoreHorizontal,
+  Edit,
+  Trash2,
+  Copy,
+  Scissors,
+  Clipboard,
+  Download,
+  Star,
+  Clock,
+  ChevronRight,
+  Home,
+  GitBranch,
+  AlertCircle,
+  CheckCircle,
+  Minus,
+  X
+} from "lucide-react";
+import { cn } from "@/lib/utils";
+import {
+  ContextMenu,
+  ContextMenuContent,
+  ContextMenuItem,
+  ContextMenuSeparator,
+  ContextMenuTrigger,
+} from "@/components/ui/context-menu";
+import { Input } from "@/components/ui/input";
+import { Breadcrumb } from "@/components/ui/breadcrumb";
+
+// Types
+interface FileNode {
+  id: string;
+  name: string;
+  type: "file" | "folder";
+  path: string;
+  size?: number;
+  modifiedAt?: Date;
+  gitStatus?: "modified" | "added" | "deleted" | "untracked" | "staged";
+  children?: FileNode[];
+  isExpanded?: boolean;
+}
+
+interface FileExplorerProps {
+  files?: FileNode[];
+  onFileSelect?: (file: FileNode) => void;
+  onFileOperation?: (operation: string, files: FileNode[], target?: FileNode) => void;
+  className?: string;
+}
+
+// File type detection
+const getFileIcon = (fileName: string, isFolder: boolean, isExpanded?: boolean) => {
+  if (isFolder) {
+    return isExpanded ? (
+      <FolderOpen className="w-4 h-4 text-purple-400" />
+    ) : (
+      <Folder className="w-4 h-4 text-purple-400" />
+    );
+  }
+
+  const ext = fileName.split('.').pop()?.toLowerCase();
+  const iconClass = "w-4 h-4";
+
+  switch (ext) {
+    case 'js':
+    case 'jsx':
+    case 'ts':
+    case 'tsx':
+      return <FileCode className={`${iconClass} text-yellow-400`} />;
+    case 'css':
+    case 'scss':
+    case 'sass':
+      return <FileCode className={`${iconClass} text-blue-400`} />;
+    case 'html':
+    case 'htm':
+      return <FileCode className={`${iconClass} text-orange-400`} />;
+    case 'json':
+    case 'xml':
+      return <FileCode className={`${iconClass} text-green-400`} />;
+    case 'md':
+    case 'txt':
+      return <FileText className={`${iconClass} text-gray-400`} />;
+    case 'png':
+    case 'jpg':
+    case 'jpeg':
+    case 'gif':
+    case 'svg':
+      return <FileImage className={`${iconClass} text-pink-400`} />;
+    case 'mp4':
+    case 'avi':
+    case 'mov':
+      return <FileVideo className={`${iconClass} text-red-400`} />;
+    case 'mp3':
+    case 'wav':
+    case 'flac':
+      return <FileAudio className={`${iconClass} text-indigo-400`} />;
+    default:
+      return <File className={`${iconClass} text-gray-400`} />;
+  }
+};
+
+// Git status colors
+const getGitStatusColor = (status?: string) => {
+  switch (status) {
+    case 'modified':
+      return 'text-yellow-400';
+    case 'added':
+    case 'staged':
+      return 'text-green-400';
+    case 'deleted':
+      return 'text-red-400';
+    case 'untracked':
+      return 'text-blue-400';
+    default:
+      return '';
+  }
+};
+
+// Recent files component
+const RecentFiles: React.FC<{ files: FileNode[]; onFileSelect: (file: FileNode, isMultiSelect: boolean) => void }> = ({
+  files,
+  onFileSelect
+}) => {
+  const recentFiles = files.slice(0, 5);
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: -10 }}
+      animate={{ opacity: 1, y: 0 }}
+      className="mb-6"
+    >
+      <div className="flex items-center gap-2 mb-3 px-3">
+        <Clock className="w-4 h-4 text-purple-400" />
+        <span className="text-sm font-medium text-white/80">Recent Files</span>
+      </div>
+      <div className="space-y-1">
+        {recentFiles.map((file) => (
+          <motion.div
+            key={file.id}
+            className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-white/[0.05] cursor-pointer transition-colors"
+            onClick={() => onFileSelect(file, false)}
+            whileHover={{ x: 4 }}
+          >
+            {getFileIcon(file.name, file.type === 'folder')}
+            <span className="text-sm text-white/70 truncate">{file.name}</span>
+            <Star className="w-3 h-3 text-yellow-400 ml-auto opacity-60" />
+          </motion.div>
+        ))}
+      </div>
+    </motion.div>
+  );
+};
+
+// Breadcrumb component
+const BreadcrumbNav: React.FC<{ path: string; onNavigate: (path: string) => void }> = ({
+  path,
+  onNavigate
+}) => {
+  const segments = path.split('/').filter(Boolean);
+
+  return (
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      className="flex items-center gap-1 px-3 py-2 mb-4 bg-white/[0.03] rounded-lg backdrop-blur-sm border border-white/[0.08]"
+    >
+      <Home
+        className="w-4 h-4 text-purple-400 cursor-pointer hover:text-purple-300"
+        onClick={() => onNavigate('/')}
+      />
+      {segments.map((segment, index) => (
+        <React.Fragment key={index}>
+          <ChevronRight className="w-3 h-3 text-white/40" />
+          <span
+            className="text-sm text-white/70 cursor-pointer hover:text-white transition-colors"
+            onClick={() => onNavigate('/' + segments.slice(0, index + 1).join('/'))}
+          >
+            {segment}
+          </span>
+        </React.Fragment>
+      ))}
+    </motion.div>
+  );
+};
+
+// File tree item component
+const FileTreeItem: React.FC<{
+  file: FileNode;
+  level: number;
+  selectedFiles: Set<string>;
+  onToggle: (id: string) => void;
+  onSelect: (file: FileNode, isMultiSelect: boolean) => void;
+  onFileOperation: (operation: string, files: FileNode[], target?: FileNode) => void;
+}> = ({ file, level, selectedFiles, onToggle, onSelect, onFileOperation }) => {
+  const [isRenaming, setIsRenaming] = useState(false);
+  const [newName, setNewName] = useState(file.name);
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  const isSelected = selectedFiles.has(file.id);
+  const hasChildren = file.children && file.children.length > 0;
+
+  useEffect(() => {
+    if (isRenaming && inputRef.current) {
+      inputRef.current.focus();
+      inputRef.current.select();
+    }
+  }, [isRenaming]);
+
+  const handleRename = () => {
+    if (newName && newName !== file.name) {
+      onFileOperation('rename', [{ ...file, name: newName }]);
+    }
+    setIsRenaming(false);
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter') {
+      handleRename();
+    } else if (e.key === 'Escape') {
+      setNewName(file.name);
+      setIsRenaming(false);
+    }
+  };
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, x: -10 }}
+      animate={{ opacity: 1, x: 0 }}
+      transition={{ delay: level * 0.05 }}
+    >
+      <ContextMenu>
+        <ContextMenuTrigger>
+          <div
+            className={cn(
+              "flex items-center gap-2 px-3 py-2 rounded-lg cursor-pointer transition-all duration-200 group",
+              "hover:bg-white/[0.08] hover:backdrop-blur-md",
+              isSelected && "bg-purple-500/20 border border-purple-400/30",
+              getGitStatusColor(file.gitStatus)
+            )}
+            style={{ paddingLeft: `${12 + level * 20}px` }}
+            onClick={(e) => {
+              if (file.type === 'folder') {
+                onToggle(file.id);
+              }
+              onSelect(file, e.ctrlKey || e.metaKey);
+            }}
+          >
+            {hasChildren && (
+              <motion.div
+                animate={{ rotate: file.isExpanded ? 90 : 0 }}
+                transition={{ duration: 0.2 }}
+              >
+                <ChevronRight className="w-3 h-3 text-white/60" />
+              </motion.div>
+            )}
+            
+            {!hasChildren && <div className="w-3" />}
+            
+            {getFileIcon(file.name, file.type === 'folder', file.isExpanded)}
+            
+            {isRenaming ? (
+              <input
+                ref={inputRef}
+                value={newName}
+                onChange={(e) => setNewName(e.target.value)}
+                onBlur={handleRename}
+                onKeyDown={handleKeyDown}
+                className="bg-white/10 text-white text-sm px-2 py-1 rounded border border-purple-400/50 focus:outline-none focus:border-purple-400"
+              />
+            ) : (
+              <span className="text-sm text-white/80 truncate flex-1">{file.name}</span>
+            )}
+
+            {file.gitStatus && (
+              <div className="flex items-center gap-1">
+                {file.gitStatus === 'modified' && <Minus className="w-3 h-3 text-yellow-400" />}
+                {file.gitStatus === 'added' && <Plus className="w-3 h-3 text-green-400" />}
+                {file.gitStatus === 'deleted' && <X className="w-3 h-3 text-red-400" />}
+                {file.gitStatus === 'untracked' && <AlertCircle className="w-3 h-3 text-blue-400" />}
+                {file.gitStatus === 'staged' && <CheckCircle className="w-3 h-3 text-green-400" />}
+              </div>
+            )}
+
+            <div className="opacity-0 group-hover:opacity-100 transition-opacity">
+              <MoreHorizontal className="w-3 h-3 text-white/60" />
+            </div>
+          </div>
+        </ContextMenuTrigger>
+        
+        <ContextMenuContent className="bg-black/90 backdrop-blur-xl border-white/[0.15] text-white">
+          <ContextMenuItem onClick={() => onFileOperation('open', [file])}>
+            Open
+          </ContextMenuItem>
+          <ContextMenuSeparator className="bg-white/[0.15]" />
+          <ContextMenuItem onClick={() => onFileOperation('newFile', [], file)}>
+            <Plus className="w-4 h-4 mr-2" />
+            New File
+          </ContextMenuItem>
+          <ContextMenuItem onClick={() => onFileOperation('newFolder', [], file)}>
+            <Folder className="w-4 h-4 mr-2" />
+            New Folder
+          </ContextMenuItem>
+          <ContextMenuSeparator className="bg-white/[0.15]" />
+          <ContextMenuItem onClick={() => setIsRenaming(true)}>
+            <Edit className="w-4 h-4 mr-2" />
+            Rename
+          </ContextMenuItem>
+          <ContextMenuItem onClick={() => onFileOperation('copy', [file])}>
+            <Copy className="w-4 h-4 mr-2" />
+            Copy
+          </ContextMenuItem>
+          <ContextMenuItem onClick={() => onFileOperation('cut', [file])}>
+            <Scissors className="w-4 h-4 mr-2" />
+            Cut
+          </ContextMenuItem>
+          <ContextMenuItem onClick={() => onFileOperation('paste', [], file)}>
+            <Clipboard className="w-4 h-4 mr-2" />
+            Paste
+          </ContextMenuItem>
+          <ContextMenuSeparator className="bg-white/[0.15]" />
+          <ContextMenuItem onClick={() => onFileOperation('download', [file])}>
+            <Download className="w-4 h-4 mr-2" />
+            Download
+          </ContextMenuItem>
+          <ContextMenuItem 
+            onClick={() => onFileOperation('delete', [file])}
+            className="text-red-400 focus:text-red-300"
+          >
+            <Trash2 className="w-4 h-4 mr-2" />
+            Delete
+          </ContextMenuItem>
+        </ContextMenuContent>
+      </ContextMenu>
+
+      <AnimatePresence>
+        {file.isExpanded && hasChildren && (
+          <motion.div
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: "auto", opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.3, ease: "easeInOut" }}
+            className="overflow-hidden"
+          >
+            {file.children!.map((child) => (
+              <FileTreeItem
+                key={child.id}
+                file={child}
+                level={level + 1}
+                selectedFiles={selectedFiles}
+                onToggle={onToggle}
+                onSelect={onSelect}
+                onFileOperation={onFileOperation}
+              />
+            ))}
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </motion.div>
+  );
+};
+
+// Main file explorer component
+export const FileExplorer: React.FC<FileExplorerProps> = ({
+  files = [],
+  onFileSelect,
+  onFileOperation,
+  className
+}) => {
+  const [searchQuery, setSearchQuery] = useState("");
+  const [selectedFiles, setSelectedFiles] = useState<Set<string>>(new Set());
+  const [expandedFolders, setExpandedFolders] = useState<Set<string>>(new Set());
+  const [currentPath, setCurrentPath] = useState("/");
+
+  const handleToggleFolder = useCallback((folderId: string) => {
+    setExpandedFolders(prev => {
+      const newSet = new Set(prev);
+      if (newSet.has(folderId)) {
+        newSet.delete(folderId);
+      } else {
+        newSet.add(folderId);
+      }
+      return newSet;
+    });
+  }, []);
+
+  const handleFileSelect = useCallback((file: FileNode, isMultiSelect: boolean) => {
+    if (isMultiSelect) {
+      setSelectedFiles(prev => {
+        const newSet = new Set(prev);
+        if (newSet.has(file.id)) {
+          newSet.delete(file.id);
+        } else {
+          newSet.add(file.id);
+        }
+        return newSet;
+      });
+    } else {
+      setSelectedFiles(new Set([file.id]));
+      onFileSelect?.(file);
+    }
+  }, [onFileSelect]);
+
+  const handleFileOperation = useCallback((operation: string, files: FileNode[], target?: FileNode) => {
+    onFileOperation?.(operation, files, target);
+  }, [onFileOperation]);
+
+  const filteredFiles = files.filter(file => 
+    file.name.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
+  // Update expanded state for files
+  const filesWithExpanded = files.map(file => ({
+    ...file,
+    isExpanded: expandedFolders.has(file.id),
+    children: file.children?.map(child => ({
+      ...child,
+      isExpanded: expandedFolders.has(child.id)
+    }))
+  }));
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, x: -20 }}
+      animate={{ opacity: 1, x: 0 }}
+      className={cn(
+        "w-80 h-full bg-black/40 backdrop-blur-xl border-r border-white/[0.08] flex flex-col",
+        "text-white overflow-hidden",
+        className
+      )}
+    >
+      {/* Header */}
+      <div className="p-4 border-b border-white/[0.08]">
+        <div className="flex items-center gap-2 mb-4">
+          <Folder className="w-5 h-5 text-purple-400" />
+          <h2 className="text-lg font-semibold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
+            Explorer
+          </h2>
+        </div>
+
+        {/* Search */}
+        <div className="relative">
+          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-white/40" />
+          <input
+            type="text"
+            placeholder="Search files..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="w-full pl-10 pr-4 py-2 bg-white/[0.05] border border-white/[0.15] rounded-lg text-sm text-white placeholder-white/40 focus:outline-none focus:border-purple-400/50 transition-colors"
+          />
+        </div>
+      </div>
+
+      {/* Content */}
+      <div className="flex-1 overflow-y-auto custom-scrollbar">
+        <div className="p-4">
+          {/* Breadcrumb */}
+          <BreadcrumbNav path={currentPath} onNavigate={setCurrentPath} />
+
+          {/* Recent Files */}
+          <RecentFiles files={filteredFiles} onFileSelect={handleFileSelect} />
+
+          {/* File Tree */}
+          <div className="space-y-1">
+            {filteredFiles.length === 0 ? (
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                className="text-center py-8"
+              >
+                <Folder className="w-12 h-12 text-white/20 mx-auto mb-3" />
+                <p className="text-white/40 text-sm">
+                  {searchQuery ? "No files found" : "No files to display"}
+                </p>
+                <p className="text-white/30 text-xs mt-1">
+                  {searchQuery ? "Try a different search term" : "Create your first file to get started! 🚀"}
+                </p>
+              </motion.div>
+            ) : (
+              filesWithExpanded.map((file) => (
+                <FileTreeItem
+                  key={file.id}
+                  file={file}
+                  level={0}
+                  selectedFiles={selectedFiles}
+                  onToggle={handleToggleFolder}
+                  onSelect={handleFileSelect}
+                  onFileOperation={handleFileOperation}
+                />
+              ))
+            )}
+          </div>
+        </div>
+      </div>
+
+      {/* Footer */}
+      <div className="p-4 border-t border-white/[0.08]">
+        <div className="flex items-center justify-between text-xs text-white/40">
+          <div className="flex items-center gap-2">
+            <GitBranch className="w-3 h-3" />
+            <span>main</span>
+          </div>
+          <span>{filteredFiles.length} items</span>
+        </div>
+      </div>
+
+      <style jsx>{`
+        .custom-scrollbar::-webkit-scrollbar {
+          width: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+          background: rgba(255, 255, 255, 0.05);
+          border-radius: 3px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+          background: rgba(147, 51, 234, 0.5);
+          border-radius: 3px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+          background: rgba(147, 51, 234, 0.7);
+        }
+      `}</style>
+    </motion.div>
+  );
+};
+
+// Demo data
+const demoFiles: FileNode[] = [
+  {
+    id: "1",
+    name: "src",
+    type: "folder",
+    path: "/src",
+    isExpanded: true,
+    children: [
+      {
+        id: "2",
+        name: "components",
+        type: "folder",
+        path: "/src/components",
+        children: [
+          {
+            id: "3",
+            name: "FileExplorer.tsx",
+            type: "file",
+            path: "/src/components/FileExplorer.tsx",
+            size: 15420,
+            modifiedAt: new Date(),
+            gitStatus: "modified"
+          },
+          {
+            id: "4",
+            name: "Button.tsx",
+            type: "file",
+            path: "/src/components/Button.tsx",
+            size: 2340,
+            modifiedAt: new Date(),
+            gitStatus: "staged"
+          }
+        ]
+      },
+      {
+        id: "5",
+        name: "hooks",
+        type: "folder",
+        path: "/src/hooks",
+        children: [
+          {
+            id: "6",
+            name: "useFileSystem.ts",
+            type: "file",
+            path: "/src/hooks/useFileSystem.ts",
+            size: 3200,
+            modifiedAt: new Date(),
+            gitStatus: "untracked"
+          }
+        ]
+      },
+      {
+        id: "7",
+        name: "App.tsx",
+        type: "file",
+        path: "/src/App.tsx",
+        size: 1200,
+        modifiedAt: new Date(),
+        gitStatus: "added"
+      }
+    ]
+  },
+  {
+    id: "8",
+    name: "public",
+    type: "folder",
+    path: "/public",
+    children: [
+      {
+        id: "9",
+        name: "logo.svg",
+        type: "file",
+        path: "/public/logo.svg",
+        size: 2400,
+        modifiedAt: new Date()
+      },
+      {
+        id: "10",
+        name: "favicon.ico",
+        type: "file",
+        path: "/public/favicon.ico",
+        size: 1200,
+        modifiedAt: new Date()
+      }
+    ]
+  },
+  {
+    id: "11",
+    name: "package.json",
+    type: "file",
+    path: "/package.json",
+    size: 1800,
+    modifiedAt: new Date(),
+    gitStatus: "modified"
+  },
+  {
+    id: "12",
+    name: "README.md",
+    type: "file",
+    path: "/README.md",
+    size: 3400,
+    modifiedAt: new Date()
+  }
+];
+
+export default function FileExplorerDemo() {
+  const handleFileSelect = (file: FileNode) => {
+    console.log("Selected file:", file.name);
+  };
+
+  const handleFileOperation = (operation: string, files: FileNode[], target?: FileNode) => {
+    console.log("File operation:", operation, files.map(f => f.name), target?.name);
+  };
+
+  return (
+    <div className="h-screen bg-gradient-to-br from-purple-900/20 via-black to-indigo-900/20 flex">
+      <FileExplorer
+        files={demoFiles}
+        onFileSelect={handleFileSelect}
+        onFileOperation={handleFileOperation}
+      />
+      <div className="flex-1 flex items-center justify-center">
+        <div className="text-center text-white/60">
+          <Folder className="w-16 h-16 mx-auto mb-4 text-purple-400" />
+          <h3 className="text-xl font-semibold mb-2">Monaco IDE File Explorer</h3>
+          <p className="text-sm">Select a file from the explorer to open it</p>
+        </div>
+      </div>
+    </div>
+  );
+}

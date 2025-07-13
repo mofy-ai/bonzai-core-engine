@@ -1,0 +1,887 @@
+"use client";
+
+import * as React from "react";
+import { useState, useRef, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { cn } from "@/lib/utils";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { Separator } from "@/components/ui/separator";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { 
+  GitBranch, 
+  GitCommit, 
+  GitMerge, 
+  GitPullRequest,
+  Plus,
+  Minus,
+  FileText,
+  FolderGit2,
+  Upload,
+  Download,
+  RefreshCw,
+  Trash2,
+  Eye,
+  Copy,
+  Check,
+  AlertCircle,
+  Clock,
+  User,
+  Calendar,
+  Hash,
+  Smile,
+  GitFork,
+  Archive,
+  Settings,
+  Terminal,
+  ChevronDown,
+  ChevronRight,
+  Circle,
+  Dot
+} from "lucide-react";
+
+// Glass effect component
+interface GlassProps extends React.HTMLAttributes<HTMLDivElement> {
+  width?: string;
+  height?: string;
+}
+
+const Glass = React.forwardRef<HTMLDivElement, GlassProps>(
+  ({ className, width = "w-full", height = "h-full", children, ...props }, ref) => {
+    return (
+      <div 
+        className={cn("relative overflow-hidden", width, height, className)}
+        ref={ref} 
+        {...props}
+      >
+        <div className="absolute inset-0 bg-gradient-to-br from-purple-500/10 via-purple-600/5 to-purple-700/10 backdrop-blur-md border border-purple-300/20 rounded-lg" />
+        <div className="relative z-10 h-full w-full">
+          {children}
+        </div>
+        <svg className="absolute inset-0 w-full h-full">
+          <defs>
+            <filter id="fractal-noise-glass">
+              <feTurbulence
+                type="fractalNoise"
+                baseFrequency="0.12 0.12"
+                numOctaves="1"
+                result="warp"
+              />
+              <feDisplacementMap
+                xChannelSelector="R"
+                yChannelSelector="G"
+                scale="30"
+                in="SourceGraphic"
+                in2="warp"
+              />
+            </filter>
+          </defs>
+        </svg>
+      </div>
+    );
+  }
+);
+Glass.displayName = "Glass";
+
+// Draggable List component
+interface DraggableItemProps {
+  id: string;
+  content: React.JSX.Element;
+}
+
+interface DraggableListProps {
+  items: DraggableItemProps[];
+  onChange?: (items: DraggableItemProps[]) => void;
+  className?: string;
+}
+
+const DraggableList: React.FC<DraggableListProps> = ({
+  items: initialItems,
+  onChange,
+  className,
+}) => {
+  const [items, setItems] = useState(initialItems);
+  const [draggedItem, setDraggedItem] = useState<DraggableItemProps | null>(null);
+  const [dragOverItemId, setDragOverItemId] = useState<string | number | null>(null);
+
+  const handleDragStart = (item: DraggableItemProps) => {
+    setDraggedItem(item);
+  };
+
+  const handleDragOver = (e: React.DragEvent, itemId: string | number) => {
+    e.preventDefault();
+    setDragOverItemId(itemId);
+  };
+
+  const handleDragEnd = () => {
+    if (!draggedItem || !dragOverItemId) {
+      setDraggedItem(null);
+      setDragOverItemId(null);
+      return;
+    }
+
+    const newItems = [...items];
+    const draggedIndex = items.findIndex((item) => item.id === draggedItem.id);
+    const dropIndex = items.findIndex((item) => item.id === dragOverItemId);
+
+    newItems.splice(draggedIndex, 1);
+    newItems.splice(dropIndex, 0, draggedItem);
+
+    setItems(newItems);
+    onChange?.(newItems);
+    setDraggedItem(null);
+    setDragOverItemId(null);
+  };
+
+  return (
+    <div className={cn("flex flex-col gap-2", className)}>
+      <AnimatePresence>
+        {items.map((item) => (
+          <motion.div
+            key={item.id}
+            layout
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            transition={{ duration: 0.2 }}
+            draggable
+            onDragStart={() => handleDragStart(item)}
+            onDragOver={(e) => handleDragOver(e, item.id)}
+            onDragEnd={handleDragEnd}
+            className={cn(
+              "cursor-grab rounded-lg border bg-background/50 border-purple-300/20 p-3 shadow-sm transition-colors backdrop-blur-sm",
+              dragOverItemId === item.id && "border-2 border-purple-400 bg-purple-50/50",
+              draggedItem?.id === item.id && "border-2 border-purple-300 opacity-50"
+            )}
+          >
+            {item.content}
+          </motion.div>
+        ))}
+      </AnimatePresence>
+    </div>
+  );
+};
+
+// Git file status types
+interface GitFile {
+  id: string;
+  path: string;
+  status: 'added' | 'modified' | 'deleted' | 'untracked' | 'staged';
+  changes?: {
+    additions: number;
+    deletions: number;
+  };
+  content?: string;
+  diff?: string;
+}
+
+interface GitCommit {
+  id: string;
+  hash: string;
+  message: string;
+  author: string;
+  date: string;
+  branch: string;
+  parents: string[];
+}
+
+interface GitBranch {
+  name: string;
+  current: boolean;
+  ahead: number;
+  behind: number;
+}
+
+interface GitStash {
+  id: string;
+  message: string;
+  branch: string;
+  date: string;
+}
+
+// Main Git Integration Panel Component
+export default function GitIntegrationPanel() {
+  const [activeTab, setActiveTab] = useState("source-control");
+  const [commitMessage, setCommitMessage] = useState("");
+  const [selectedFiles, setSelectedFiles] = useState<string[]>([]);
+  const [currentBranch, setCurrentBranch] = useState("main");
+  const [showDiff, setShowDiff] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [copied, setCopied] = useState(false);
+
+  // Sample data
+  const [unstagedFiles] = useState<GitFile[]>([
+    {
+      id: "1",
+      path: "src/components/GitPanel.tsx",
+      status: "modified",
+      changes: { additions: 15, deletions: 3 },
+      diff: `@@ -1,5 +1,5 @@
+import React from 'react';
+-import { Button } from './Button';
++import { Button } from '@/components/ui/button';
+ 
+ export function GitPanel() {
+   return (
+@@ -10,3 +10,15 @@
+     </div>
+   );
+ }
++
++// New feature implementation
++export function handleGitOperation() {
++  console.log('Git operation executed');
++}`
+    },
+    {
+      id: "2", 
+      path: "src/utils/git.ts",
+      status: "added",
+      changes: { additions: 25, deletions: 0 }
+    },
+    {
+      id: "3",
+      path: "README.md", 
+      status: "modified",
+      changes: { additions: 2, deletions: 1 }
+    }
+  ]);
+
+  const [stagedFiles] = useState<GitFile[]>([
+    {
+      id: "4",
+      path: "package.json",
+      status: "staged", 
+      changes: { additions: 1, deletions: 0 }
+    }
+  ]);
+
+  const [branches] = useState<GitBranch[]>([
+    { name: "main", current: true, ahead: 2, behind: 0 },
+    { name: "feature/git-integration", current: false, ahead: 5, behind: 1 },
+    { name: "hotfix/critical-bug", current: false, ahead: 1, behind: 3 }
+  ]);
+
+  const [commits] = useState<GitCommit[]>([
+    {
+      id: "1",
+      hash: "a1b2c3d",
+      message: "feat: add git integration panel with glassmorphism design",
+      author: "Mama Bear",
+      date: "2024-01-15T10:30:00Z",
+      branch: "main",
+      parents: ["x9y8z7w"]
+    },
+    {
+      id: "2", 
+      hash: "x9y8z7w",
+      message: "fix: resolve merge conflicts in component structure",
+      author: "Developer",
+      date: "2024-01-14T15:45:00Z", 
+      branch: "main",
+      parents: ["m5n6o7p"]
+    },
+    {
+      id: "3",
+      hash: "m5n6o7p", 
+      message: "docs: update README with installation instructions",
+      author: "Mama Bear",
+      date: "2024-01-14T09:20:00Z",
+      branch: "main", 
+      parents: []
+    }
+  ]);
+
+  const [stashes] = useState<GitStash[]>([
+    {
+      id: "1",
+      message: "WIP: working on diff viewer implementation",
+      branch: "feature/git-integration",
+      date: "2024-01-15T14:20:00Z"
+    }
+  ]);
+
+  const getStatusColor = (status: string) => {
+    switch (status) {
+      case 'added': case 'staged': return 'text-green-500';
+      case 'modified': return 'text-yellow-500';
+      case 'deleted': return 'text-red-500';
+      case 'untracked': return 'text-blue-500';
+      default: return 'text-muted-foreground';
+    }
+  };
+
+  const getStatusIcon = (status: string) => {
+    switch (status) {
+      case 'added': case 'staged': return <Plus className="h-3 w-3" />;
+      case 'modified': return <Circle className="h-3 w-3" />;
+      case 'deleted': return <Minus className="h-3 w-3" />;
+      case 'untracked': return <Dot className="h-3 w-3" />;
+      default: return <Circle className="h-3 w-3" />;
+    }
+  };
+
+  const handleStageFile = (fileId: string) => {
+    // Simulate staging animation
+    setIsLoading(true);
+    setTimeout(() => setIsLoading(false), 500);
+  };
+
+  const handleCommit = async () => {
+    if (!commitMessage.trim()) return;
+    
+    setIsLoading(true);
+    // Simulate commit
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    setCommitMessage("");
+    setIsLoading(false);
+  };
+
+  const handleCopy = (text: string) => {
+    navigator.clipboard.writeText(text);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
+
+  const emojis = ["✨", "🐛", "📝", "🚀", "🔧", "💡", "🎨", "⚡", "🔥", "💯"];
+
+  return (
+    <div className="w-full max-w-7xl mx-auto p-6 space-y-6">
+      <Glass className="p-6">
+        <div className="flex items-center justify-between mb-6">
+          <div className="flex items-center gap-3">
+            <FolderGit2 className="h-8 w-8 text-purple-400" />
+            <div>
+              <h1 className="text-2xl font-bold text-foreground">Git Integration</h1>
+              <p className="text-sm text-muted-foreground">Monaco IDE • Purple Glassmorphism</p>
+            </div>
+          </div>
+          <div className="flex items-center gap-2">
+            <Badge variant="outline" className="border-purple-300/50 text-purple-400">
+              <GitBranch className="h-3 w-3 mr-1" />
+              {currentBranch}
+            </Badge>
+            <Badge variant="outline" className="border-green-300/50 text-green-400">
+              2 ahead • 0 behind
+            </Badge>
+          </div>
+        </div>
+
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+          <TabsList className="grid w-full grid-cols-6 bg-background/50 backdrop-blur-sm border border-purple-300/20">
+            <TabsTrigger value="source-control" className="data-[state=active]:bg-purple-500/20">
+              <GitCommit className="h-4 w-4 mr-2" />
+              Source Control
+            </TabsTrigger>
+            <TabsTrigger value="branches" className="data-[state=active]:bg-purple-500/20">
+              <GitBranch className="h-4 w-4 mr-2" />
+              Branches
+            </TabsTrigger>
+            <TabsTrigger value="history" className="data-[state=active]:bg-purple-500/20">
+              <Clock className="h-4 w-4 mr-2" />
+              History
+            </TabsTrigger>
+            <TabsTrigger value="diff" className="data-[state=active]:bg-purple-500/20">
+              <Eye className="h-4 w-4 mr-2" />
+              Diff Viewer
+            </TabsTrigger>
+            <TabsTrigger value="remote" className="data-[state=active]:bg-purple-500/20">
+              <Upload className="h-4 w-4 mr-2" />
+              Remote
+            </TabsTrigger>
+            <TabsTrigger value="stash" className="data-[state=active]:bg-purple-500/20">
+              <Archive className="h-4 w-4 mr-2" />
+              Stash
+            </TabsTrigger>
+          </TabsList>
+
+          <TabsContent value="source-control" className="space-y-6 mt-6">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              {/* Unstaged Changes */}
+              <Glass className="p-4">
+                <div className="flex items-center justify-between mb-4">
+                  <h3 className="text-lg font-semibold text-foreground flex items-center gap-2">
+                    <Circle className="h-4 w-4 text-yellow-500" />
+                    Changes ({unstagedFiles.length})
+                  </h3>
+                  <Button size="sm" variant="outline" className="border-purple-300/50">
+                    <Plus className="h-3 w-3 mr-1" />
+                    Stage All
+                  </Button>
+                </div>
+                <ScrollArea className="h-64">
+                  <DraggableList
+                    items={unstagedFiles.map(file => ({
+                      id: file.id,
+                      content: (
+                        <div className="flex items-center justify-between w-full">
+                          <div className="flex items-center gap-2 min-w-0">
+                            <span className={getStatusColor(file.status)}>
+                              {getStatusIcon(file.status)}
+                            </span>
+                            <span className="text-sm font-medium truncate">{file.path}</span>
+                            <Badge variant="outline" className="text-xs">
+                              {file.status}
+                            </Badge>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            {file.changes && (
+                              <div className="flex items-center gap-1 text-xs">
+                                <span className="text-green-500">+{file.changes.additions}</span>
+                                <span className="text-red-500">-{file.changes.deletions}</span>
+                              </div>
+                            )}
+                            <Button 
+                              size="sm" 
+                              variant="ghost"
+                              onClick={() => handleStageFile(file.id)}
+                              className="h-6 w-6 p-0"
+                            >
+                              <Plus className="h-3 w-3" />
+                            </Button>
+                          </div>
+                        </div>
+                      )
+                    }))}
+                    className="space-y-2"
+                  />
+                </ScrollArea>
+              </Glass>
+
+              {/* Staged Changes */}
+              <Glass className="p-4">
+                <div className="flex items-center justify-between mb-4">
+                  <h3 className="text-lg font-semibold text-foreground flex items-center gap-2">
+                    <Check className="h-4 w-4 text-green-500" />
+                    Staged ({stagedFiles.length})
+                  </h3>
+                  <Button size="sm" variant="outline" className="border-purple-300/50">
+                    <Minus className="h-3 w-3 mr-1" />
+                    Unstage All
+                  </Button>
+                </div>
+                <ScrollArea className="h-64">
+                  <DraggableList
+                    items={stagedFiles.map(file => ({
+                      id: file.id,
+                      content: (
+                        <div className="flex items-center justify-between w-full">
+                          <div className="flex items-center gap-2 min-w-0">
+                            <span className="text-green-500">
+                              <Check className="h-3 w-3" />
+                            </span>
+                            <span className="text-sm font-medium truncate">{file.path}</span>
+                            <Badge variant="outline" className="text-xs border-green-300/50 text-green-400">
+                              staged
+                            </Badge>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            {file.changes && (
+                              <div className="flex items-center gap-1 text-xs">
+                                <span className="text-green-500">+{file.changes.additions}</span>
+                                <span className="text-red-500">-{file.changes.deletions}</span>
+                              </div>
+                            )}
+                            <Button size="sm" variant="ghost" className="h-6 w-6 p-0">
+                              <Minus className="h-3 w-3" />
+                            </Button>
+                          </div>
+                        </div>
+                      )
+                    }))}
+                    className="space-y-2"
+                  />
+                </ScrollArea>
+              </Glass>
+            </div>
+
+            {/* Commit Section */}
+            <Glass className="p-4">
+              <div className="space-y-4">
+                <div className="flex items-center gap-2 mb-2">
+                  <GitCommit className="h-5 w-5 text-purple-400" />
+                  <h3 className="text-lg font-semibold">Commit Changes</h3>
+                  <div className="ml-auto text-sm text-muted-foreground">
+                    Mama Bear says: "Write meaningful commit messages! 🐻"
+                  </div>
+                </div>
+                <div className="flex gap-2">
+                  <div className="flex-1">
+                    <Textarea
+                      placeholder="Enter commit message... (tip: start with feat:, fix:, docs:, etc.)"
+                      value={commitMessage}
+                      onChange={(e) => setCommitMessage(e.target.value)}
+                      className="min-h-[80px] bg-background/50 border-purple-300/20 focus:border-purple-400"
+                    />
+                    <div className="flex items-center justify-between mt-2">
+                      <div className="flex gap-1">
+                        {emojis.map((emoji, i) => (
+                          <Button
+                            key={i}
+                            size="sm"
+                            variant="ghost"
+                            onClick={() => setCommitMessage(prev => prev + emoji)}
+                            className="h-6 w-6 p-0 text-xs"
+                          >
+                            {emoji}
+                          </Button>
+                        ))}
+                      </div>
+                      <span className="text-xs text-muted-foreground">
+                        {commitMessage.length}/72 characters
+                      </span>
+                    </div>
+                  </div>
+                  <div className="flex flex-col gap-2">
+                    <Button 
+                      onClick={handleCommit}
+                      disabled={!commitMessage.trim() || stagedFiles.length === 0 || isLoading}
+                      className="bg-purple-600 hover:bg-purple-700"
+                    >
+                      {isLoading ? (
+                        <RefreshCw className="h-4 w-4 mr-2 animate-spin" />
+                      ) : (
+                        <GitCommit className="h-4 w-4 mr-2" />
+                      )}
+                      Commit
+                    </Button>
+                    <Button variant="outline" size="sm" className="border-purple-300/50">
+                      <GitMerge className="h-3 w-3 mr-1" />
+                      Commit & Push
+                    </Button>
+                  </div>
+                </div>
+              </div>
+            </Glass>
+          </TabsContent>
+
+          <TabsContent value="branches" className="space-y-4 mt-6">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              <Glass className="p-4">
+                <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
+                  <GitBranch className="h-5 w-5 text-purple-400" />
+                  Local Branches
+                </h3>
+                <div className="space-y-2">
+                  {branches.map((branch) => (
+                    <motion.div
+                      key={branch.name}
+                      className={cn(
+                        "flex items-center justify-between p-3 rounded-lg border transition-colors",
+                        branch.current 
+                          ? "bg-purple-500/20 border-purple-400/50" 
+                          : "bg-background/50 border-purple-300/20 hover:bg-purple-500/10"
+                      )}
+                      whileHover={{ scale: 1.02 }}
+                    >
+                      <div className="flex items-center gap-2">
+                        <GitBranch className={cn(
+                          "h-4 w-4",
+                          branch.current ? "text-purple-400" : "text-muted-foreground"
+                        )} />
+                        <span className="font-medium">{branch.name}</span>
+                        {branch.current && (
+                          <Badge variant="outline" className="border-purple-400/50 text-purple-400">
+                            current
+                          </Badge>
+                        )}
+                      </div>
+                      <div className="flex items-center gap-2">
+                        {(branch.ahead > 0 || branch.behind > 0) && (
+                          <div className="flex items-center gap-1 text-xs">
+                            {branch.ahead > 0 && (
+                              <span className="text-green-500">↑{branch.ahead}</span>
+                            )}
+                            {branch.behind > 0 && (
+                              <span className="text-red-500">↓{branch.behind}</span>
+                            )}
+                          </div>
+                        )}
+                        <Button size="sm" variant="ghost" className="h-6 w-6 p-0">
+                          <GitMerge className="h-3 w-3" />
+                        </Button>
+                      </div>
+                    </motion.div>
+                  ))}
+                </div>
+                <Button className="w-full mt-4 bg-purple-600 hover:bg-purple-700">
+                  <Plus className="h-4 w-4 mr-2" />
+                  Create New Branch
+                </Button>
+              </Glass>
+
+              <Glass className="p-4">
+                <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
+                  <GitFork className="h-5 w-5 text-purple-400" />
+                  Branch Operations
+                </h3>
+                <div className="space-y-3">
+                  <Button variant="outline" className="w-full justify-start border-purple-300/20">
+                    <GitMerge className="h-4 w-4 mr-2" />
+                    Merge Branch
+                  </Button>
+                  <Button variant="outline" className="w-full justify-start border-purple-300/20">
+                    <GitPullRequest className="h-4 w-4 mr-2" />
+                    Create Pull Request
+                  </Button>
+                  <Button variant="outline" className="w-full justify-start border-purple-300/20">
+                    <Trash2 className="h-4 w-4 mr-2" />
+                    Delete Branch
+                  </Button>
+                  <Separator className="my-4" />
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium">Create Branch From:</label>
+                    <Input 
+                      placeholder="Branch name"
+                      className="bg-background/50 border-purple-300/20"
+                    />
+                    <Button className="w-full bg-purple-600 hover:bg-purple-700">
+                      Create Branch
+                    </Button>
+                  </div>
+                </div>
+              </Glass>
+            </div>
+          </TabsContent>
+
+          <TabsContent value="history" className="space-y-4 mt-6">
+            <Glass className="p-4">
+              <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
+                <Clock className="h-5 w-5 text-purple-400" />
+                Commit History
+              </h3>
+              <ScrollArea className="h-96">
+                <div className="space-y-3">
+                  {commits.map((commit, index) => (
+                    <motion.div
+                      key={commit.id}
+                      className="flex items-start gap-3 p-3 rounded-lg bg-background/50 border border-purple-300/20 hover:bg-purple-500/10 transition-colors"
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: index * 0.1 }}
+                    >
+                      <div className="flex flex-col items-center">
+                        <div className="w-3 h-3 rounded-full bg-purple-400" />
+                        {index < commits.length - 1 && (
+                          <div className="w-px h-12 bg-purple-300/30 mt-2" />
+                        )}
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-2 mb-1">
+                          <Button
+                            size="sm"
+                            variant="ghost"
+                            onClick={() => handleCopy(commit.hash)}
+                            className="h-6 px-2 font-mono text-xs border border-purple-300/20"
+                          >
+                            {copied ? <Check className="h-3 w-3" /> : <Hash className="h-3 w-3" />}
+                            {commit.hash}
+                          </Button>
+                          <Badge variant="outline" className="border-purple-300/50 text-purple-400">
+                            {commit.branch}
+                          </Badge>
+                        </div>
+                        <p className="text-sm font-medium mb-1">{commit.message}</p>
+                        <div className="flex items-center gap-3 text-xs text-muted-foreground">
+                          <span className="flex items-center gap-1">
+                            <User className="h-3 w-3" />
+                            {commit.author}
+                          </span>
+                          <span className="flex items-center gap-1">
+                            <Calendar className="h-3 w-3" />
+                            {new Date(commit.date).toLocaleDateString()}
+                          </span>
+                        </div>
+                      </div>
+                      <Button size="sm" variant="ghost" className="h-6 w-6 p-0">
+                        <Eye className="h-3 w-3" />
+                      </Button>
+                    </motion.div>
+                  ))}
+                </div>
+              </ScrollArea>
+            </Glass>
+          </TabsContent>
+
+          <TabsContent value="diff" className="space-y-4 mt-6">
+            <Glass className="p-4">
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="text-lg font-semibold flex items-center gap-2">
+                  <Eye className="h-5 w-5 text-purple-400" />
+                  Diff Viewer
+                </h3>
+                <div className="flex gap-2">
+                  <Button size="sm" variant="outline" className="border-purple-300/50">
+                    Side by Side
+                  </Button>
+                  <Button size="sm" variant="outline" className="border-purple-300/50">
+                    Unified
+                  </Button>
+                </div>
+              </div>
+              {unstagedFiles[0]?.diff ? (
+                <div className="bg-background/50 border border-purple-300/20 rounded-lg overflow-hidden">
+                  <div className="bg-purple-500/10 px-4 py-2 border-b border-purple-300/20">
+                    <span className="text-sm font-medium">{unstagedFiles[0].path}</span>
+                  </div>
+                  <ScrollArea className="h-64">
+                    <pre className="p-4 text-xs font-mono">
+                      {unstagedFiles[0].diff.split('\n').map((line, i) => (
+                        <div
+                          key={i}
+                          className={cn(
+                            "leading-relaxed",
+                            line.startsWith('+') && "bg-green-500/20 text-green-400",
+                            line.startsWith('-') && "bg-red-500/20 text-red-400",
+                            line.startsWith('@@') && "bg-purple-500/20 text-purple-400"
+                          )}
+                        >
+                          {line}
+                        </div>
+                      ))}
+                    </pre>
+                  </ScrollArea>
+                </div>
+              ) : (
+                <div className="text-center py-12 text-muted-foreground">
+                  <Eye className="h-12 w-12 mx-auto mb-4 opacity-50" />
+                  <p>Select a file to view diff</p>
+                </div>
+              )}
+            </Glass>
+          </TabsContent>
+
+          <TabsContent value="remote" className="space-y-4 mt-6">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              <Glass className="p-4">
+                <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
+                  <Upload className="h-5 w-5 text-purple-400" />
+                  Remote Operations
+                </h3>
+                <div className="space-y-3">
+                  <Button className="w-full bg-green-600 hover:bg-green-700">
+                    <Upload className="h-4 w-4 mr-2" />
+                    Push to Origin
+                  </Button>
+                  <Button variant="outline" className="w-full border-purple-300/20">
+                    <Download className="h-4 w-4 mr-2" />
+                    Pull from Origin
+                  </Button>
+                  <Button variant="outline" className="w-full border-purple-300/20">
+                    <RefreshCw className="h-4 w-4 mr-2" />
+                    Fetch
+                  </Button>
+                  <Separator />
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium">Remote URL:</label>
+                    <Input 
+                      value="https://github.com/user/monaco-ide.git"
+                      readOnly
+                      className="bg-background/50 border-purple-300/20"
+                    />
+                  </div>
+                </div>
+              </Glass>
+
+              <Glass className="p-4">
+                <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
+                  <Settings className="h-5 w-5 text-purple-400" />
+                  Repository Status
+                </h3>
+                <div className="space-y-3">
+                  <div className="flex items-center justify-between p-2 rounded bg-background/50">
+                    <span className="text-sm">Commits ahead:</span>
+                    <Badge variant="outline" className="border-green-300/50 text-green-400">2</Badge>
+                  </div>
+                  <div className="flex items-center justify-between p-2 rounded bg-background/50">
+                    <span className="text-sm">Commits behind:</span>
+                    <Badge variant="outline" className="border-gray-300/50">0</Badge>
+                  </div>
+                  <div className="flex items-center justify-between p-2 rounded bg-background/50">
+                    <span className="text-sm">Conflicts:</span>
+                    <Badge variant="outline" className="border-red-300/50 text-red-400">0</Badge>
+                  </div>
+                  <div className="flex items-center justify-between p-2 rounded bg-background/50">
+                    <span className="text-sm">Last sync:</span>
+                    <span className="text-xs text-muted-foreground">2 hours ago</span>
+                  </div>
+                </div>
+              </Glass>
+            </div>
+          </TabsContent>
+
+          <TabsContent value="stash" className="space-y-4 mt-6">
+            <Glass className="p-4">
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="text-lg font-semibold flex items-center gap-2">
+                  <Archive className="h-5 w-5 text-purple-400" />
+                  Stash Management
+                </h3>
+                <Button className="bg-purple-600 hover:bg-purple-700">
+                  <Plus className="h-4 w-4 mr-2" />
+                  Create Stash
+                </Button>
+              </div>
+              <div className="space-y-3">
+                {stashes.map((stash) => (
+                  <motion.div
+                    key={stash.id}
+                    className="flex items-center justify-between p-3 rounded-lg bg-background/50 border border-purple-300/20 hover:bg-purple-500/10 transition-colors"
+                    whileHover={{ scale: 1.02 }}
+                  >
+                    <div>
+                      <p className="text-sm font-medium">{stash.message}</p>
+                      <div className="flex items-center gap-3 text-xs text-muted-foreground mt-1">
+                        <span className="flex items-center gap-1">
+                          <GitBranch className="h-3 w-3" />
+                          {stash.branch}
+                        </span>
+                        <span className="flex items-center gap-1">
+                          <Calendar className="h-3 w-3" />
+                          {new Date(stash.date).toLocaleDateString()}
+                        </span>
+                      </div>
+                    </div>
+                    <div className="flex gap-1">
+                      <Button size="sm" variant="ghost" className="h-6 w-6 p-0">
+                        <Download className="h-3 w-3" />
+                      </Button>
+                      <Button size="sm" variant="ghost" className="h-6 w-6 p-0">
+                        <Trash2 className="h-3 w-3" />
+                      </Button>
+                    </div>
+                  </motion.div>
+                ))}
+                {stashes.length === 0 && (
+                  <div className="text-center py-12 text-muted-foreground">
+                    <Archive className="h-12 w-12 mx-auto mb-4 opacity-50" />
+                    <p>No stashes found</p>
+                    <p className="text-xs">Create a stash to save your work in progress</p>
+                  </div>
+                )}
+              </div>
+            </Glass>
+          </TabsContent>
+        </Tabs>
+      </Glass>
+
+      {/* Mama Bear Tips */}
+      <Glass className="p-4">
+        <div className="flex items-start gap-3">
+          <div className="text-2xl">🐻</div>
+          <div>
+            <h4 className="font-semibold text-purple-400 mb-1">Mama Bear's Git Tips</h4>
+            <p className="text-sm text-muted-foreground">
+              "Remember to commit often with meaningful messages! Use conventional commits like 'feat:', 'fix:', 'docs:' to keep your history clean. 
+              And don't forget to pull before you push! 🌟"
+            </p>
+          </div>
+        </div>
+      </Glass>
+    </div>
+  );
+}

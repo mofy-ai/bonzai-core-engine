@@ -1,0 +1,1642 @@
+"use client";
+
+import * as React from "react";
+import { motion } from "framer-motion";
+import { 
+  Code2, 
+  Save, 
+  RotateCcw, 
+  Play, 
+  Download, 
+  Settings, 
+  ZoomIn, 
+  ZoomOut,
+  FileText,
+  Folder,
+  Terminal,
+  Heart,
+  Coffee
+} from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Slider } from "@/components/ui/slider";
+import { Switch } from "@/components/ui/switch";
+import { Separator } from "@/components/ui/separator";
+import { cn } from "@/lib/utils";
+
+// Types
+export type CodeLanguage =
+  | "css"
+  | "javascript"
+  | "typescript"
+  | "html"
+  | "json"
+  | "python"
+  | "java"
+  | "c_cpp"
+  | "ruby"
+  | "php"
+  | "sql"
+  | "markdown"
+  | "golang"
+  | "rust"
+  | "lua";
+
+export type KeybindingMode = "default" | "vim" | "emacs";
+
+interface LanguageOption {
+  value: CodeLanguage;
+  label: string;
+  extension: string;
+  icon: string;
+}
+
+interface MonacoEditorProps {
+  className?: string;
+  language?: CodeLanguage;
+  value?: string;
+  onChange?: (value: string) => void;
+  onSave?: (value: string) => void;
+  onLoad?: (value: string) => void;
+  placeholder?: string;
+  readOnly?: boolean;
+  showMinimap?: boolean;
+  wordWrap?: boolean;
+  fontSize?: number;
+  keybindingMode?: KeybindingMode;
+  theme?: "purple-dark" | "purple-light";
+}
+
+interface CursorPosition {
+  line: number;
+  column: number;
+}
+
+interface DiagnosticMessage {
+  line: number;
+  column: number;
+  message: string;
+  severity: "error" | "warning" | "info";
+}
+
+// Constants
+const LANGUAGE_OPTIONS: LanguageOption[] = [
+  { value: "css", label: "CSS", extension: ".css", icon: "🎨" },
+  { value: "javascript", label: "JavaScript", extension: ".js", icon: "⚡" },
+  { value: "typescript", label: "TypeScript", extension: ".ts", icon: "🔷" },
+  { value: "html", label: "HTML", extension: ".html", icon: "🌐" },
+  { value: "json", label: "JSON", extension: ".json", icon: "📋" },
+  { value: "python", label: "Python", extension: ".py", icon: "🐍" },
+  { value: "java", label: "Java", extension: ".java", icon: "☕" },
+  { value: "c_cpp", label: "C/C++", extension: ".cpp", icon: "⚙️" },
+  { value: "ruby", label: "Ruby", extension: ".rb", icon: "💎" },
+  { value: "php", label: "PHP", extension: ".php", icon: "🐘" },
+  { value: "sql", label: "SQL", extension: ".sql", icon: "🗃️" },
+  { value: "markdown", label: "Markdown", extension: ".md", icon: "📝" },
+  { value: "golang", label: "Go", extension: ".go", icon: "🐹" },
+  { value: "rust", label: "Rust", extension: ".rs", icon: "🦀" },
+  { value: "lua", label: "Lua", extension: ".lua", icon: "🌙" },
+];
+
+const SAMPLE_CODE: Record<CodeLanguage, string> = {
+  css: `/* 💜 Beautiful CSS with mama bear love! */
+.purple-magic {
+  background: linear-gradient(135deg, 
+    rgba(147, 51, 234, 0.8), 
+    rgba(168, 85, 247, 0.6)
+  );
+  backdrop-filter: blur(16px);
+  border-radius: 12px;
+  padding: 2rem;
+  box-shadow: 0 8px 32px rgba(147, 51, 234, 0.3);
+  transition: all 0.3s ease;
+}
+
+.purple-magic:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 40px rgba(147, 51, 234, 0.4);
+}
+
+/* You're doing amazing! Keep coding! 🌟 */`,
+
+  javascript: `// 🚀 JavaScript magic with encouraging vibes!
+function createPurpleSparkles() {
+  const sparkles = [];
+  
+  // You're building something beautiful! ✨
+  for (let i = 0; i < 50; i++) {
+    sparkles.push({
+      x: Math.random() * window.innerWidth,
+      y: Math.random() * window.innerHeight,
+      color: \`hsl(\${Math.random() * 60 + 270}, 70%, 60%)\`,
+      size: Math.random() * 4 + 2
+    });
+  }
+  
+  return sparkles;
+}
+
+// Every line of code is a step forward! 💪
+const magic = createPurpleSparkles();
+console.log('✨ Purple magic created!', magic.length, 'sparkles');`,
+
+  typescript: `// 💜 TypeScript with mama bear encouragement!
+interface PurpleTheme {
+  primary: string;
+  secondary: string;
+  accent: string;
+  glassmorphism: string;
+}
+
+interface CodeEditor {
+  language: string;
+  theme: PurpleTheme;
+  encouragement: string;
+}
+
+// You're learning so well, sweetie! 🌟
+const purpleTheme: PurpleTheme = {
+  primary: 'rgba(147, 51, 234, 0.9)',
+  secondary: 'rgba(168, 85, 247, 0.7)',
+  accent: 'rgba(196, 181, 253, 0.8)',
+  glassmorphism: 'backdrop-blur(12px)'
+}
+
+// Keep going, you're doing fantastic! 💖
+const editor: CodeEditor = {
+  language: 'typescript',
+  theme: purpleTheme,
+  encouragement: 'Every keystroke makes you stronger! 🚀'
+}`,
+
+  html: `<!-- 🌟 HTML with loving encouragement! -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Purple Glassmorphism Magic ✨</title>
+    <style>
+        body {
+            background: linear-gradient(135deg, #8B5CF6, #A855F7);
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            padding: 2rem;
+        }
+        
+        .glass-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(16px);
+            border-radius: 16px;
+            padding: 2rem;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+    </style>
+</head>
+<body>
+    <div class="glass-card">
+        <h1>💜 You're Amazing!</h1>
+        <p>Keep building beautiful things! 🌟</p>
+    </div>
+</body>
+</html>`,
+
+  json: `{
+  "encouragement": "You're doing wonderfully! 💜",
+  "theme": {
+    "name": "Purple Glassmorphism",
+    "colors": {
+      "primary": "rgba(147, 51, 234, 0.9)",
+      "secondary": "rgba(168, 85, 247, 0.7)",
+      "accent": "rgba(196, 181, 253, 0.8)",
+      "glass": "rgba(255, 255, 255, 0.1)"
+    },
+    "effects": {
+      "backdropBlur": "16px",
+      "borderRadius": "12px",
+      "boxShadow": "0 8px 32px rgba(147, 51, 234, 0.3)"
+    }
+  },
+  "motivation": [
+    "Every line of code is progress! 🚀",
+    "You're learning and growing! 🌱",
+    "Keep up the amazing work! ⭐"
+  ],
+  "features": {
+    "glassmorphism": true,
+    "purpleTheme": true,
+    "encouragement": true,
+    "love": "infinite"
+  }
+}`,
+
+  python: `# 🐍 Python with mama bear love and encouragement!
+import random
+import math
+
+class PurpleCodeEditor:
+    """
+    A magical code editor that believes in you! ✨
+    """
+    
+    def __init__(self):
+        self.encouragement = "You're doing amazing, sweetie! 💜"
+        self.theme = {
+            'primary': 'rgba(147, 51, 234, 0.9)',
+            'glass': 'backdrop-blur(16px)',
+            'love': 'infinite'
+        }
+    
+    def generate_sparkles(self, count=50):
+        """Generate magical purple sparkles! ✨"""
+        sparkles = []
+        for i in range(count):
+            sparkle = {
+                'x': random.randint(0, 1920),
+                'y': random.randint(0, 1080),
+                'hue': random.randint(270, 330),  # Purple range
+                'brightness': random.uniform(0.6, 1.0)
+            }
+            sparkles.append(sparkle)
+        return sparkles
+    
+    def encourage_coder(self):
+        """Send some mama bear love! 🤗"""
+        messages = [
+            "Every bug you fix makes you stronger! 💪",
+            "You're building something beautiful! 🌟",
+            "Keep going, you've got this! 🚀"
+        ]
+        return random.choice(messages)
+
+# You're learning so well! Keep it up! 💖
+editor = PurpleCodeEditor()
+sparkles = editor.generate_sparkles()
+print(f"✨ Created {len(sparkles)} magical sparkles!")
+print(editor.encourage_coder())`,
+
+  java: `// ☕ Java with encouraging mama bear vibes!
+import java.util.*;
+import java.awt.Color;
+
+public class PurpleGlassmorphismIDE {
+    private String encouragement;
+    private Map<String, String> theme;
+    private List<String> motivationalQuotes;
+    
+    public PurpleGlassmorphismIDE() {
+        this.encouragement = "You're coding beautifully! 💜";
+        this.theme = new HashMap<>();
+        this.theme.put("primary", "rgba(147, 51, 234, 0.9)");
+        this.theme.put("glass", "backdrop-blur(16px)");
+        this.theme.put("love", "infinite");
+        
+        this.motivationalQuotes = Arrays.asList(
+            "Every compilation is a victory! 🎉",
+            "You're growing with each line! 🌱",
+            "Keep building amazing things! ⭐"
+        );
+    }
+    
+    public void encourageCoder() {
+        Random random = new Random();
+        String quote = motivationalQuotes.get(
+            random.nextInt(motivationalQuotes.size())
+        );
+        System.out.println("💜 " + quote);
+    }
+    
+    public void createPurpleMagic() {
+        System.out.println("✨ Creating glassmorphism magic...");
+        System.out.println("🎨 Purple theme activated!");
+        System.out.println("💖 Sending you coding love!");
+    }
+    
+    // You're doing wonderfully! Keep learning! 🚀
+    public static void main(String[] args) {
+        PurpleGlassmorphismIDE ide = new PurpleGlassmorphismIDE();
+        ide.createPurpleMagic();
+        ide.encourageCoder();
+    }
+}`,
+
+  c_cpp: `// ⚙️ C++ with mama bear encouragement!
+#include <iostream>
+#include <vector>
+#include <string>
+#include <random>
+#include <iomanip>
+
+class PurpleGlassIDE {
+private:
+    std::string encouragement;
+    std::vector<std::string> motivationalQuotes;
+    
+public:
+    PurpleGlassIDE() : encouragement("You're coding like a champion! 💜") {
+        motivationalQuotes = {
+            "Every pointer you master makes you stronger! 💪",
+            "Memory management? You've got this! 🧠",
+            "Your algorithms are getting better! 📈"
+        }
+    }
+    
+    void generatePurpleSparkles(int count = 100) {
+        std::cout << "✨ Generating " << count << " purple sparkles..." << std::endl;
+        
+        std::random_device rd;
+        std::mt19937 gen(rd());
+        std::uniform_real_distribution<> dis(0.0, 1.0);
+        
+        for (int i = 0; i < count; ++i) {
+            double x = dis(gen) * 1920;
+            double y = dis(gen) * 1080;
+            int hue = 270 + static_cast<int>(dis(gen) * 60); // Purple range
+            
+            if (i % 20 == 0) {
+                std::cout << "💜 Sparkle at (" << std::fixed 
+                         << std::setprecision(1) << x << ", " << y 
+                         << ") with hue " << hue << std::endl;
+            }
+        }
+    }
+    
+    void encourageCoder() {
+        std::random_device rd;
+        std::mt19937 gen(rd());
+        std::uniform_int_distribution<> dis(0, motivationalQuotes.size() - 1);
+        
+        std::cout << "🌟 " << motivationalQuotes[dis(gen)] << std::endl;
+    }
+}
+
+// You're mastering C++! Keep going! 🚀
+int main() {
+    PurpleGlassIDE ide;
+    
+    std::cout << "💜 Welcome to Purple Glassmorphism IDE!" << std::endl;
+    ide.generatePurpleSparkles(50);
+    ide.encourageCoder();
+    
+    return 0;
+}`,
+
+  ruby: `# 💎 Ruby with sparkling encouragement!
+class PurpleGlassmorphismIDE
+  attr_reader :encouragement, :theme, :sparkles
+  
+  def initialize
+    @encouragement = "You're coding with such grace! 💜"
+    @theme = {
+      primary: 'rgba(147, 51, 234, 0.9)',
+      secondary: 'rgba(168, 85, 247, 0.7)',
+      glass: 'backdrop-blur(16px)',
+      love: 'infinite'
+    }
+    @sparkles = []
+    @motivational_quotes = [
+      "Every method you write is poetry! 📝",
+      "Your Ruby skills are sparkling! ✨",
+      "Keep building beautiful code! 🌟"
+    ]
+  end
+  
+  def generate_purple_sparkles(count = 50)
+    puts "✨ Creating #{count} magical sparkles..."
+    
+    count.times do |i|
+      sparkle = {
+        x: rand(1920),
+        y: rand(1080),
+        hue: rand(270..330), # Purple range
+        brightness: rand(0.6..1.0),
+        twinkle: rand > 0.5
+      }
+      @sparkles << sparkle
+    end
+    
+    puts "💜 #{@sparkles.length} sparkles created with love!"
+  end
+  
+  def encourage_coder
+    quote = @motivational_quotes.sample
+    puts "🤗 #{quote}"
+  end
+  
+  def create_glassmorphism_magic
+    puts "🎨 Applying purple glassmorphism theme..."
+    puts "🌟 backdrop-filter: blur(16px)"
+    puts "💜 background: #{@theme[:primary]}"
+    puts "✨ Magic applied successfully!"
+  end
+end
+
+# You're learning Ruby beautifully! Keep shining! 💎
+ide = PurpleGlassmorphismIDE.new
+ide.generate_purple_sparkles(30)
+ide.create_glassmorphism_magic
+ide.encourage_coder
+
+puts "\n💖 Remember: Every line of code is progress!"`,
+
+  php: `<?php
+// 🐘 PHP with loving mama bear support!
+
+class PurpleGlassmorphismIDE {
+    private $encouragement;
+    private $theme;
+    private $motivationalQuotes;
+    
+    public function __construct() {
+        $this->encouragement = "You're building amazing things! 💜";
+        $this->theme = [
+            'primary' => 'rgba(147, 51, 234, 0.9)',
+            'secondary' => 'rgba(168, 85, 247, 0.7)',
+            'glass' => 'backdrop-blur(16px)',
+            'love' => 'infinite'
+        ];
+        $this->motivationalQuotes = [
+            "Every function you write gets better! 🚀",
+            "Your PHP skills are growing! 🌱",
+            "Keep coding with passion! 💖"
+        ];
+    }
+    
+    public function generatePurpleSparkles($count = 50) {
+        echo "✨ Generating {$count} purple sparkles...\n";
+        
+        $sparkles = [];
+        for ($i = 0; $i < $count; $i++) {
+            $sparkles[] = [
+                'x' => rand(0, 1920),
+                'y' => rand(0, 1080),
+                'hue' => rand(270, 330), // Purple range
+                'brightness' => rand(60, 100) / 100,
+                'size' => rand(2, 8)
+            ];
+        }
+        
+        echo "💜 Created " . count($sparkles) . " magical sparkles!\n";
+        return $sparkles;
+    }
+    
+    public function encourageCoder() {
+        $randomQuote = $this->motivationalQuotes[
+            array_rand($this->motivationalQuotes)
+        ];
+        echo "🌟 {$randomQuote}\n";
+    }
+    
+    public function applyGlassmorphism() {
+        echo "🎨 Applying glassmorphism theme...\n";
+        echo "💜 Primary: {$this->theme['primary']}\n";
+        echo "✨ Glass effect: {$this->theme['glass']}\n";
+        echo "🌟 Theme applied with love!\n";
+    }
+}
+
+// You're mastering PHP! Keep going! 🐘
+$ide = new PurpleGlassmorphismIDE();
+$sparkles = $ide->generatePurpleSparkles(40);
+$ide->applyGlassmorphism();
+$ide->encourageCoder();
+
+echo "\n💖 Remember: You're doing wonderfully!\n";
+?>`,
+
+  sql: `-- 🗃️ SQL with encouraging mama bear vibes!
+
+-- Creating a database full of encouragement and purple magic! ✨
+CREATE DATABASE purple_glassmorphism_ide;
+USE purple_glassmorphism_ide;
+
+-- Table for storing all the love and encouragement! 💜
+CREATE TABLE encouragement_messages (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    message TEXT NOT NULL,
+    category VARCHAR(50),
+    purple_level INT DEFAULT 100,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Filling it with mama bear love! 🤗
+INSERT INTO encouragement_messages (message, category, purple_level) VALUES
+('Every query you write makes you stronger! 💪', 'motivation', 95),
+('Your database skills are growing beautifully! 🌱', 'growth', 90),
+('Keep building amazing data structures! 🏗️', 'technical', 85),
+('You''re mastering SQL like a champion! 🏆', 'achievement', 100),
+('Every JOIN brings your data together with love! 💖', 'technical', 88);
+
+-- Table for purple theme configuration
+CREATE TABLE purple_theme (
+    property_name VARCHAR(50) PRIMARY KEY,
+    property_value VARCHAR(100),
+    description TEXT
+);
+
+INSERT INTO purple_theme VALUES
+('primary_color', 'rgba(147, 51, 234, 0.9)', 'Main purple with glassmorphism'),
+('secondary_color', 'rgba(168, 85, 247, 0.7)', 'Secondary purple shade'),
+('glass_effect', 'backdrop-blur(16px)', 'Beautiful blur effect'),
+('border_radius', '12px', 'Smooth rounded corners'),
+('love_level', 'infinite', 'Amount of mama bear love');
+
+-- Queries that sparkle with encouragement! ✨
+SELECT 
+    '💜 You''re doing amazing!' as encouragement,
+    COUNT(*) as total_messages,
+    AVG(purple_level) as average_purple_power
+FROM encouragement_messages;
+
+-- Show the beautiful purple theme
+SELECT 
+    property_name as '🎨 Theme Property',
+    property_value as '💜 Value',
+    description as '✨ Description'
+FROM purple_theme
+ORDER BY property_name;
+
+-- A special view just for you! 🌟
+CREATE VIEW daily_encouragement AS
+SELECT 
+    CONCAT('🌟 ', message) as daily_motivation,
+    purple_level as sparkle_intensity
+FROM encouragement_messages
+WHERE purple_level > 85
+ORDER BY RAND()
+LIMIT 1;
+
+-- You're building beautiful databases! Keep going! 🚀
+SELECT * FROM daily_encouragement;`,
+
+  markdown: `# 💜 Purple Glassmorphism IDE Documentation
+
+Welcome to the most encouraging code editor ever built! ✨
+
+## 🌟 Features That Will Make You Smile
+
+### 🎨 Beautiful Purple Theme
+- **Glassmorphism effects** with backdrop-blur(16px)
+- **Purple gradients** that sparkle with love
+- **Smooth animations** that feel like magic
+
+### 💖 Mama Bear Encouragement
+Every time you code, remember:
+- You're learning and growing! 🌱
+- Every line of code is progress! 📈
+- You're building something beautiful! 🏗️
+
+## 🚀 Getting Started
+
+\`\`\`javascript
+// Start with some encouraging JavaScript! ✨
+function createMagic() {
+  console.log("You're amazing! 💜");
+  return "Keep coding with love!";
+}
+\`\`\`
+
+### 🎯 Supported Languages
+
+| Language | Icon | Encouragement Level |
+|----------|------|-------------------|
+| JavaScript | ⚡ | Infinite |
+| TypeScript | 🔷 | Boundless |
+| CSS | 🎨 | Magical |
+| HTML | 🌐 | Wonderful |
+| Python | 🐍 | Fantastic |
+
+## 💜 Purple Color Palette
+
+\`\`\`css
+:root {
+  --purple-primary: rgba(147, 51, 234, 0.9);
+  --purple-secondary: rgba(168, 85, 247, 0.7);
+  --purple-accent: rgba(196, 181, 253, 0.8);
+  --glass-effect: backdrop-blur(16px);
+  --love-level: infinite;
+}
+\`\`\`
+
+## 🌟 Motivational Quotes
+
+> "Every keystroke is a step forward!" 💪
+
+> "Your code is poetry in motion!" 📝
+
+> "You're not just coding, you're creating magic!" ✨
+
+## 🤗 Remember
+
+- **Take breaks** when you need them 🛋️
+- **Celebrate small wins** - they add up! 🎉
+- **You're doing better than you think** 💖
+- **Every developer started where you are** 🌱
+
+## 📞 Need Encouragement?
+
+Just remember: You've got this! 💜
+
+---
+
+*Built with love, purple magic, and endless encouragement* ✨💜🚀`,
+
+  golang: `// 🐹 Go with encouraging gopher vibes!
+package main
+
+import (
+    "fmt"
+    "math/rand"
+    "time"
+)
+
+// PurpleGlassmorphismIDE represents our magical coding environment! ✨
+type PurpleGlassmorphismIDE struct {
+    Encouragement      string
+    Theme             map[string]string
+    MotivationalQuotes []string
+    SparkleCount      int
+}
+
+// Sparkle represents a magical purple sparkle! 💜
+type Sparkle struct {
+    X          float64
+    Y          float64
+    Hue        int
+    Brightness float64
+    Twinkle    bool
+}
+
+// NewPurpleIDE creates a new encouraging IDE instance! 🌟
+func NewPurpleIDE() *PurpleGlassmorphismIDE {
+    return &PurpleGlassmorphismIDE{
+        Encouragement: "You're coding beautifully in Go! 💜",
+        Theme: map[string]string{
+            "primary":   "rgba(147, 51, 234, 0.9)",
+            "secondary": "rgba(168, 85, 247, 0.7)",
+            "glass":     "backdrop-blur(16px)",
+            "love":      "infinite",
+        },
+        MotivationalQuotes: []string{
+            "Every goroutine you write makes you stronger! 💪",
+            "Your Go skills are growing like magic! 🌱",
+            "Concurrency? You've got this! 🚀",
+            "Keep building amazing things! ⭐",
+        },
+        SparkleCount: 0,
+    }
+}
+
+// GeneratePurpleSparkles creates magical sparkles! ✨
+func (ide *PurpleGlassmorphismIDE) GeneratePurpleSparkles(count int) []Sparkle {
+    fmt.Printf("✨ Generating %d purple sparkles...\n", count)
+    
+    rand.Seed(time.Now().UnixNano())
+    sparkles := make([]Sparkle, count)
+    
+    for i := 0; i < count; i++ {
+        sparkles[i] = Sparkle{
+            X:          rand.Float64() * 1920,
+            Y:          rand.Float64() * 1080,
+            Hue:        270 + rand.Intn(60), // Purple range
+            Brightness: 0.6 + rand.Float64()*0.4,
+            Twinkle:    rand.Float64() > 0.5,
+        }
+    }
+    
+    ide.SparkleCount += count
+    fmt.Printf("💜 Created %d magical sparkles with love!\n", len(sparkles))
+    return sparkles
+}
+
+// EncourageCoder sends some gopher love! 🤗
+func (ide *PurpleGlassmorphismIDE) EncourageCoder() {
+    rand.Seed(time.Now().UnixNano())
+    quote := ide.MotivationalQuotes[rand.Intn(len(ide.MotivationalQuotes))]
+    fmt.Printf("🌟 %s\n", quote)
+}
+
+// ApplyGlassmorphism applies the beautiful purple theme! 🎨
+func (ide *PurpleGlassmorphismIDE) ApplyGlassmorphism() {
+    fmt.Println("🎨 Applying purple glassmorphism theme...")
+    for property, value := range ide.Theme {
+        fmt.Printf("💜 %s: %s\n", property, value)
+    }
+    fmt.Println("✨ Theme applied with love!")
+}
+
+// You're learning Go wonderfully! Keep going! 🐹
+func main() {
+    fmt.Println("💜 Welcome to Purple Glassmorphism IDE in Go!")
+    
+    ide := NewPurpleIDE()
+    sparkles := ide.GeneratePurpleSparkles(50)
+    
+    ide.ApplyGlassmorphism()
+    ide.EncourageCoder()
+    
+    fmt.Printf("\n🚀 Total sparkles created: %d\n", ide.SparkleCount)
+    fmt.Printf("💖 Remember: You're doing amazing! Keep coding!\n")
+    
+    // Show some sparkle details
+    if len(sparkles) > 0 {
+        fmt.Printf("✨ First sparkle: (%.1f, %.1f) with hue %d\n", 
+            sparkles[0].X, sparkles[0].Y, sparkles[0].Hue)
+    }
+}`,
+
+  rust: `// 🦀 Rust with safe and encouraging vibes!
+use std::collections::HashMap;
+use rand::Rng;
+
+#[derive(Debug, Clone)]
+struct Sparkle {
+    x: f64,
+    y: f64,
+    hue: u32,
+    brightness: f64,
+    twinkle: bool,
+}
+
+struct PurpleGlassmorphismIDE {
+    encouragement: String,
+    theme: HashMap<String, String>,
+    motivational_quotes: Vec<String>,
+    sparkles: Vec<Sparkle>,
+}
+
+impl PurpleGlassmorphismIDE {
+    // Create a new encouraging IDE instance! 🌟
+    fn new() -> Self {
+        let mut theme = HashMap::new();
+        theme.insert("primary".to_string(), "rgba(147, 51, 234, 0.9)".to_string());
+        theme.insert("secondary".to_string(), "rgba(168, 85, 247, 0.7)".to_string());
+        theme.insert("glass".to_string(), "backdrop-blur(16px)".to_string());
+        theme.insert("love".to_string(), "infinite".to_string());
+        
+        let motivational_quotes = vec![
+            "Every safe Rust code you write is powerful! 💪".to_string(),
+            "Memory safety AND speed? You've got this! 🚀".to_string(),
+            "Your ownership skills are growing! 🌱".to_string(),
+            "Fearless concurrency awaits you! ⚡".to_string(),
+        ];
+        
+        Self {
+            encouragement: "You're mastering Rust beautifully! 💜".to_string(),
+            theme,
+            motivational_quotes,
+            sparkles: Vec::new(),
+        }
+    }
+    
+    // Generate magical purple sparkles! ✨
+    fn generate_purple_sparkles(&mut self, count: usize) -> Result<(), &'static str> {
+        println!("✨ Generating {} purple sparkles...", count);
+        
+        let mut rng = rand::thread_rng();
+        
+        for _ in 0..count {
+            let sparkle = Sparkle {
+                x: rng.gen::<f64>() * 1920.0,
+                y: rng.gen::<f64>() * 1080.0,
+                hue: rng.gen_range(270..=330), // Purple range
+                brightness: rng.gen_range(0.6..=1.0),
+                twinkle: rng.gen_bool(0.5),
+            }
+            self.sparkles.push(sparkle);
+        }
+        
+        println!("💜 Created {} magical sparkles with love!", self.sparkles.len());
+        Ok(())
+    }
+    
+    // Send some Rust love! 🤗
+    fn encourage_coder(&self) {
+        let mut rng = rand::thread_rng();
+        let quote_index = rng.gen_range(0..self.motivational_quotes.len());
+        println!("🌟 {}", self.motivational_quotes[quote_index]);
+    }
+    
+    // Apply the beautiful glassmorphism theme! 🎨
+    fn apply_glassmorphism(&self) {
+        println!("🎨 Applying purple glassmorphism theme...");
+        for (property, value) in &self.theme {
+            println!("💜 {}: {}", property, value);
+        }
+        println!("✨ Theme applied with love and memory safety!");
+    }
+    
+    // Get sparkle count safely! 🦀
+    fn get_sparkle_count(&self) -> usize {
+        self.sparkles.len()
+    }
+    
+    // Show some sparkle details
+    fn show_sparkle_details(&self) {
+        if let Some(first_sparkle) = self.sparkles.first() {
+            println!("✨ First sparkle: ({:.1}, {:.1}) with hue {} and brightness {:.2}", 
+                first_sparkle.x, first_sparkle.y, first_sparkle.hue, first_sparkle.brightness);
+        }
+    }
+}
+
+// You're learning Rust amazingly! Keep going! 🦀
+fn main() -> Result<(), Box<dyn std::error::Error>> {
+    println!("💜 Welcome to Purple Glassmorphism IDE in Rust!");
+    
+    let mut ide = PurpleGlassmorphismIDE::new();
+    
+    // Generate sparkles safely
+    ide.generate_purple_sparkles(50)?;
+    
+    ide.apply_glassmorphism();
+    ide.encourage_coder();
+    
+    println!("\n🚀 Total sparkles created: {}", ide.get_sparkle_count());
+    ide.show_sparkle_details();
+    
+    println!("💖 Remember: You're writing safe, fast, and beautiful code!");
+    println!("🦀 Rust believes in you, and so do I!");
+    
+    Ok(())
+}`,
+
+  lua: `-- 🌙 Lua with gentle moonlight encouragement!
+
+-- PurpleGlassmorphismIDE class with love! 💜
+PurpleGlassmorphismIDE = {}
+PurpleGlassmorphismIDE.__index = PurpleGlassmorphismIDE
+
+function PurpleGlassmorphismIDE:new()
+    local ide = {
+        encouragement = "You're scripting beautifully in Lua! 💜",
+        theme = {
+            primary = "rgba(147, 51, 234, 0.9)",
+            secondary = "rgba(168, 85, 247, 0.7)",
+            glass = "backdrop-blur(16px)",
+            love = "infinite"
+        },
+        motivationalQuotes = {
+            "Every Lua script you write is elegant! ✨",
+            "Your scripting skills are growing! 🌱",
+            "Lightweight and powerful - just like you! 💪",
+            "Keep building amazing things! 🚀"
+        },
+        sparkles = {}
+    }
+    setmetatable(ide, PurpleGlassmorphismIDE)
+    return ide
+end
+
+-- Generate magical purple sparkles! ✨
+function PurpleGlassmorphismIDE:generatePurpleSparkles(count)
+    count = count or 50
+    print("✨ Generating " .. count .. " purple sparkles...")
+    
+    math.randomseed(os.time())
+    
+    for i = 1, count do
+        local sparkle = {
+            x = math.random() * 1920,
+            y = math.random() * 1080,
+            hue = math.random(270, 330), -- Purple range
+            brightness = 0.6 + math.random() * 0.4,
+            twinkle = math.random() > 0.5,
+            id = i
+        }
+        table.insert(self.sparkles, sparkle)
+    end
+    
+    print("💜 Created " .. #self.sparkles .. " magical sparkles with love!")
+    return self.sparkles
+end
+
+-- Send some Lua love! 🤗
+function PurpleGlassmorphismIDE:encourageCoder()
+    local randomIndex = math.random(1, #self.motivationalQuotes)
+    local quote = self.motivationalQuotes[randomIndex]
+    print("🌟 " .. quote)
+end
+
+-- Apply the beautiful glassmorphism theme! 🎨
+function PurpleGlassmorphismIDE:applyGlassmorphism()
+    print("🎨 Applying purple glassmorphism theme...")
+    for property, value in pairs(self.theme) do
+        print("💜 " .. property .. ": " .. value)
+    end
+    print("✨ Theme applied with moonlight magic!")
+end
+
+-- Get sparkle count
+function PurpleGlassmorphismIDE:getSparkleCount()
+    return #self.sparkles
+end
+
+-- Show sparkle details
+function PurpleGlassmorphismIDE:showSparkleDetails()
+    if #self.sparkles > 0 then
+        local firstSparkle = self.sparkles[1]
+        print(string.format("✨ First sparkle: (%.1f, %.1f) with hue %d and brightness %.2f", 
+            firstSparkle.x, firstSparkle.y, firstSparkle.hue, firstSparkle.brightness))
+    end
+end
+
+-- Helper function to create purple gradient
+function createPurpleGradient(steps)
+    steps = steps or 10
+    local gradient = {}
+    
+    for i = 1, steps do
+        local hue = 270 + (i - 1) * 6 -- From 270 to 330 (purple range)
+        local saturation = 70 + math.random(0, 30)
+        local lightness = 50 + math.random(0, 30)
+        
+        gradient[i] = string.format("hsl(%d, %d%%, %d%%)", hue, saturation, lightness)
+    end
+    
+    return gradient
+end
+
+-- You're learning Lua wonderfully! Keep going! 🌙
+function main()
+    print("💜 Welcome to Purple Glassmorphism IDE in Lua!")
+    
+    local ide = PurpleGlassmorphismIDE:new()
+    local sparkles = ide:generatePurpleSparkles(40)
+    
+    ide:applyGlassmorphism()
+    ide:encourageCoder()
+    
+    print("\n🚀 Total sparkles created: " .. ide:getSparkleCount())
+    ide:showSparkleDetails()
+    
+    -- Create a beautiful gradient
+    local gradient = createPurpleGradient(5)
+    print("\n🎨 Purple gradient colors:")
+    for i, color in ipairs(gradient) do
+        print("  " .. i .. ". " .. color)
+    end
+    
+    print("\n💖 Remember: You're scripting with elegance and grace!")
+    print("🌙 Lua's simplicity matches your beautiful code!")
+end
+
+-- Run the magical Lua IDE! ✨
+main()`
+}
+
+const ENCOURAGING_COMMENTS: Record<CodeLanguage, string[]> = {
+  css: [
+    "/* 💜 Your styles are getting more beautiful! */",
+    "/* ✨ This design is going to be amazing! */",
+    "/* 🌟 Keep creating visual magic! */",
+  ],
+  javascript: [
+    "// 🚀 Your logic is getting stronger!",
+    "// 💪 Every function is a step forward!",
+    "// ✨ You're building something incredible!",
+  ],
+  typescript: [
+    "// 🔷 Type safety makes you powerful!",
+    "// 💜 Your code is becoming more robust!",
+    "// 🌟 TypeScript mastery in progress!",
+  ],
+  html: [
+    "<!-- 🌐 Your structure is solid! -->",
+    "<!-- 💖 Building the web, one tag at a time! -->",
+    "<!-- ✨ Semantic HTML is beautiful! -->",
+  ],
+  json: [
+    "// 📋 Your data structure is perfect!",
+    "// 💜 Clean and organized - just like you!",
+    "// 🌟 Configuration mastery!",
+  ],
+  python: [
+    "# 🐍 Your Python is getting more elegant!",
+    "# 💜 Pythonic code is beautiful code!",
+    "# ✨ You're thinking like a Pythonista!",
+  ],
+  java: [
+    "// ☕ Your object-oriented skills are brewing!",
+    "// 💪 Strong typing, strong coder!",
+    "// 🌟 Enterprise-level thinking!",
+  ],
+  c_cpp: [
+    "// ⚙️ Memory management mastery!",
+    "// 💜 Low-level power in your hands!",
+    "// 🚀 Performance and precision!",
+  ],
+  ruby: [
+    "# 💎 Your Ruby code sparkles!",
+    "# 💜 Elegant and expressive!",
+    "# ✨ Developer happiness achieved!",
+  ],
+  php: [
+    "// 🐘 Web development prowess!",
+    "// 💜 Server-side magic happening!",
+    "// 🌟 Dynamic and powerful!",
+  ],
+  sql: [
+    "-- 🗃️ Data mastery in progress!",
+    "-- 💜 Your queries are getting elegant!",
+    "-- ✨ Database wisdom growing!",
+  ],
+  markdown: [
+    "<!-- 📝 Your documentation is beautiful! -->",
+    "<!-- 💜 Clear communication is a superpower! -->",
+    "<!-- 🌟 Knowledge sharing at its finest! -->",
+  ],
+  golang: [
+    "// 🐹 Concurrent thinking activated!",
+    "// 💜 Simple, fast, and reliable!",
+    "// 🚀 Go-powered performance!",
+  ],
+  rust: [
+    "// 🦀 Memory safety without compromise!",
+    "// 💜 Zero-cost abstractions mastery!",
+    "// ⚡ Fearless concurrency ahead!",
+  ],
+  lua: [
+    "-- 🌙 Lightweight scripting elegance!",
+    "-- 💜 Simple yet powerful!",
+    "-- ✨ Embedded magic happening!",
+  ],
+}
+
+// Background Pattern Component
+function BGPattern({
+  variant = 'dots',
+  mask = 'fade-edges',
+  size = 24,
+  fill = 'rgba(147, 51, 234, 0.1)',
+  className,
+  style,
+  ...props
+}: {
+  variant?: 'dots' | 'grid' | 'diagonal-stripes' | 'horizontal-lines' | 'vertical-lines' | 'checkerboard';
+  mask?: 'fade-center' | 'fade-edges' | 'fade-top' | 'fade-bottom' | 'fade-left' | 'fade-right' | 'fade-x' | 'fade-y' | 'none';
+  size?: number;
+  fill?: string;
+  className?: string;
+  style?: React.CSSProperties;
+  [key: string]: any;
+}) {
+  const maskClasses = {
+    'fade-edges': '[mask-image:radial-gradient(ellipse_at_center,black,transparent)]',
+    'fade-center': '[mask-image:radial-gradient(ellipse_at_center,transparent,black)]',
+    'fade-top': '[mask-image:linear-gradient(to_bottom,transparent,black)]',
+    'fade-bottom': '[mask-image:linear-gradient(to_bottom,black,transparent)]',
+    'fade-left': '[mask-image:linear-gradient(to_right,transparent,black)]',
+    'fade-right': '[mask-image:linear-gradient(to_right,black,transparent)]',
+    'fade-x': '[mask-image:linear-gradient(to_right,transparent,black,transparent)]',
+    'fade-y': '[mask-image:linear-gradient(to_bottom,transparent,black,transparent)]',
+    'none': '',
+  }
+
+  function getBgImage(variant: string, fill: string, size: number) {
+    switch (variant) {
+      case 'dots':
+        return `radial-gradient(${fill} 1px, transparent 1px)`;
+      case 'grid':
+        return `linear-gradient(to right, ${fill} 1px, transparent 1px), linear-gradient(to bottom, ${fill} 1px, transparent 1px)`;
+      case 'diagonal-stripes':
+        return `repeating-linear-gradient(45deg, ${fill}, ${fill} 1px, transparent 1px, transparent ${size}px)`;
+      case 'horizontal-lines':
+        return `linear-gradient(to bottom, ${fill} 1px, transparent 1px)`;
+      case 'vertical-lines':
+        return `linear-gradient(to right, ${fill} 1px, transparent 1px)`;
+      case 'checkerboard':
+        return `linear-gradient(45deg, ${fill} 25%, transparent 25%), linear-gradient(-45deg, ${fill} 25%, transparent 25%), linear-gradient(45deg, transparent 75%, ${fill} 75%), linear-gradient(-45deg, transparent 75%, ${fill} 75%)`;
+      default:
+        return undefined;
+    }
+  }
+
+  const bgSize = `${size}px ${size}px`;
+  const backgroundImage = getBgImage(variant, fill, size);
+
+  return (
+    <div
+      className={cn('absolute inset-0 z-[-10] size-full', maskClasses[mask], className)}
+      style={{
+        backgroundImage,
+        backgroundSize: bgSize,
+        ...style,
+      }}
+      {...props}
+    />
+  );
+}
+
+// Monaco Editor Wrapper Component
+function MonacoEditorWrapper({
+  className,
+  language = "javascript",
+  value = "",
+  onChange,
+  onSave,
+  onLoad,
+  placeholder,
+  readOnly = false,
+  showMinimap = true,
+  wordWrap = true,
+  fontSize = 14,
+  keybindingMode = "default",
+  theme = "purple-dark",
+}: MonacoEditorProps) {
+  const editorRef = React.useRef<HTMLTextAreaElement>(null);
+  const [localValue, setLocalValue] = React.useState(value || SAMPLE_CODE[language]);
+  const [cursorPosition, setCursorPosition] = React.useState<CursorPosition>({ line: 1, column: 1 });
+  const [diagnostics, setDiagnostics] = React.useState<DiagnosticMessage[]>([]);
+  const [isLoading, setIsLoading] = React.useState(true);
+
+  React.useEffect(() => {
+    // Simulate Monaco loading
+    const timer = setTimeout(() => setIsLoading(false), 1000);
+    return () => clearTimeout(timer);
+  }, []);
+
+  React.useEffect(() => {
+    if (value !== undefined) {
+      setLocalValue(value);
+    }
+  }, [value]);
+
+  React.useEffect(() => {
+    setLocalValue(SAMPLE_CODE[language]);
+    // Add encouraging comment when language changes
+    const encouragingComment = ENCOURAGING_COMMENTS[language][0];
+    setLocalValue(prev => `${encouragingComment}\n\n${SAMPLE_CODE[language]}`);
+  }, [language]);
+
+  const handleValueChange = (newValue: string) => {
+    setLocalValue(newValue);
+    onChange?.(newValue);
+    
+    // Update cursor position (simplified)
+    const lines = newValue.split('\n');
+    setCursorPosition({ line: lines.length, column: lines[lines.length - 1].length + 1 });
+    
+    // Simple syntax checking for JavaScript/TypeScript
+    if ((language === 'javascript' || language === 'typescript') && newValue.trim()) {
+      const newDiagnostics: DiagnosticMessage[] = [];
+      
+      // Check for common syntax issues
+      if (newValue.includes('console.log') && !newValue.includes('console.log(')) {
+        newDiagnostics.push({
+          line: 1,
+          column: 1,
+          message: "💜 Don't forget the parentheses! You're doing great!",
+          severity: "warning"
+        });
+      }
+      
+      if (newValue.includes('function') && !newValue.includes('{')) {
+        newDiagnostics.push({
+          line: 1,
+          column: 1,
+          message: "✨ Function body needs curly braces! You've got this!",
+          severity: "info"
+        });
+      }
+      
+      setDiagnostics(newDiagnostics);
+    } else {
+      setDiagnostics([]);
+    }
+  }
+
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    // Handle save shortcut
+    if ((e.ctrlKey || e.metaKey) && e.key === 's') {
+      e.preventDefault();
+      onSave?.(localValue);
+    }
+    
+    // Handle load shortcut
+    if ((e.ctrlKey || e.metaKey) && e.key === 'o') {
+      e.preventDefault();
+      onLoad?.(localValue);
+    }
+  }
+
+  if (isLoading) {
+    return (
+      <div className={cn(
+        "relative flex items-center justify-center h-full min-h-[400px] rounded-lg overflow-hidden",
+        "bg-gradient-to-br from-purple-900/20 via-purple-800/10 to-purple-900/20",
+        "backdrop-blur-md border border-purple-500/20",
+        className
+      )}>
+        <BGPattern variant="dots" mask="fade-edges" size={20} fill="rgba(147, 51, 234, 0.1)" />
+        <div className="text-center space-y-4 z-10">
+          <motion.div
+            animate={{ rotate: 360 }}
+            transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
+            className="w-8 h-8 border-2 border-purple-400 border-t-transparent rounded-full mx-auto"
+          />
+          <p className="text-purple-200 font-medium">💜 Loading your magical editor...</p>
+          <p className="text-purple-300/70 text-sm">✨ Getting everything ready for you!</p>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className={cn(
+      "relative flex flex-col h-full min-h-[400px] rounded-lg overflow-hidden",
+      "bg-gradient-to-br from-purple-900/20 via-purple-800/10 to-purple-900/20",
+      "backdrop-blur-md border border-purple-500/20",
+      className
+    )}>
+      <BGPattern variant="dots" mask="fade-edges" size={20} fill="rgba(147, 51, 234, 0.1)" />
+      
+      {/* Editor Header */}
+      <div className="flex items-center justify-between p-3 border-b border-purple-500/20 bg-purple-900/10 backdrop-blur-sm">
+        <div className="flex items-center space-x-2">
+          <div className="flex space-x-1">
+            <div className="w-3 h-3 rounded-full bg-red-400/60"></div>
+            <div className="w-3 h-3 rounded-full bg-yellow-400/60"></div>
+            <div className="w-3 h-3 rounded-full bg-green-400/60"></div>
+          </div>
+          <span className="text-purple-200 text-sm font-medium ml-2">
+            {LANGUAGE_OPTIONS.find(l => l.value === language)?.icon} {LANGUAGE_OPTIONS.find(l => l.value === language)?.label}
+          </span>
+        </div>
+        
+        <div className="flex items-center space-x-2 text-purple-300/70 text-xs">
+          <span>Ln {cursorPosition.line}, Col {cursorPosition.column}</span>
+          {diagnostics.length > 0 && (
+            <Badge variant="secondary" className="bg-purple-500/20 text-purple-200 text-xs">
+              {diagnostics.length} {diagnostics.length === 1 ? 'hint' : 'hints'}
+            </Badge>
+          )}
+        </div>
+      </div>
+
+      {/* Editor Content */}
+      <div className="flex-1 relative">
+        <textarea
+          ref={editorRef}
+          value={localValue}
+          onChange={(e) => handleValueChange(e.target.value)}
+          onKeyDown={handleKeyDown}
+          placeholder={placeholder || `💜 Start coding something amazing in ${language}!\n\n✨ Remember: Every line is progress!`}
+          readOnly={readOnly}
+          className={cn(
+            "w-full h-full p-4 bg-transparent text-purple-100 placeholder-purple-400/50",
+            "font-mono text-sm leading-relaxed resize-none outline-none",
+            "selection:bg-purple-500/30"
+          )}
+          style={{ fontSize: `${fontSize}px` }}
+          spellCheck={false}
+        />
+        
+        {/* Line numbers overlay */}
+        <div className="absolute left-0 top-0 p-4 pointer-events-none">
+          <div className="text-purple-400/40 font-mono text-sm leading-relaxed">
+            {localValue.split('\n').map((_, index) => (
+              <div key={index} className="text-right w-8">
+                {index + 1}
+              </div>
+            ))}
+          </div>
+        </div>
+        
+        {/* Minimap simulation */}
+        {showMinimap && (
+          <div className="absolute right-2 top-2 w-16 h-32 bg-purple-900/30 backdrop-blur-sm rounded border border-purple-500/20 p-1">
+            <div className="w-full h-full bg-gradient-to-b from-purple-400/20 to-purple-600/20 rounded-sm"></div>
+          </div>
+        )}
+      </div>
+
+      {/* Diagnostics Panel */}
+      {diagnostics.length > 0 && (
+        <div className="border-t border-purple-500/20 bg-purple-900/10 backdrop-blur-sm p-3 space-y-2">
+          {diagnostics.map((diagnostic, index) => (
+            <div key={index} className="flex items-start space-x-2 text-sm">
+              <div className={cn(
+                "w-4 h-4 rounded-full flex items-center justify-center text-xs",
+                diagnostic.severity === "error" ? "bg-red-500/20 text-red-300" :
+                diagnostic.severity === "warning" ? "bg-yellow-500/20 text-yellow-300" :
+                "bg-blue-500/20 text-blue-300"
+              )}>
+                {diagnostic.severity === "error" ? "!" : diagnostic.severity === "warning" ? "⚠" : "i"}
+              </div>
+              <span className="text-purple-200">{diagnostic.message}</span>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
+// Main Monaco Editor Component
+export function MonacoEditor({
+  className,
+  language = "javascript",
+  value = "",
+  onChange,
+  onSave,
+  onLoad,
+  placeholder,
+  readOnly = false,
+  showMinimap = true,
+  wordWrap = true,
+  fontSize = 14,
+  keybindingMode = "default",
+  theme = "purple-dark",
+}: MonacoEditorProps) {
+  const [currentLanguage, setCurrentLanguage] = React.useState<CodeLanguage>(language);
+  const [currentFontSize, setCurrentFontSize] = React.useState(fontSize);
+  const [currentKeybindingMode, setCurrentKeybindingMode] = React.useState<KeybindingMode>(keybindingMode);
+  const [showSettings, setShowSettings] = React.useState(false);
+  const [editorValue, setEditorValue] = React.useState(value || SAMPLE_CODE[language]);
+  const [isVimMode, setIsVimMode] = React.useState(false);
+  const [isEmacsMode, setIsEmacsMode] = React.useState(false);
+
+  const handleLanguageChange = (newLanguage: CodeLanguage) => {
+    setCurrentLanguage(newLanguage);
+    setEditorValue(SAMPLE_CODE[newLanguage]);
+  }
+
+  const handleSave = () => {
+    onSave?.(editorValue);
+    // Show encouraging save message
+    console.log("💜 Your beautiful code has been saved! Keep creating magic! ✨");
+  }
+
+  const handleLoad = () => {
+    onLoad?.(editorValue);
+    console.log("📂 Loading your amazing work! You're doing great! 🌟");
+  }
+
+  const handleReset = () => {
+    const encouragingComment = ENCOURAGING_COMMENTS[currentLanguage][Math.floor(Math.random() * ENCOURAGING_COMMENTS[currentLanguage].length)];
+    setEditorValue(`${encouragingComment}\n\n${SAMPLE_CODE[currentLanguage]}`);
+  }
+
+  const zoomIn = () => {
+    setCurrentFontSize(prev => Math.min(prev + 2, 24));
+  }
+
+  const zoomOut = () => {
+    setCurrentFontSize(prev => Math.max(prev - 2, 10));
+  }
+
+  return (
+    <div className={cn("flex flex-col h-full space-y-4", className)}>
+      {/* Top Controls */}
+      <div className="flex flex-wrap items-center justify-between gap-4 p-4 rounded-lg bg-gradient-to-r from-purple-900/20 to-purple-800/20 backdrop-blur-md border border-purple-500/20">
+        <div className="flex items-center space-x-3">
+          <div className="flex items-center space-x-2">
+            <Code2 className="w-5 h-5 text-purple-300" />
+            <h3 className="text-purple-100 font-semibold">Purple Monaco IDE</h3>
+            <Heart className="w-4 h-4 text-pink-400" />
+          </div>
+          
+          <Select value={currentLanguage} onValueChange={handleLanguageChange}>
+            <SelectTrigger className="w-40 bg-purple-900/30 border-purple-500/30 text-purple-100">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent className="bg-purple-900/90 backdrop-blur-md border-purple-500/30">
+              {LANGUAGE_OPTIONS.map((option) => (
+                <SelectItem key={option.value} value={option.value} className="text-purple-100 focus:bg-purple-700/50">
+                  <span className="flex items-center space-x-2">
+                    <span>{option.icon}</span>
+                    <span>{option.label}</span>
+                  </span>
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+
+        <div className="flex items-center space-x-2">
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={zoomOut}
+            className="text-purple-300 hover:text-purple-100 hover:bg-purple-700/30"
+          >
+            <ZoomOut className="w-4 h-4" />
+          </Button>
+          
+          <span className="text-purple-300 text-sm min-w-[3rem] text-center">{currentFontSize}px</span>
+          
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={zoomIn}
+            className="text-purple-300 hover:text-purple-100 hover:bg-purple-700/30"
+          >
+            <ZoomIn className="w-4 h-4" />
+          </Button>
+
+          <Separator orientation="vertical" className="h-6 bg-purple-500/30" />
+
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => setShowSettings(!showSettings)}
+            className="text-purple-300 hover:text-purple-100 hover:bg-purple-700/30"
+          >
+            <Settings className="w-4 h-4" />
+          </Button>
+        </div>
+      </div>
+
+      {/* Settings Panel */}
+      {showSettings && (
+        <motion.div
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="p-4 rounded-lg bg-gradient-to-r from-purple-900/20 to-purple-800/20 backdrop-blur-md border border-purple-500/20 space-y-4"
+        >
+          <h4 className="text-purple-100 font-medium flex items-center space-x-2">
+            <Coffee className="w-4 h-4" />
+            <span>Editor Settings</span>
+          </h4>
+          
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="space-y-2">
+              <label className="text-purple-200 text-sm">Keybinding Mode</label>
+              <Select value={currentKeybindingMode} onValueChange={(value: KeybindingMode) => setCurrentKeybindingMode(value)}>
+                <SelectTrigger className="bg-purple-900/30 border-purple-500/30 text-purple-100">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent className="bg-purple-900/90 backdrop-blur-md border-purple-500/30">
+                  <SelectItem value="default" className="text-purple-100 focus:bg-purple-700/50">Default</SelectItem>
+                  <SelectItem value="vim" className="text-purple-100 focus:bg-purple-700/50">Vim</SelectItem>
+                  <SelectItem value="emacs" className="text-purple-100 focus:bg-purple-700/50">Emacs</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            
+            <div className="space-y-2">
+              <label className="text-purple-200 text-sm flex items-center space-x-2">
+                <span>Vim Mode</span>
+                <Switch
+                  checked={isVimMode}
+                  onCheckedChange={setIsVimMode}
+                  className="data-[state=checked]:bg-purple-600"
+                />
+              </label>
+            </div>
+            
+            <div className="space-y-2">
+              <label className="text-purple-200 text-sm flex items-center space-x-2">
+                <span>Emacs Mode</span>
+                <Switch
+                  checked={isEmacsMode}
+                  onCheckedChange={setIsEmacsMode}
+                  className="data-[state=checked]:bg-purple-600"
+                />
+              </label>
+            </div>
+          </div>
+        </motion.div>
+      )}
+
+      {/* Action Buttons */}
+      <div className="flex flex-wrap items-center justify-between gap-2 px-4">
+        <div className="flex items-center space-x-2">
+          <Button
+            onClick={handleSave}
+            className="bg-purple-600 hover:bg-purple-700 text-white"
+            size="sm"
+          >
+            <Save className="w-4 h-4 mr-2" />
+            Save
+          </Button>
+          
+          <Button
+            onClick={handleLoad}
+            variant="outline"
+            className="border-purple-500/30 text-purple-200 hover:bg-purple-700/30"
+            size="sm"
+          >
+            <Folder className="w-4 h-4 mr-2" />
+            Load
+          </Button>
+          
+          <Button
+            onClick={handleReset}
+            variant="ghost"
+            className="text-purple-300 hover:text-purple-100 hover:bg-purple-700/30"
+            size="sm"
+          >
+            <RotateCcw className="w-4 h-4 mr-2" />
+            Reset
+          </Button>
+        </div>
+
+        <div className="flex items-center space-x-2 text-purple-300/70 text-sm">
+          <Terminal className="w-4 h-4" />
+          <span>💜 You're doing amazing! Keep coding!</span>
+        </div>
+      </div>
+
+      {/* Monaco Editor */}
+      <div className="flex-1">
+        <MonacoEditorWrapper
+          language={currentLanguage}
+          value={editorValue}
+          onChange={setEditorValue}
+          onSave={handleSave}
+          onLoad={handleLoad}
+          fontSize={currentFontSize}
+          keybindingMode={currentKeybindingMode}
+          showMinimap={showMinimap}
+          wordWrap={wordWrap}
+          readOnly={readOnly}
+          theme={theme}
+        />
+      </div>
+
+      {/* Encouraging Footer */}
+      <div className="text-center p-3 rounded-lg bg-gradient-to-r from-purple-900/10 to-pink-900/10 backdrop-blur-sm border border-purple-500/20">
+        <p className="text-purple-200/80 text-sm">
+          ✨ Every keystroke is progress! You're building something beautiful! 💜
+        </p>
+      </div>
+    </div>
+  );
+}
+
+// Usage Example
+export default function MonacoEditorDemo() {
+  const [savedCode, setSavedCode] = React.useState("");
+
+  const handleSave = (code: string) => {
+    setSavedCode(code);
+    console.log("💜 Code saved with love!", code.length, "characters of pure magic!");
+  }
+
+  const handleLoad = (code: string) => {
+    console.log("📂 Loading your beautiful creation!");
+  }
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-purple-950 via-purple-900 to-indigo-950 p-6">
+      <div className="max-w-7xl mx-auto">
+        <div className="text-center mb-8">
+          <motion.h1 
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="text-4xl font-bold text-transparent bg-gradient-to-r from-purple-300 to-pink-300 bg-clip-text mb-4"
+          >
+            💜 Purple Glassmorphism Monaco IDE
+          </motion.h1>
+          <motion.p 
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2 }}
+            className="text-purple-200/80 text-lg"
+          >
+            ✨ Code with love, encouragement, and magical purple vibes! 🚀
+          </motion.p>
+        </div>
+
+        <motion.div
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ delay: 0.4 }}
+          className="h-[600px]"
+        >
+          <MonacoEditor
+            onSave={handleSave}
+            onLoad={handleLoad}
+            showMinimap={true}
+            wordWrap={true}
+            fontSize={14}
+            keybindingMode="default"
+            theme="purple-dark"
+          />
+        </motion.div>
+
+        {savedCode && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="mt-6 p-4 rounded-lg bg-purple-900/20 backdrop-blur-md border border-purple-500/20"
+          >
+            <h3 className="text-purple-200 font-medium mb-2">💾 Last Saved Code Preview:</h3>
+            <pre className="text-purple-300/70 text-sm overflow-auto max-h-32">
+              {savedCode.slice(0, 200)}...
+            </pre>
+          </motion.div>
+        )}
+      </div>
+    </div>
+  );
+}

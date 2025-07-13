@@ -1,0 +1,608 @@
+"use client";
+
+import React, { useState, useEffect, useRef, useCallback } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { 
+  Search, 
+  Replace, 
+  X, 
+  ChevronDown, 
+  ChevronRight, 
+  FileText, 
+  History, 
+  Settings,
+  Regex,
+  CaseSensitive,
+  WholeWord,
+  Filter,
+  Play,
+  Pause,
+  RotateCcw,
+  Coffee
+} from 'lucide-react';
+
+// Utility function for className merging
+const cn = (...classes: (string | undefined | null | false)[]) => classes.filter(Boolean).join(" ");
+
+// Types
+interface SearchResult {
+  file: string;
+  line: number;
+  column: number;
+  content: string;
+  match: string;
+  context: {
+    before: string;
+    after: string;
+  };
+}
+
+interface FileResults {
+  file: string;
+  results: SearchResult[];
+  isExpanded: boolean;
+}
+
+interface SearchOptions {
+  caseSensitive: boolean;
+  wholeWord: boolean;
+  regex: boolean;
+  includePatterns: string[];
+  excludePatterns: string[];
+}
+
+interface SearchHistory {
+  query: string;
+  replaceWith?: string;
+  timestamp: Date;
+  resultCount: number;
+}
+
+// Mock data for demonstration
+const mockSearchResults: FileResults[] = [
+  {
+    file: "src/components/SearchPanel.tsx",
+    isExpanded: true,
+    results: [
+      {
+        file: "src/components/SearchPanel.tsx",
+        line: 42,
+        column: 15,
+        content: "const searchQuery = useState('');",
+        match: "search",
+        context: {
+          before: "const ",
+          after: "Query = useState('');"
+        }
+      },
+      {
+        file: "src/components/SearchPanel.tsx",
+        line: 89,
+        column: 8,
+        content: "  handleSearch(query);",
+        match: "search",
+        context: {
+          before: "  handle",
+          after: "(query);"
+        }
+      }
+    ]
+  },
+  {
+    file: "src/utils/searchHelpers.ts",
+    isExpanded: false,
+    results: [
+      {
+        file: "src/utils/searchHelpers.ts",
+        line: 12,
+        column: 20,
+        content: "export function performSearch(pattern: string) {",
+        match: "search",
+        context: {
+          before: "export function perform",
+          after: "(pattern: string) {"
+        }
+      }
+    ]
+  }
+];
+
+const mockSearchHistory: SearchHistory[] = [
+  { query: "useState", timestamp: new Date(Date.now() - 300000), resultCount: 24 },
+  { query: "interface.*Props", timestamp: new Date(Date.now() - 600000), resultCount: 12 },
+  { query: "console.log", replaceWith: "logger.info", timestamp: new Date(Date.now() - 900000), resultCount: 8 },
+];
+
+// Syntax highlighting for regex patterns
+const highlightRegex = (pattern: string) => {
+  if (!pattern) return pattern;
+  
+  const regexParts = [
+    { regex: /(\[|\]|\(|\)|\{|\})/g, className: "text-purple-400" },
+    { regex: /(\*|\+|\?|\|)/g, className: "text-yellow-400" },
+    { regex: /(\\[a-zA-Z])/g, className: "text-green-400" },
+    { regex: /(\^|\$)/g, className: "text-red-400" },
+  ];
+
+  let highlighted = pattern;
+  regexParts.forEach(({ regex, className }) => {
+    highlighted = highlighted.replace(regex, `<span class="${className}">$1</span>`);
+  });
+
+  return highlighted;
+};
+
+// Main component
+export function GlobalSearchPanel() {
+  const [searchQuery, setSearchQuery] = useState("");
+  const [replaceQuery, setReplaceQuery] = useState("");
+  const [isReplaceMode, setIsReplaceMode] = useState(false);
+  const [searchResults, setSearchResults] = useState<FileResults[]>([]);
+  const [searchHistory, setSearchHistory] = useState<SearchHistory[]>(mockSearchHistory);
+  const [isSearching, setIsSearching] = useState(false);
+  const [showHistory, setShowHistory] = useState(false);
+  const [showAdvanced, setShowAdvanced] = useState(false);
+  const [searchOptions, setSearchOptions] = useState<SearchOptions>({
+    caseSensitive: false,
+    wholeWord: false,
+    regex: false,
+    includePatterns: ["*.ts", "*.tsx", "*.js", "*.jsx"],
+    excludePatterns: ["node_modules", ".git", "dist", "build"]
+  });
+
+  const searchInputRef = useRef<HTMLInputElement>(null);
+  const replaceInputRef = useRef<HTMLInputElement>(null);
+
+  // Keyboard shortcuts
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if ((e.ctrlKey || e.metaKey) && e.key === 'f') {
+        e.preventDefault();
+        setIsReplaceMode(false);
+        searchInputRef.current?.focus();
+      }
+      if ((e.ctrlKey || e.metaKey) && e.key === 'h') {
+        e.preventDefault();
+        setIsReplaceMode(true);
+        searchInputRef.current?.focus();
+      }
+      if (e.key === 'Escape') {
+        setShowHistory(false);
+        setShowAdvanced(false);
+      }
+    };
+
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
+  }, []);
+
+  // Mock search function
+  const performSearch = useCallback(async (query: string) => {
+    if (!query.trim()) {
+      setSearchResults([]);
+      return;
+    }
+
+    setIsSearching(true);
+    
+    // Simulate search delay
+    await new Promise(resolve => setTimeout(resolve, 800));
+    
+    setSearchResults(mockSearchResults);
+    setIsSearching(false);
+
+    // Add to history
+    const historyEntry: SearchHistory = {
+      query,
+      replaceWith: isReplaceMode ? replaceQuery : undefined,
+      timestamp: new Date(),
+      resultCount: mockSearchResults.reduce((acc, file) => acc + file.results.length, 0)
+    };
+    setSearchHistory(prev => [historyEntry, ...prev.slice(0, 9)]);
+  }, [isReplaceMode, replaceQuery]);
+
+  const toggleFileExpansion = (fileIndex: number) => {
+    setSearchResults(prev => prev.map((file, index) => 
+      index === fileIndex ? { ...file, isExpanded: !file.isExpanded } : file
+    ));
+  };
+
+  const handleHistorySelect = (historyItem: SearchHistory) => {
+    setSearchQuery(historyItem.query);
+    if (historyItem.replaceWith) {
+      setReplaceQuery(historyItem.replaceWith);
+      setIsReplaceMode(true);
+    }
+    setShowHistory(false);
+    performSearch(historyItem.query);
+  };
+
+  const totalResults = searchResults.reduce((acc, file) => acc + file.results.length, 0);
+
+  return (
+    <div className="w-full max-w-4xl mx-auto bg-gradient-to-br from-purple-900/20 via-indigo-900/20 to-pink-900/20 backdrop-blur-xl border border-purple-500/30 rounded-2xl shadow-2xl overflow-hidden">
+      {/* Header */}
+      <div className="bg-gradient-to-r from-purple-600/20 to-indigo-600/20 backdrop-blur-sm border-b border-purple-500/30 p-4">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="p-2 bg-purple-500/20 rounded-lg">
+              <Search className="w-5 h-5 text-purple-300" />
+            </div>
+            <h2 className="text-xl font-semibold text-white">Global Search</h2>
+          </div>
+          <div className="flex items-center gap-2">
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              onClick={() => setShowAdvanced(!showAdvanced)}
+              className="p-2 bg-purple-500/20 hover:bg-purple-500/30 rounded-lg transition-colors"
+            >
+              <Settings className="w-4 h-4 text-purple-300" />
+            </motion.button>
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              onClick={() => setIsReplaceMode(!isReplaceMode)}
+              className={cn(
+                "p-2 rounded-lg transition-colors",
+                isReplaceMode 
+                  ? "bg-pink-500/30 text-pink-300" 
+                  : "bg-purple-500/20 hover:bg-purple-500/30 text-purple-300"
+              )}
+            >
+              <Replace className="w-4 h-4" />
+            </motion.button>
+          </div>
+        </div>
+      </div>
+
+      {/* Search Input Section */}
+      <div className="p-6 space-y-4">
+        {/* Main Search Input */}
+        <div className="relative">
+          <div className="flex items-center gap-2">
+            <div className="relative flex-1">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-purple-400" />
+              <input
+                ref={searchInputRef}
+                type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    performSearch(searchQuery);
+                  }
+                }}
+                placeholder="Search across all files..."
+                className={cn(
+                  "w-full pl-10 pr-4 py-3 bg-black/30 border rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 transition-all",
+                  searchOptions.regex 
+                    ? "border-green-500/50 focus:ring-green-500/50 font-mono" 
+                    : "border-purple-500/50 focus:ring-purple-500/50"
+                )}
+                style={searchOptions.regex ? {
+                  fontFamily: 'Monaco, "Cascadia Code", "Roboto Mono", monospace'
+                } : {}}
+              />
+              {searchOptions.regex && searchQuery && (
+                <div 
+                  className="absolute left-10 top-1/2 transform -translate-y-1/2 pointer-events-none text-sm"
+                  dangerouslySetInnerHTML={{ __html: highlightRegex(searchQuery) }}
+                />
+              )}
+            </div>
+            
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              onClick={() => setShowHistory(!showHistory)}
+              className="p-3 bg-purple-500/20 hover:bg-purple-500/30 rounded-lg transition-colors relative"
+            >
+              <History className="w-4 h-4 text-purple-300" />
+              {showHistory && (
+                <motion.div
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="absolute top-full right-0 mt-2 w-80 bg-black/90 backdrop-blur-xl border border-purple-500/30 rounded-lg shadow-xl z-50"
+                >
+                  <div className="p-3 border-b border-purple-500/30">
+                    <h3 className="text-sm font-medium text-white">Search History</h3>
+                  </div>
+                  <div className="max-h-60 overflow-y-auto">
+                    {searchHistory.map((item, index) => (
+                      <motion.button
+                        key={index}
+                        whileHover={{ backgroundColor: "rgba(147, 51, 234, 0.1)" }}
+                        onClick={() => handleHistorySelect(item)}
+                        className="w-full p-3 text-left hover:bg-purple-500/10 transition-colors border-b border-purple-500/10 last:border-b-0"
+                      >
+                        <div className="flex items-center justify-between">
+                          <span className="text-white text-sm font-mono">{item.query}</span>
+                          <span className="text-purple-400 text-xs">{item.resultCount} results</span>
+                        </div>
+                        {item.replaceWith && (
+                          <div className="text-pink-400 text-xs mt-1">→ {item.replaceWith}</div>
+                        )}
+                        <div className="text-gray-500 text-xs mt-1">
+                          {item.timestamp.toLocaleTimeString()}
+                        </div>
+                      </motion.button>
+                    ))}
+                  </div>
+                </motion.div>
+              )}
+            </motion.button>
+          </div>
+        </div>
+
+        {/* Replace Input */}
+        <AnimatePresence>
+          {isReplaceMode && (
+            <motion.div
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: "auto" }}
+              exit={{ opacity: 0, height: 0 }}
+              className="relative"
+            >
+              <Replace className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-pink-400" />
+              <input
+                ref={replaceInputRef}
+                type="text"
+                value={replaceQuery}
+                onChange={(e) => setReplaceQuery(e.target.value)}
+                placeholder="Replace with..."
+                className="w-full pl-10 pr-4 py-3 bg-black/30 border border-pink-500/50 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-pink-500/50 transition-all"
+              />
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        {/* Advanced Options */}
+        <AnimatePresence>
+          {showAdvanced && (
+            <motion.div
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: "auto" }}
+              exit={{ opacity: 0, height: 0 }}
+              className="bg-black/20 rounded-lg p-4 space-y-4"
+            >
+              {/* Search Options */}
+              <div className="flex flex-wrap gap-3">
+                <motion.button
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  onClick={() => setSearchOptions(prev => ({ ...prev, caseSensitive: !prev.caseSensitive }))}
+                  className={cn(
+                    "flex items-center gap-2 px-3 py-2 rounded-lg transition-colors",
+                    searchOptions.caseSensitive 
+                      ? "bg-purple-500/30 text-purple-300" 
+                      : "bg-gray-500/20 text-gray-400 hover:bg-gray-500/30"
+                  )}
+                >
+                  <CaseSensitive className="w-4 h-4" />
+                  <span className="text-sm">Case Sensitive</span>
+                </motion.button>
+
+                <motion.button
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  onClick={() => setSearchOptions(prev => ({ ...prev, wholeWord: !prev.wholeWord }))}
+                  className={cn(
+                    "flex items-center gap-2 px-3 py-2 rounded-lg transition-colors",
+                    searchOptions.wholeWord 
+                      ? "bg-purple-500/30 text-purple-300" 
+                      : "bg-gray-500/20 text-gray-400 hover:bg-gray-500/30"
+                  )}
+                >
+                  <WholeWord className="w-4 h-4" />
+                  <span className="text-sm">Whole Word</span>
+                </motion.button>
+
+                <motion.button
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  onClick={() => setSearchOptions(prev => ({ ...prev, regex: !prev.regex }))}
+                  className={cn(
+                    "flex items-center gap-2 px-3 py-2 rounded-lg transition-colors",
+                    searchOptions.regex 
+                      ? "bg-green-500/30 text-green-300" 
+                      : "bg-gray-500/20 text-gray-400 hover:bg-gray-500/30"
+                  )}
+                >
+                  <Regex className="w-4 h-4" />
+                  <span className="text-sm">Regex</span>
+                </motion.button>
+              </div>
+
+              {/* File Filters */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-300 mb-2">Include Files</label>
+                  <div className="flex flex-wrap gap-2">
+                    {searchOptions.includePatterns.map((pattern, index) => (
+                      <span key={index} className="px-2 py-1 bg-green-500/20 text-green-300 rounded text-xs">
+                        {pattern}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-300 mb-2">Exclude Patterns</label>
+                  <div className="flex flex-wrap gap-2">
+                    {searchOptions.excludePatterns.map((pattern, index) => (
+                      <span key={index} className="px-2 py-1 bg-red-500/20 text-red-300 rounded text-xs">
+                        {pattern}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        {/* Search Button */}
+        <motion.button
+          whileHover={{ scale: 1.02 }}
+          whileTap={{ scale: 0.98 }}
+          onClick={() => performSearch(searchQuery)}
+          disabled={!searchQuery.trim() || isSearching}
+          className="w-full py-3 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 disabled:from-gray-600 disabled:to-gray-700 text-white rounded-lg font-medium transition-all disabled:cursor-not-allowed"
+        >
+          {isSearching ? (
+            <div className="flex items-center justify-center gap-2">
+              <motion.div
+                animate={{ rotate: 360 }}
+                transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+                className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full"
+              />
+              Searching...
+            </div>
+          ) : (
+            `Search${isReplaceMode ? ' & Replace' : ''}`
+          )}
+        </motion.button>
+      </div>
+
+      {/* Results Section */}
+      <div className="border-t border-purple-500/30">
+        {/* Results Header */}
+        {(searchResults.length > 0 || isSearching) && (
+          <div className="p-4 bg-purple-900/10 border-b border-purple-500/20">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                {isSearching ? (
+                  <motion.div
+                    animate={{ rotate: 360 }}
+                    transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+                    className="w-4 h-4 border-2 border-purple-400/30 border-t-purple-400 rounded-full"
+                  />
+                ) : (
+                  <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse" />
+                )}
+                <span className="text-white font-medium">
+                  {isSearching ? 'Searching...' : `${totalResults} results in ${searchResults.length} files`}
+                </span>
+              </div>
+              {isReplaceMode && !isSearching && totalResults > 0 && (
+                <motion.button
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  className="px-4 py-2 bg-pink-600 hover:bg-pink-700 text-white rounded-lg text-sm font-medium transition-colors"
+                >
+                  Replace All
+                </motion.button>
+              )}
+            </div>
+          </div>
+        )}
+
+        {/* Results List */}
+        <div className="max-h-96 overflow-y-auto">
+          {searchResults.length === 0 && !isSearching && searchQuery && (
+            <div className="p-8 text-center">
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="space-y-4"
+              >
+                <Coffee className="w-12 h-12 text-purple-400 mx-auto" />
+                <div>
+                  <h3 className="text-lg font-medium text-white mb-2">No results found</h3>
+                  <p className="text-gray-400">
+                    Don't worry mama bear! Try adjusting your search terms or check your filters.
+                  </p>
+                </div>
+              </motion.div>
+            </div>
+          )}
+
+          {searchResults.map((fileResult, fileIndex) => (
+            <motion.div
+              key={fileResult.file}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: fileIndex * 0.1 }}
+              className="border-b border-purple-500/10 last:border-b-0"
+            >
+              {/* File Header */}
+              <motion.button
+                whileHover={{ backgroundColor: "rgba(147, 51, 234, 0.05)" }}
+                onClick={() => toggleFileExpansion(fileIndex)}
+                className="w-full p-4 flex items-center justify-between hover:bg-purple-500/5 transition-colors"
+              >
+                <div className="flex items-center gap-3">
+                  <motion.div
+                    animate={{ rotate: fileResult.isExpanded ? 90 : 0 }}
+                    transition={{ duration: 0.2 }}
+                  >
+                    <ChevronRight className="w-4 h-4 text-purple-400" />
+                  </motion.div>
+                  <FileText className="w-4 h-4 text-purple-400" />
+                  <span className="text-white font-medium">{fileResult.file}</span>
+                </div>
+                <span className="text-purple-400 text-sm">
+                  {fileResult.results.length} result{fileResult.results.length !== 1 ? 's' : ''}
+                </span>
+              </motion.button>
+
+              {/* File Results */}
+              <AnimatePresence>
+                {fileResult.isExpanded && (
+                  <motion.div
+                    initial={{ opacity: 0, height: 0 }}
+                    animate={{ opacity: 1, height: "auto" }}
+                    exit={{ opacity: 0, height: 0 }}
+                    className="bg-black/20"
+                  >
+                    {fileResult.results.map((result, resultIndex) => (
+                      <motion.div
+                        key={resultIndex}
+                        initial={{ opacity: 0, x: -20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ delay: resultIndex * 0.05 }}
+                        className="p-4 border-l-2 border-purple-500/30 ml-8 hover:bg-purple-500/5 transition-colors cursor-pointer"
+                        onClick={() => {
+                          // Mock file opening callback
+                          console.log(`Opening ${result.file} at line ${result.line}`);
+                        }}
+                      >
+                        <div className="flex items-center gap-2 mb-2">
+                          <span className="text-purple-400 text-sm font-mono">
+                            Line {result.line}:{result.column}
+                          </span>
+                        </div>
+                        <div className="font-mono text-sm bg-black/30 rounded p-2 overflow-x-auto">
+                          <span className="text-gray-400">{result.context.before}</span>
+                          <span className="bg-yellow-400/30 text-yellow-300 px-1 rounded">
+                            {result.match}
+                          </span>
+                          <span className="text-gray-400">{result.context.after}</span>
+                        </div>
+                      </motion.div>
+                    ))}
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </motion.div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// Usage example
+export default function DemoOne() {
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-indigo-900 p-8">
+      <div className="max-w-6xl mx-auto">
+        <div className="text-center mb-8">
+          <h1 className="text-4xl font-bold text-white mb-4">Monaco IDE Global Search</h1>
+          <p className="text-gray-300">Search across your entire workspace with advanced filtering and regex support</p>
+        </div>
+        <GlobalSearchPanel />
+      </div>
+    </div>
+  );
+}

@@ -1,0 +1,1084 @@
+"use client";
+
+import * as React from "react";
+import { useState, useEffect, useRef, useCallback, useMemo } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import {
+  Search,
+  FolderIcon,
+  FolderOpenIcon,
+  FileIcon,
+  FileTextIcon,
+  FileCodeIcon,
+  ImageIcon,
+  SettingsIcon,
+  GitBranchIcon,
+  PlusIcon,
+  TrashIcon,
+  CopyIcon,
+  ScissorsIcon,
+  ClipboardIcon,
+  EditIcon,
+  RefreshCwIcon,
+  ChevronRightIcon,
+  ChevronDownIcon,
+  MoreHorizontalIcon,
+  ClockIcon,
+  StarIcon,
+  FilterIcon,
+  SortAscIcon,
+  EyeIcon,
+  DownloadIcon,
+  ShareIcon,
+  InfoIcon,
+  CheckIcon,
+  XIcon,
+  AlertCircleIcon,
+  HomeIcon,
+  ArrowUpIcon,
+  ArrowDownIcon,
+  ArrowLeftIcon,
+  ArrowRightIcon,
+
+} from "lucide-react";
+import { cn } from "@/lib/utils";
+import {
+  ContextMenu,
+  ContextMenuContent,
+  ContextMenuItem,
+  ContextMenuSeparator,
+  ContextMenuTrigger,
+  ContextMenuSub,
+  ContextMenuSubContent,
+  ContextMenuSubTrigger,
+} from "@/components/ui/context-menu";
+import { Input } from "@/components/ui/input";
+import { 
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbSeparator
+} from "@/components/ui/breadcrumb";
+import { 
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger
+} from "@/components/ui/tooltip";
+import { Badge } from "@/components/ui/badge";
+
+// Types
+interface FileSystemItem {
+  id: string;
+  name: string;
+  type: "file" | "folder";
+  path: string;
+  size?: number;
+  lastModified?: Date;
+  gitStatus?: "modified" | "added" | "deleted" | "untracked" | "staged";
+  children?: FileSystemItem[];
+  isExpanded?: boolean;
+  content?: string;
+}
+
+interface FileExplorerProps {
+  files?: FileSystemItem[];
+  onFileSelect?: (file: FileSystemItem) => void;
+  onFileOpen?: (file: FileSystemItem) => void;
+  onFileCreate?: (parentPath: string, name: string, type: "file" | "folder") => void;
+  onFileDelete?: (file: FileSystemItem) => void;
+  onFileRename?: (file: FileSystemItem, newName: string) => void;
+  onFileCopy?: (file: FileSystemItem) => void;
+  onFileCut?: (file: FileSystemItem) => void;
+  onFilePaste?: (targetPath: string) => void;
+  onFileMove?: (file: FileSystemItem, targetPath: string) => void;
+  className?: string;
+}
+
+interface RecentFile {
+  id: string;
+  name: string;
+  path: string;
+  lastAccessed: Date;
+  type: "file" | "folder";
+}
+
+// Utility functions
+const formatFileSize = (bytes: number): string => {
+  if (bytes === 0) return "0 B";
+  const k = 1024;
+  const sizes = ["B", "KB", "MB", "GB"];
+  const i = Math.floor(Math.log(bytes) / Math.log(k));
+  return parseFloat((bytes / Math.pow(k, i)).toFixed(1)) + " " + sizes[i];
+};
+
+const formatDate = (date: Date): string => {
+  return new Intl.DateTimeFormat("en-US", {
+    month: "short",
+    day: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+  }).format(date);
+};
+
+const getFileIcon = (fileName: string, type: "file" | "folder", isExpanded?: boolean) => {
+  if (type === "folder") {
+    return isExpanded ? (
+      <FolderOpenIcon className="h-4 w-4 text-purple-400" />
+    ) : (
+      <FolderIcon className="h-4 w-4 text-purple-400" />
+    );
+  }
+
+  const ext = fileName.split(".").pop()?.toLowerCase();
+  switch (ext) {
+    case "js":
+    case "jsx":
+    case "ts":
+    case "tsx":
+      return <FileCodeIcon className="h-4 w-4 text-yellow-400" />;
+    case "json":
+      return <FileCodeIcon className="h-4 w-4 text-green-400" />;
+    case "css":
+    case "scss":
+    case "sass":
+      return <FileCodeIcon className="h-4 w-4 text-blue-400" />;
+    case "html":
+      return <FileCodeIcon className="h-4 w-4 text-orange-400" />;
+    case "md":
+    case "mdx":
+      return <FileTextIcon className="h-4 w-4 text-gray-400" />;
+    case "png":
+    case "jpg":
+    case "jpeg":
+    case "gif":
+    case "svg":
+      return <ImageIcon className="h-4 w-4 text-pink-400" />;
+    default:
+      return <FileIcon className="h-4 w-4 text-gray-400" />;
+  }
+};
+
+const getGitStatusColor = (status?: string) => {
+  switch (status) {
+    case "modified":
+      return "text-yellow-400";
+    case "added":
+    case "staged":
+      return "text-green-400";
+    case "deleted":
+      return "text-red-400";
+    case "untracked":
+      return "text-blue-400";
+    default:
+      return "";
+  }
+};
+
+// Sample data
+const sampleFiles: FileSystemItem[] = [
+  {
+    id: "1",
+    name: "src",
+    type: "folder",
+    path: "/src",
+    isExpanded: true,
+    children: [
+      {
+        id: "2",
+        name: "components",
+        type: "folder",
+        path: "/src/components",
+        isExpanded: true,
+        children: [
+          {
+            id: "3",
+            name: "Button.tsx",
+            type: "file",
+            path: "/src/components/Button.tsx",
+            size: 2048,
+            lastModified: new Date("2024-01-15T10:30:00"),
+            gitStatus: "modified",
+            content: "// Button component code here",
+          },
+          {
+            id: "4",
+            name: "Input.tsx",
+            type: "file",
+            path: "/src/components/Input.tsx",
+            size: 1536,
+            lastModified: new Date("2024-01-14T15:45:00"),
+            gitStatus: "staged",
+            content: "// Input component code here",
+          },
+        ],
+      },
+      {
+        id: "5",
+        name: "hooks",
+        type: "folder",
+        path: "/src/hooks",
+        children: [
+          {
+            id: "6",
+            name: "useLocalStorage.ts",
+            type: "file",
+            path: "/src/hooks/useLocalStorage.ts",
+            size: 1024,
+            lastModified: new Date("2024-01-13T09:15:00"),
+            gitStatus: "added",
+            content: "// useLocalStorage hook code here",
+          },
+        ],
+      },
+      {
+        id: "7",
+        name: "App.tsx",
+        type: "file",
+        path: "/src/App.tsx",
+        size: 3072,
+        lastModified: new Date("2024-01-16T14:20:00"),
+        gitStatus: "untracked",
+        content: "// App component code here",
+      },
+    ],
+  },
+  {
+    id: "8",
+    name: "public",
+    type: "folder",
+    path: "/public",
+    children: [
+      {
+        id: "9",
+        name: "index.html",
+        type: "file",
+        path: "/public/index.html",
+        size: 512,
+        lastModified: new Date("2024-01-10T12:00:00"),
+        content: "<!DOCTYPE html>...",
+      },
+    ],
+  },
+  {
+    id: "10",
+    name: "package.json",
+    type: "file",
+    path: "/package.json",
+    size: 1024,
+    lastModified: new Date("2024-01-16T16:30:00"),
+    gitStatus: "modified",
+    content: '{\n  "name": "my-app",\n  "version": "1.0.0"\n}',
+  },
+];
+
+const sampleRecentFiles: RecentFile[] = [
+  {
+    id: "3",
+    name: "Button.tsx",
+    path: "/src/components/Button.tsx",
+    lastAccessed: new Date("2024-01-16T16:45:00"),
+    type: "file",
+  },
+  {
+    id: "7",
+    name: "App.tsx",
+    path: "/src/App.tsx",
+    lastAccessed: new Date("2024-01-16T16:30:00"),
+    type: "file",
+  },
+  {
+    id: "10",
+    name: "package.json",
+    path: "/package.json",
+    lastAccessed: new Date("2024-01-16T16:15:00"),
+    type: "file",
+  },
+];
+
+// File Explorer Component
+function FileExplorer({
+  files = sampleFiles,
+  onFileSelect,
+  onFileOpen,
+  onFileCreate,
+  onFileDelete,
+  onFileRename,
+  onFileCopy,
+  onFileCut,
+  onFilePaste,
+  onFileMove,
+  className,
+}: FileExplorerProps) {
+  const [searchTerm, setSearchTerm] = useState("");
+  const [selectedItems, setSelectedItems] = useState<Set<string>>(new Set());
+  const [expandedFolders, setExpandedFolders] = useState<Set<string>>(new Set(["1", "2"]));
+  const [currentPath, setCurrentPath] = useState("/");
+  const [recentFiles] = useState<RecentFile[]>(sampleRecentFiles);
+  const [clipboard, setClipboard] = useState<{ items: FileSystemItem[]; operation: "copy" | "cut" } | null>(null);
+  const [hoveredItem, setHoveredItem] = useState<string | null>(null);
+  const [contextMenuItem, setContextMenuItem] = useState<FileSystemItem | null>(null);
+  const [isRenaming, setIsRenaming] = useState<string | null>(null);
+  const [renameValue, setRenameValue] = useState("");
+  const [draggedItem, setDraggedItem] = useState<FileSystemItem | null>(null);
+  const [dropTarget, setDropTarget] = useState<string | null>(null);
+  const [sortBy, setSortBy] = useState<"name" | "size" | "date">("name");
+  const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
+  const [showHidden, setShowHidden] = useState(false);
+  const [viewMode, setViewMode] = useState<"list" | "grid">("list");
+
+  const fileListRef = useRef<HTMLDivElement>(null);
+  const renameInputRef = useRef<HTMLInputElement>(null);
+
+  // Keyboard navigation
+  const [focusedIndex, setFocusedIndex] = useState(0);
+  const [keyboardMode, setKeyboardMode] = useState(false);
+
+  // Filter and sort files
+  const filteredFiles = useMemo(() => {
+    const filterItems = (items: FileSystemItem[]): FileSystemItem[] => {
+      return items
+        .filter((item) => {
+          if (!showHidden && item.name.startsWith(".")) return false;
+          if (searchTerm) {
+            return item.name.toLowerCase().includes(searchTerm.toLowerCase());
+          }
+          return true;
+        })
+        .sort((a, b) => {
+          let comparison = 0;
+          switch (sortBy) {
+            case "name":
+              comparison = a.name.localeCompare(b.name);
+              break;
+            case "size":
+              comparison = (a.size || 0) - (b.size || 0);
+              break;
+            case "date":
+              comparison = (a.lastModified?.getTime() || 0) - (b.lastModified?.getTime() || 0);
+              break;
+          }
+          return sortOrder === "asc" ? comparison : -comparison;
+        })
+        .map((item) => ({
+          ...item,
+          children: item.children ? filterItems(item.children) : undefined,
+        }));
+    };
+    return filterItems(files);
+  }, [files, searchTerm, sortBy, sortOrder, showHidden]);
+
+  // Flatten files for keyboard navigation
+  const flattenedFiles = useMemo(() => {
+    const flatten = (items: FileSystemItem[], level = 0): Array<FileSystemItem & { level: number }> => {
+      const result: Array<FileSystemItem & { level: number }> = [];
+      items.forEach((item) => {
+        result.push({ ...item, level });
+        if (item.type === "folder" && item.children && expandedFolders.has(item.id)) {
+          result.push(...flatten(item.children, level + 1));
+        }
+      });
+      return result;
+    };
+    return flatten(filteredFiles);
+  }, [filteredFiles, expandedFolders]);
+
+  // Handle keyboard events
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (isRenaming) return;
+
+      switch (e.key) {
+        case "ArrowDown":
+          e.preventDefault();
+          setKeyboardMode(true);
+          setFocusedIndex((prev) => Math.min(prev + 1, flattenedFiles.length - 1));
+          break;
+        case "ArrowUp":
+          e.preventDefault();
+          setKeyboardMode(true);
+          setFocusedIndex((prev) => Math.max(prev - 1, 0));
+          break;
+        case "ArrowRight":
+          e.preventDefault();
+          if (flattenedFiles[focusedIndex]?.type === "folder") {
+            setExpandedFolders((prev) => new Set([...prev, flattenedFiles[focusedIndex].id]));
+          }
+          break;
+        case "ArrowLeft":
+          e.preventDefault();
+          if (flattenedFiles[focusedIndex]?.type === "folder") {
+            setExpandedFolders((prev) => {
+              const newSet = new Set(prev);
+              newSet.delete(flattenedFiles[focusedIndex].id);
+              return newSet;
+            });
+          }
+          break;
+        case "Enter":
+          e.preventDefault();
+          if (flattenedFiles[focusedIndex]) {
+            handleItemClick(flattenedFiles[focusedIndex], e as any);
+          }
+          break;
+        case "Delete":
+          e.preventDefault();
+          if (selectedItems.size > 0) {
+            handleDelete();
+          }
+          break;
+        case "F2":
+          e.preventDefault();
+          if (selectedItems.size === 1) {
+            const itemId = Array.from(selectedItems)[0];
+            handleRename(itemId);
+          }
+          break;
+        case "Escape":
+          e.preventDefault();
+          setSelectedItems(new Set());
+          setKeyboardMode(false);
+          break;
+      }
+
+      // Ctrl/Cmd shortcuts
+      if (e.ctrlKey || e.metaKey) {
+        switch (e.key) {
+          case "a":
+            e.preventDefault();
+            setSelectedItems(new Set(flattenedFiles.map((f) => f.id)));
+            break;
+          case "c":
+            e.preventDefault();
+            handleCopy();
+            break;
+          case "x":
+            e.preventDefault();
+            handleCut();
+            break;
+          case "v":
+            e.preventDefault();
+            handlePaste();
+            break;
+          case "f":
+            e.preventDefault();
+            // Focus search input
+            break;
+        }
+      }
+    };
+
+    document.addEventListener("keydown", handleKeyDown);
+    return () => document.removeEventListener("keydown", handleKeyDown);
+  }, [focusedIndex, flattenedFiles, selectedItems, isRenaming]);
+
+  // Auto-focus rename input
+  useEffect(() => {
+    if (isRenaming && renameInputRef.current) {
+      renameInputRef.current.focus();
+      renameInputRef.current.select();
+    }
+  }, [isRenaming]);
+
+  const handleItemClick = (item: FileSystemItem, e: React.MouseEvent) => {
+    setKeyboardMode(false);
+
+    if (e.ctrlKey || e.metaKey) {
+      // Multi-select
+      setSelectedItems((prev) => {
+        const newSet = new Set(prev);
+        if (newSet.has(item.id)) {
+          newSet.delete(item.id);
+        } else {
+          newSet.add(item.id);
+        }
+        return newSet;
+      });
+    } else if (e.shiftKey && selectedItems.size > 0) {
+      // Range select
+      const lastSelected = Array.from(selectedItems)[selectedItems.size - 1];
+      const lastIndex = flattenedFiles.findIndex((f) => f.id === lastSelected);
+      const currentIndex = flattenedFiles.findIndex((f) => f.id === item.id);
+      const start = Math.min(lastIndex, currentIndex);
+      const end = Math.max(lastIndex, currentIndex);
+      const rangeIds = flattenedFiles.slice(start, end + 1).map((f) => f.id);
+      setSelectedItems(new Set(rangeIds));
+    } else {
+      // Single select
+      setSelectedItems(new Set([item.id]));
+      onFileSelect?.(item);
+
+      if (item.type === "folder") {
+        setExpandedFolders((prev) => {
+          const newSet = new Set(prev);
+          if (newSet.has(item.id)) {
+            newSet.delete(item.id);
+          } else {
+            newSet.add(item.id);
+          }
+          return newSet;
+        });
+      }
+    }
+  };
+
+  const handleItemDoubleClick = (item: FileSystemItem) => {
+    if (item.type === "file") {
+      onFileOpen?.(item);
+    }
+  };
+
+  const handleContextMenu = (item: FileSystemItem) => {
+    setContextMenuItem(item);
+    if (!selectedItems.has(item.id)) {
+      setSelectedItems(new Set([item.id]));
+    }
+  };
+
+  const handleNewFile = () => {
+    const name = prompt("Enter file name:");
+    if (name) {
+      onFileCreate?.(currentPath, name, "file");
+    }
+  };
+
+  const handleNewFolder = () => {
+    const name = prompt("Enter folder name:");
+    if (name) {
+      onFileCreate?.(currentPath, name, "folder");
+    }
+  };
+
+  const handleDelete = () => {
+    if (confirm(`Delete ${selectedItems.size} item(s)?`)) {
+      selectedItems.forEach((id) => {
+        const item = flattenedFiles.find((f) => f.id === id);
+        if (item) {
+          onFileDelete?.(item);
+        }
+      });
+      setSelectedItems(new Set());
+    }
+  };
+
+  const handleRename = (itemId: string) => {
+    const item = flattenedFiles.find((f) => f.id === itemId);
+    if (item) {
+      setIsRenaming(itemId);
+      setRenameValue(item.name);
+    }
+  };
+
+  const handleRenameSubmit = () => {
+    if (isRenaming && renameValue.trim()) {
+      const item = flattenedFiles.find((f) => f.id === isRenaming);
+      if (item) {
+        onFileRename?.(item, renameValue.trim());
+      }
+    }
+    setIsRenaming(null);
+    setRenameValue("");
+  };
+
+  const handleRenameCancel = () => {
+    setIsRenaming(null);
+    setRenameValue("");
+  };
+
+  const handleCopy = () => {
+    const items = flattenedFiles.filter((f) => selectedItems.has(f.id));
+    setClipboard({ items, operation: "copy" });
+    items.forEach((item) => onFileCopy?.(item));
+  };
+
+  const handleCut = () => {
+    const items = flattenedFiles.filter((f) => selectedItems.has(f.id));
+    setClipboard({ items, operation: "cut" });
+    items.forEach((item) => onFileCut?.(item));
+  };
+
+  const handlePaste = () => {
+    if (clipboard) {
+      onFilePaste?.(currentPath);
+      if (clipboard.operation === "cut") {
+        setClipboard(null);
+      }
+    }
+  };
+
+  const handleDragStart = (item: FileSystemItem) => {
+    setDraggedItem(item);
+  };
+
+  const handleDragOver = (e: React.DragEvent, targetId: string) => {
+    e.preventDefault();
+    setDropTarget(targetId);
+  };
+
+  const handleDragLeave = () => {
+    setDropTarget(null);
+  };
+
+  const handleDrop = (e: React.DragEvent, targetItem: FileSystemItem) => {
+    e.preventDefault();
+    if (draggedItem && targetItem.type === "folder") {
+      onFileMove?.(draggedItem, targetItem.path);
+    }
+    setDraggedItem(null);
+    setDropTarget(null);
+  };
+
+  const renderFileItem = (item: FileSystemItem & { level: number }, index: number) => {
+    const isSelected = selectedItems.has(item.id);
+    const isFocused = keyboardMode && focusedIndex === index;
+    const isHovered = hoveredItem === item.id;
+    const isDragTarget = dropTarget === item.id;
+    const isBeingRenamed = isRenaming === item.id;
+
+    return (
+      <ContextMenu key={item.id}>
+        <ContextMenuTrigger asChild>
+          <motion.div
+            className={cn(
+              "group flex items-center gap-2 px-3 py-2 rounded-lg cursor-pointer transition-all duration-200",
+              "hover:bg-purple-500/10 hover:backdrop-blur-sm",
+              isSelected && "bg-purple-500/20 backdrop-blur-md border border-purple-500/30",
+              isFocused && "ring-2 ring-purple-400/50",
+              isDragTarget && "bg-purple-500/30",
+              item.level > 0 && "ml-4"
+            )}
+            style={{ paddingLeft: `${12 + item.level * 16}px` }}
+            onClick={(e) => handleItemClick(item, e)}
+            onDoubleClick={() => handleItemDoubleClick(item)}
+            onMouseEnter={() => setHoveredItem(item.id)}
+            onMouseLeave={() => setHoveredItem(null)}
+            onDragStart={() => handleDragStart(item)}
+            onDragOver={(e) => handleDragOver(e, item.id)}
+            onDragLeave={handleDragLeave}
+            onDrop={(e) => handleDrop(e, item)}
+            draggable
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.2, delay: index * 0.02 }}
+            whileHover={{ scale: 1.01 }}
+            whileTap={{ scale: 0.99 }}
+          >
+            {/* Expand/Collapse Icon */}
+            {item.type === "folder" && (
+              <motion.div
+                className="flex-shrink-0 w-4 h-4 flex items-center justify-center"
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.9 }}
+              >
+                {expandedFolders.has(item.id) ? (
+                  <ChevronDownIcon className="h-3 w-3 text-purple-400" />
+                ) : (
+                  <ChevronRightIcon className="h-3 w-3 text-purple-400" />
+                )}
+              </motion.div>
+            )}
+
+            {/* File/Folder Icon */}
+            <div className="flex-shrink-0">
+              {getFileIcon(item.name, item.type, expandedFolders.has(item.id))}
+            </div>
+
+            {/* File Name */}
+            <div className="flex-1 min-w-0">
+              {isBeingRenamed ? (
+                <input
+                  ref={renameInputRef}
+                  type="text"
+                  value={renameValue}
+                  onChange={(e) => setRenameValue(e.target.value)}
+                  onBlur={handleRenameSubmit}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") {
+                      handleRenameSubmit();
+                    } else if (e.key === "Escape") {
+                      handleRenameCancel();
+                    }
+                  }}
+                  className="w-full px-2 py-1 text-sm bg-background border border-purple-500/50 rounded focus:outline-none focus:ring-2 focus:ring-purple-400"
+                />
+              ) : (
+                <span
+                  className={cn(
+                    "text-sm font-medium truncate",
+                    item.gitStatus && getGitStatusColor(item.gitStatus)
+                  )}
+                >
+                  {item.name}
+                </span>
+              )}
+            </div>
+
+            {/* Git Status Badge */}
+            {item.gitStatus && (
+              <div className="flex-shrink-0">
+                <div
+                  className={cn(
+                    "w-2 h-2 rounded-full",
+                    item.gitStatus === "modified" && "bg-yellow-400",
+                    item.gitStatus === "added" && "bg-green-400",
+                    item.gitStatus === "deleted" && "bg-red-400",
+                    item.gitStatus === "untracked" && "bg-blue-400",
+                    item.gitStatus === "staged" && "bg-green-500"
+                  )}
+                  title={item.gitStatus}
+                />
+              </div>
+            )}
+
+            {/* File Size & Date (on hover) */}
+            {(isHovered || isSelected) && item.type === "file" && (
+              <motion.div
+                className="flex-shrink-0 text-xs text-muted-foreground space-x-2"
+                initial={{ opacity: 0, width: 0 }}
+                animate={{ opacity: 1, width: "auto" }}
+                exit={{ opacity: 0, width: 0 }}
+              >
+                {item.size && <span>{formatFileSize(item.size)}</span>}
+                {item.lastModified && <span>{formatDate(item.lastModified)}</span>}
+              </motion.div>
+            )}
+          </motion.div>
+        </ContextMenuTrigger>
+
+        <ContextMenuContent className="w-64 bg-background/95 backdrop-blur-md border border-purple-500/20">
+          <ContextMenuItem onClick={() => handleItemDoubleClick(item)}>
+            <EyeIcon className="h-4 w-4 mr-2" />
+            Open
+          </ContextMenuItem>
+          <ContextMenuSeparator />
+          <ContextMenuItem onClick={handleNewFile}>
+            <PlusIcon className="h-4 w-4 mr-2" />
+            New File
+          </ContextMenuItem>
+          <ContextMenuItem onClick={handleNewFolder}>
+            <FolderIcon className="h-4 w-4 mr-2" />
+            New Folder
+          </ContextMenuItem>
+          <ContextMenuSeparator />
+          <ContextMenuItem onClick={() => handleRename(item.id)}>
+            <EditIcon className="h-4 w-4 mr-2" />
+            Rename
+          </ContextMenuItem>
+          <ContextMenuItem onClick={handleCopy}>
+            <CopyIcon className="h-4 w-4 mr-2" />
+            Copy
+          </ContextMenuItem>
+          <ContextMenuItem onClick={handleCut}>
+            <ScissorsIcon className="h-4 w-4 mr-2" />
+            Cut
+          </ContextMenuItem>
+          <ContextMenuItem onClick={handlePaste} disabled={!clipboard}>
+            <ClipboardIcon className="h-4 w-4 mr-2" />
+            Paste
+          </ContextMenuItem>
+          <ContextMenuSeparator />
+          <ContextMenuItem onClick={handleDelete} className="text-red-400">
+            <TrashIcon className="h-4 w-4 mr-2" />
+            Delete
+          </ContextMenuItem>
+        </ContextMenuContent>
+      </ContextMenu>
+    );
+  };
+
+  return (
+    <div
+      className={cn(
+        "h-full flex flex-col bg-background/80 backdrop-blur-md border border-purple-500/20 rounded-xl overflow-hidden",
+        className
+      )}
+    >
+      {/* Header */}
+      <div className="flex items-center justify-between p-4 border-b border-purple-500/20 bg-purple-500/5">
+        <div className="flex items-center gap-2">
+          <FolderIcon className="h-5 w-5 text-purple-400" />
+          <h2 className="text-lg font-semibold text-foreground">File Explorer</h2>
+        </div>
+        <div className="flex items-center gap-2">
+          <motion.button
+            className="p-2 rounded-lg hover:bg-purple-500/10 transition-colors"
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            onClick={() => setSortBy(sortBy === "name" ? "size" : sortBy === "size" ? "date" : "name")}
+            title="Sort files"
+          >
+            <SortAscIcon className="h-4 w-4 text-purple-400" />
+          </motion.button>
+          <motion.button
+            className="p-2 rounded-lg hover:bg-purple-500/10 transition-colors"
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            onClick={() => setViewMode(viewMode === "list" ? "grid" : "list")}
+            title="Toggle view mode"
+          >
+            <FilterIcon className="h-4 w-4 text-purple-400" />
+          </motion.button>
+          <motion.button
+            className="p-2 rounded-lg hover:bg-purple-500/10 transition-colors"
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            title="Refresh"
+          >
+            <RefreshCwIcon className="h-4 w-4 text-purple-400" />
+          </motion.button>
+        </div>
+      </div>
+
+      {/* Search Bar */}
+      <div className="p-4 border-b border-purple-500/20">
+        <div className="relative">
+          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-purple-400" />
+          <input
+            type="text"
+            placeholder="Search files and folders..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="w-full pl-10 pr-4 py-2 bg-background/50 border border-purple-500/30 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-400/50 focus:border-purple-500/50 text-foreground placeholder-muted-foreground"
+          />
+        </div>
+      </div>
+
+      {/* Breadcrumb Navigation */}
+      <div className="px-4 py-2 border-b border-purple-500/20 bg-purple-500/5">
+        <div className="flex items-center gap-2 text-sm text-muted-foreground">
+          <HomeIcon className="h-4 w-4" />
+          <span>/</span>
+          <span className="text-foreground">src</span>
+          <ChevronRightIcon className="h-3 w-3" />
+          <span className="text-foreground">components</span>
+        </div>
+      </div>
+
+      {/* Recent Files */}
+      {recentFiles.length > 0 && !searchTerm && (
+        <div className="p-4 border-b border-purple-500/20">
+          <h3 className="text-sm font-medium text-muted-foreground mb-3 flex items-center gap-2">
+            <ClockIcon className="h-4 w-4" />
+            Recent Files
+          </h3>
+          <div className="space-y-1">
+            {recentFiles.slice(0, 3).map((file) => (
+              <motion.div
+                key={file.id}
+                className="flex items-center gap-2 px-2 py-1 rounded-lg hover:bg-purple-500/10 cursor-pointer transition-colors"
+                whileHover={{ scale: 1.01 }}
+                whileTap={{ scale: 0.99 }}
+              >
+                {getFileIcon(file.name, file.type)}
+                <span className="text-sm text-foreground truncate">{file.name}</span>
+                <span className="text-xs text-muted-foreground ml-auto">
+                  {formatDate(file.lastAccessed)}
+                </span>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* File List */}
+      <div className="flex-1 overflow-auto" ref={fileListRef}>
+        <div className="p-2 space-y-1">
+          <AnimatePresence>
+            {flattenedFiles.map((item, index) => renderFileItem(item, index))}
+          </AnimatePresence>
+        </div>
+
+        {/* Empty State */}
+        {flattenedFiles.length === 0 && (
+          <motion.div
+            className="flex flex-col items-center justify-center h-64 text-center"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.3 }}
+          >
+            <FolderIcon className="h-16 w-16 text-purple-400/50 mb-4" />
+            <h3 className="text-lg font-medium text-muted-foreground mb-2">
+              {searchTerm ? "No files found" : "Folder is empty"}
+            </h3>
+            <p className="text-sm text-muted-foreground mb-4">
+              {searchTerm
+                ? `No files match "${searchTerm}". Try a different search term.`
+                : "This folder doesn't contain any files yet. Create your first file to get started!"}
+            </p>
+            {!searchTerm && (
+              <div className="flex gap-2">
+                <motion.button
+                  className="px-4 py-2 bg-purple-500 text-white rounded-lg hover:bg-purple-600 transition-colors"
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  onClick={handleNewFile}
+                >
+                  Create File
+                </motion.button>
+                <motion.button
+                  className="px-4 py-2 bg-purple-500/20 text-purple-400 border border-purple-500/30 rounded-lg hover:bg-purple-500/30 transition-colors"
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  onClick={handleNewFolder}
+                >
+                  Create Folder
+                </motion.button>
+              </div>
+            )}
+          </motion.div>
+        )}
+      </div>
+
+      {/* Status Bar */}
+      <div className="flex items-center justify-between px-4 py-2 border-t border-purple-500/20 bg-purple-500/5 text-xs text-muted-foreground">
+        <div className="flex items-center gap-4">
+          <span>{flattenedFiles.length} items</span>
+          {selectedItems.size > 0 && <span>{selectedItems.size} selected</span>}
+          {clipboard && (
+            <span className="text-purple-400">
+              {clipboard.items.length} item(s) in clipboard ({clipboard.operation})
+            </span>
+          )}
+        </div>
+        <div className="flex items-center gap-2">
+          <span>Press F2 to rename</span>
+          <span>•</span>
+          <span>Ctrl+A to select all</span>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// Demo component
+export default function FileExplorerDemo() {
+  const [selectedFile, setSelectedFile] = useState<FileSystemItem | null>(null);
+
+  const handleFileSelect = (file: FileSystemItem) => {
+    setSelectedFile(file);
+    console.log("File selected:", file);
+  };
+
+  const handleFileOpen = (file: FileSystemItem) => {
+    console.log("Opening file:", file);
+    // Here you would typically open the file in Monaco Editor
+  };
+
+  const handleFileCreate = (parentPath: string, name: string, type: "file" | "folder") => {
+    console.log("Creating", type, ":", name, "in", parentPath);
+  };
+
+  const handleFileDelete = (file: FileSystemItem) => {
+    console.log("Deleting:", file);
+  };
+
+  const handleFileRename = (file: FileSystemItem, newName: string) => {
+    console.log("Renaming", file.name, "to", newName);
+  };
+
+  const handleFileCopy = (file: FileSystemItem) => {
+    console.log("Copying:", file);
+  };
+
+  const handleFileCut = (file: FileSystemItem) => {
+    console.log("Cutting:", file);
+  };
+
+  const handleFilePaste = (targetPath: string) => {
+    console.log("Pasting to:", targetPath);
+  };
+
+  const handleFileMove = (file: FileSystemItem, targetPath: string) => {
+    console.log("Moving", file.name, "to", targetPath);
+  };
+
+  return (
+    <div className="w-full h-screen bg-gradient-to-br from-purple-900/20 via-background to-purple-900/10 p-4">
+      <div className="max-w-6xl mx-auto h-full flex gap-4">
+        {/* File Explorer */}
+        <div className="w-1/3 h-full">
+          <FileExplorer
+            onFileSelect={handleFileSelect}
+            onFileOpen={handleFileOpen}
+            onFileCreate={handleFileCreate}
+            onFileDelete={handleFileDelete}
+            onFileRename={handleFileRename}
+            onFileCopy={handleFileCopy}
+            onFileCut={handleFileCut}
+            onFilePaste={handleFilePaste}
+            onFileMove={handleFileMove}
+          />
+        </div>
+
+        {/* File Preview */}
+        <div className="flex-1 h-full">
+          <div className="h-full bg-background/80 backdrop-blur-md border border-purple-500/20 rounded-xl p-6">
+            {selectedFile ? (
+              <div className="h-full flex flex-col">
+                <div className="flex items-center gap-3 mb-4">
+                  {getFileIcon(selectedFile.name, selectedFile.type)}
+                  <div>
+                    <h2 className="text-xl font-semibold text-foreground">{selectedFile.name}</h2>
+                    <p className="text-sm text-muted-foreground">{selectedFile.path}</p>
+                  </div>
+                </div>
+                
+                <div className="flex-1 bg-background/50 border border-purple-500/20 rounded-lg p-4 overflow-auto">
+                  {selectedFile.content ? (
+                    <pre className="text-sm text-foreground whitespace-pre-wrap">
+                      {selectedFile.content}
+                    </pre>
+                  ) : (
+                    <div className="flex items-center justify-center h-full text-muted-foreground">
+                      <div className="text-center">
+                        <FileIcon className="h-16 w-16 mx-auto mb-4 opacity-50" />
+                        <p>No preview available for this file type</p>
+                      </div>
+                    </div>
+                  )}
+                </div>
+
+                {selectedFile.type === "file" && (
+                  <div className="mt-4 flex items-center justify-between text-sm text-muted-foreground">
+                    <div className="flex items-center gap-4">
+                      {selectedFile.size && <span>Size: {formatFileSize(selectedFile.size)}</span>}
+                      {selectedFile.lastModified && (
+                        <span>Modified: {formatDate(selectedFile.lastModified)}</span>
+                      )}
+                    </div>
+                    {selectedFile.gitStatus && (
+                      <div className={cn("flex items-center gap-2", getGitStatusColor(selectedFile.gitStatus))}>
+                        <GitBranchIcon className="h-4 w-4" />
+                        <span className="capitalize">{selectedFile.gitStatus}</span>
+                      </div>
+                    )}
+                  </div>
+                )}
+              </div>
+            ) : (
+              <div className="h-full flex items-center justify-center text-center">
+                <div>
+                  <FolderIcon className="h-24 w-24 mx-auto mb-6 text-purple-400/50" />
+                  <h2 className="text-2xl font-semibold text-foreground mb-2">
+                    Welcome to File Explorer
+                  </h2>
+                  <p className="text-muted-foreground mb-6 max-w-md">
+                    Select a file from the explorer to view its contents. This advanced file explorer
+                    supports drag & drop, context menus, keyboard navigation, and Git integration.
+                  </p>
+                  <div className="flex flex-wrap justify-center gap-2 text-xs text-muted-foreground">
+                    <span className="px-2 py-1 bg-purple-500/20 rounded">Right-click for context menu</span>
+                    <span className="px-2 py-1 bg-purple-500/20 rounded">Drag & drop to move files</span>
+                    <span className="px-2 py-1 bg-purple-500/20 rounded">F2 to rename</span>
+                    <span className="px-2 py-1 bg-purple-500/20 rounded">Ctrl+A to select all</span>
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}

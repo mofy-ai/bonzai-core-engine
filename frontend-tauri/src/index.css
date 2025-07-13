@@ -1,0 +1,147 @@
+/* 💜 MAMA BEAR'S BEAUTIFUL CSS - PURPLE GLASSMORPHISM MAGIC! ✨ */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* 🎨 Custom CSS for our beautiful IDE */
+@layer base {
+  * {
+    border-color: theme(colors.mama-purple.200);
+  }
+  
+  body {
+    @apply bg-gradient-to-br from-purple-900 via-purple-800 to-indigo-900;
+    @apply text-white font-sans;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+  }
+
+  /* 💜 Beautiful scrollbars */
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+  
+  ::-webkit-scrollbar-track {
+    @apply bg-purple-900/20;
+  }
+  
+  ::-webkit-scrollbar-thumb {
+    @apply bg-purple-500/40 rounded-lg;
+  }
+  
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-purple-400/60;
+  }
+}
+
+@layer components {
+  /* 🌟 Glassmorphism containers */
+  .glass-panel {
+    @apply bg-white/5 backdrop-blur-md border border-white/10 rounded-lg shadow-glass;
+  }
+  
+  .glass-panel-strong {
+    @apply bg-white/10 backdrop-blur-lg border border-white/20 rounded-lg shadow-glass-lg;
+  }
+
+  /* 💜 Mama Bear's special buttons */
+  .btn-mama {
+    @apply px-4 py-2 bg-purple-600/80 hover:bg-purple-500/90 backdrop-blur-sm border border-purple-400/30 rounded-lg transition-all duration-200;
+    @apply text-white font-medium shadow-lg hover:shadow-purple-500/25;
+  }
+
+  /* 🎯 File explorer styles */
+  .file-item {
+    @apply flex items-center gap-2 px-3 py-2 text-sm hover:bg-white/10 rounded-md cursor-pointer transition-all duration-150;
+  }
+  
+  .file-item.selected {
+    @apply bg-purple-500/30 border-l-2 border-purple-400;
+  }
+
+  /* 💬 Chat message styles */
+  .chat-message {
+    @apply p-3 rounded-lg mb-2 max-w-xs animate-in slide-in-from-bottom-2;
+  }
+  
+  .chat-message.user {
+    @apply bg-purple-600/50 border border-purple-400/30 ml-auto;
+  }
+  
+  .chat-message.family {
+    @apply bg-white/10 border border-white/20 mr-auto;
+  }
+
+  /* 🖥️ Terminal styles */
+  .terminal-window {
+    @apply bg-black/60 backdrop-blur-sm border border-white/10 rounded-lg font-mono text-sm;
+  }
+  
+  .terminal-header {
+    @apply flex items-center justify-between px-4 py-2 bg-white/5 border-b border-white/10 rounded-t-lg;
+  }
+
+  /* ⚡ Monaco Editor wrapper */
+  .monaco-wrapper {
+    @apply border border-white/10 rounded-lg overflow-hidden bg-black/20 backdrop-blur-sm;
+  }
+}
+
+@layer utilities {
+  /* 💜 Special animations */
+  .animate-love-pulse {
+    animation: love-pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+  
+  .animate-float {
+    animation: float 6s ease-in-out infinite;
+  }
+
+  /* 🎨 Text gradients */
+  .text-gradient-purple {
+    @apply bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent;
+  }
+
+  /* 🌟 Glow effects */
+  .glow-purple {
+    box-shadow: 0 0 20px rgba(168, 85, 247, 0.3);
+  }
+  
+  .glow-purple:hover {
+    box-shadow: 0 0 30px rgba(168, 85, 247, 0.5);
+  }
+}
+
+/* 💜 Keyframe animations */
+@keyframes love-pulse {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.8;
+    transform: scale(1.05);
+  }
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+/* 🎯 Responsive design for different screen sizes */
+@media (max-width: 768px) {
+  .glass-panel {
+    @apply text-sm;
+  }
+  
+  .btn-mama {
+    @apply px-3 py-1.5 text-sm;
+  }
+}

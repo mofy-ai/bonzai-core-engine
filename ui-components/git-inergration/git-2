@@ -1,0 +1,852 @@
+"use client";
+
+import * as React from "react";
+import { AnimatePresence, MotionConfig, motion } from "framer-motion";
+import {
+  GitBranch,
+  GitCommit,
+  GitMerge,
+  GitPullRequest,
+  Plus,
+  Minus,
+  FileText,
+  Folder,
+  FolderOpen,
+  Play,
+  Pause,
+  RotateCcw,
+  Download,
+  Upload,
+  Eye,
+  EyeOff,
+  Copy,
+  Check,
+  AlertCircle,
+  CheckCircle,
+  Clock,
+  User,
+  MessageSquare,
+  Settings,
+  RefreshCw,
+  Trash2,
+  Edit3,
+  Save,
+  X,
+  ChevronDown,
+  ChevronRight,
+  Search,
+  Filter,
+  MoreHorizontal,
+  Star,
+  Heart,
+  Zap,
+  Coffee,
+  Rocket,
+  Sparkles,
+} from "lucide-react";
+import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Separator } from "@/components/ui/separator";
+import { Switch } from "@/components/ui/switch";
+import { Progress } from "@/components/ui/progress";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+
+const TRANSITION = {
+  type: "spring",
+  bounce: 0.1,
+  duration: 0.4,
+};
+
+// Types
+interface GitFile {
+  id: string;
+  name: string;
+  path: string;
+  status: "added" | "modified" | "deleted" | "untracked" | "staged";
+  changes: number;
+  additions: number;
+  deletions: number;
+}
+
+interface GitCommit {
+  id: string;
+  hash: string;
+  message: string;
+  author: string;
+  date: string;
+  avatar?: string;
+  branch: string;
+  parents: string[];
+}
+
+interface GitBranch {
+  name: string;
+  current: boolean;
+  ahead: number;
+  behind: number;
+  lastCommit: string;
+}
+
+interface GitStash {
+  id: string;
+  message: string;
+  branch: string;
+  date: string;
+}
+
+interface GitConflict {
+  file: string;
+  type: "content" | "delete" | "rename";
+  resolved: boolean;
+}
+
+// Sample Data
+const sampleFiles: GitFile[] = [
+  {
+    id: "1",
+    name: "src/components/GitPanel.tsx",
+    path: "src/components/GitPanel.tsx",
+    status: "modified",
+    changes: 45,
+    additions: 30,
+    deletions: 15,
+  },
+  {
+    id: "2",
+    name: "src/types/git.ts",
+    path: "src/types/git.ts",
+    status: "added",
+    changes: 20,
+    additions: 20,
+    deletions: 0,
+  },
+  {
+    id: "3",
+    name: "README.md",
+    path: "README.md",
+    status: "modified",
+    changes: 5,
+    additions: 3,
+    deletions: 2,
+  },
+  {
+    id: "4",
+    name: "package.json",
+    path: "package.json",
+    status: "deleted",
+    changes: 10,
+    additions: 0,
+    deletions: 10,
+  },
+];
+
+const sampleCommits: GitCommit[] = [
+  {
+    id: "1",
+    hash: "a1b2c3d",
+    message: "feat: Add comprehensive Git integration panel",
+    author: "Mama Bear",
+    date: "2 hours ago",
+    avatar: "MB",
+    branch: "main",
+    parents: ["e4f5g6h"],
+  },
+  {
+    id: "2",
+    hash: "e4f5g6h",
+    message: "fix: Resolve merge conflicts in GitPanel component",
+    author: "Dev Bear",
+    date: "1 day ago",
+    avatar: "DB",
+    branch: "main",
+    parents: ["i7j8k9l"],
+  },
+  {
+    id: "3",
+    hash: "i7j8k9l",
+    message: "refactor: Improve Git status visualization",
+    author: "Code Bear",
+    date: "2 days ago",
+    avatar: "CB",
+    branch: "feature/git-ui",
+    parents: ["m0n1o2p"],
+  },
+];
+
+const sampleBranches: GitBranch[] = [
+  { name: "main", current: true, ahead: 0, behind: 0, lastCommit: "a1b2c3d" },
+  { name: "feature/git-ui", current: false, ahead: 2, behind: 1, lastCommit: "i7j8k9l" },
+  { name: "hotfix/urgent-fix", current: false, ahead: 1, behind: 3, lastCommit: "q3r4s5t" },
+];
+
+const sampleStashes: GitStash[] = [
+  {
+    id: "stash@{0}",
+    message: "WIP: Working on Git panel improvements",
+    branch: "feature/git-ui",
+    date: "1 hour ago",
+  },
+  {
+    id: "stash@{1}",
+    message: "Temporary changes for testing",
+    branch: "main",
+    date: "1 day ago",
+  },
+];
+
+const encouragingMessages = [
+  "Great commit message! 🐻",
+  "Keep up the good work! ✨",
+  "Your code is looking fantastic! 🚀",
+  "Mama Bear is proud of your progress! 💜",
+  "Another step towards greatness! ⭐",
+];
+
+const gitTips = [
+  "💡 Tip: Use conventional commits for better history!",
+  "🔍 Remember to review your changes before committing",
+  "🌟 Small, focused commits are easier to review",
+  "🚀 Don't forget to pull before pushing!",
+  "💜 Your commit messages tell a story",
+];
+
+// File Status Icon Component
+function FileStatusIcon({ status }: { status: GitFile["status"] }) {
+  switch (status) {
+    case "added":
+      return <Plus className="h-4 w-4 text-green-500" />;
+    case "modified":
+      return <Edit3 className="h-4 w-4 text-yellow-500" />;
+    case "deleted":
+      return <Minus className="h-4 w-4 text-red-500" />;
+    case "staged":
+      return <CheckCircle className="h-4 w-4 text-blue-500" />;
+    default:
+      return <AlertCircle className="h-4 w-4 text-gray-500" />;
+  }
+}
+
+// File Item Component
+function FileItem({
+  file,
+  isStaged,
+  onStage,
+  onUnstage,
+  onViewDiff,
+}: {
+  file: GitFile;
+  isStaged: boolean;
+  onStage: () => void;
+  onUnstage: () => void;
+  onViewDiff: () => void;
+}) {
+  return (
+    <motion.div
+      layout
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -10 }}
+      className="group flex items-center justify-between p-3 rounded-lg bg-background/50 backdrop-blur-sm border border-purple-200/20 hover:border-purple-300/40 transition-all duration-200"
+    >
+      <div className="flex items-center gap-3 flex-1 min-w-0">
+        <FileStatusIcon status={file.status} />
+        <div className="flex-1 min-w-0">
+          <p className="text-sm font-medium text-foreground truncate">
+            {file.name}
+          </p>
+          <p className="text-xs text-muted-foreground truncate">{file.path}</p>
+        </div>
+        <div className="flex items-center gap-2 text-xs">
+          {file.additions > 0 && (
+            <span className="text-green-500">+{file.additions}</span>
+          )}
+          {file.deletions > 0 && (
+            <span className="text-red-500">-{file.deletions}</span>
+          )}
+        </div>
+      </div>
+      <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={onViewDiff}
+                className="h-8 w-8 p-0"
+              >
+                <Eye className="h-4 w-4" />
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>View diff</TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={isStaged ? onUnstage : onStage}
+          className="h-8 w-8 p-0"
+        >
+          {isStaged ? (
+            <Minus className="h-4 w-4" />
+          ) : (
+            <Plus className="h-4 w-4" />
+          )}
+        </Button>
+      </div>
+    </motion.div>
+  );
+}
+
+// Commit Graph Component
+function CommitGraph({ commits }: { commits: GitCommit[] }) {
+  return (
+    <div className="space-y-4">
+      {commits.map((commit, index) => (
+        <motion.div
+          key={commit.id}
+          initial={{ opacity: 0, x: -20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ delay: index * 0.1 }}
+          className="flex items-start gap-4"
+        >
+          <div className="flex flex-col items-center">
+            <div className="w-3 h-3 rounded-full bg-purple-500 border-2 border-background" />
+            {index < commits.length - 1 && (
+              <div className="w-px h-8 bg-purple-300/30 mt-2" />
+            )}
+          </div>
+          <div className="flex-1 min-w-0 pb-4">
+            <div className="flex items-center gap-2 mb-1">
+              <Avatar className="h-6 w-6">
+                <AvatarFallback className="text-xs bg-purple-100 text-purple-700">
+                  {commit.avatar}
+                </AvatarFallback>
+              </Avatar>
+              <span className="text-sm font-medium text-foreground">
+                {commit.author}
+              </span>
+              <Badge variant="outline" className="text-xs">
+                {commit.branch}
+              </Badge>
+              <span className="text-xs text-muted-foreground">
+                {commit.date}
+              </span>
+            </div>
+            <p className="text-sm text-foreground mb-1">{commit.message}</p>
+            <p className="text-xs text-muted-foreground font-mono">
+              {commit.hash}
+            </p>
+          </div>
+        </motion.div>
+      ))}
+    </div>
+  );
+}
+
+// Branch Item Component
+function BranchItem({
+  branch,
+  onSwitch,
+  onDelete,
+}: {
+  branch: GitBranch;
+  onSwitch: () => void;
+  onDelete: () => void;
+}) {
+  return (
+    <div className="flex items-center justify-between p-3 rounded-lg bg-background/50 backdrop-blur-sm border border-purple-200/20 hover:border-purple-300/40 transition-all duration-200">
+      <div className="flex items-center gap-3">
+        <GitBranch className="h-4 w-4 text-purple-500" />
+        <div>
+          <div className="flex items-center gap-2">
+            <span className="text-sm font-medium text-foreground">
+              {branch.name}
+            </span>
+            {branch.current && (
+              <Badge variant="default" className="text-xs bg-purple-500">
+                Current
+              </Badge>
+            )}
+          </div>
+          <div className="flex items-center gap-2 text-xs text-muted-foreground">
+            {branch.ahead > 0 && (
+              <span className="text-green-500">↑{branch.ahead}</span>
+            )}
+            {branch.behind > 0 && (
+              <span className="text-red-500">↓{branch.behind}</span>
+            )}
+            <span>{branch.lastCommit}</span>
+          </div>
+        </div>
+      </div>
+      <div className="flex items-center gap-1">
+        {!branch.current && (
+          <>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={onSwitch}
+              className="h-8 px-2 text-xs"
+            >
+              Switch
+            </Button>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={onDelete}
+              className="h-8 w-8 p-0 text-red-500 hover:text-red-600"
+            >
+              <Trash2 className="h-4 w-4" />
+            </Button>
+          </>
+        )}
+      </div>
+    </div>
+  );
+}
+
+// Main Git Panel Component
+export default function GitIntegrationPanel() {
+  const [stagedFiles, setStagedFiles] = React.useState<string[]>([]);
+  const [commitMessage, setCommitMessage] = React.useState("");
+  const [selectedEmoji, setSelectedEmoji] = React.useState("");
+  const [showDiff, setShowDiff] = React.useState(false);
+  const [selectedFile, setSelectedFile] = React.useState<GitFile | null>(null);
+  const [isCommitting, setIsCommitting] = React.useState(false);
+  const [encouragement, setEncouragement] = React.useState("");
+  const [currentTip, setCurrentTip] = React.useState(0);
+
+  const emojis = ["🚀", "✨", "🐛", "📝", "🔧", "💄", "⚡", "🔥", "💚", "👷"];
+
+  React.useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentTip((prev) => (prev + 1) % gitTips.length);
+    }, 5000);
+    return () => clearInterval(interval);
+  }, []);
+
+  const handleStageFile = (fileId: string) => {
+    setStagedFiles((prev) => [...prev, fileId]);
+  };
+
+  const handleUnstageFile = (fileId: string) => {
+    setStagedFiles((prev) => prev.filter((id) => id !== fileId));
+  };
+
+  const handleCommit = async () => {
+    if (!commitMessage.trim()) return;
+    
+    setIsCommitting(true);
+    
+    // Simulate commit process
+    await new Promise((resolve) => setTimeout(resolve, 2000));
+    
+    setCommitMessage("");
+    setSelectedEmoji("");
+    setStagedFiles([]);
+    setEncouragement(
+      encouragingMessages[Math.floor(Math.random() * encouragingMessages.length)]
+    );
+    setIsCommitting(false);
+    
+    setTimeout(() => setEncouragement(""), 3000);
+  };
+
+  const handleViewDiff = (file: GitFile) => {
+    setSelectedFile(file);
+    setShowDiff(true);
+  };
+
+  const unstagedFiles = sampleFiles.filter((file) => !stagedFiles.includes(file.id));
+  const stagedFilesList = sampleFiles.filter((file) => stagedFiles.includes(file.id));
+
+  return (
+    <div className="w-full max-w-7xl mx-auto p-6 bg-gradient-to-br from-purple-50/50 via-background to-purple-50/30 min-h-screen">
+      <div className="mb-6">
+        <h1 className="text-3xl font-bold text-foreground mb-2">
+          Git Integration Panel
+        </h1>
+        <p className="text-muted-foreground">
+          Comprehensive Git workflow management for your Monaco IDE
+        </p>
+        
+        {encouragement && (
+          <motion.div
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            className="mt-4 p-3 rounded-lg bg-green-100/80 border border-green-200 text-green-800"
+          >
+            {encouragement}
+          </motion.div>
+        )}
+        
+        <motion.div
+          key={currentTip}
+          initial={{ opacity: 0, x: 20 }}
+          animate={{ opacity: 1, x: 0 }}
+          className="mt-2 p-2 rounded-lg bg-purple-100/50 border border-purple-200/50 text-purple-700 text-sm"
+        >
+          {gitTips[currentTip]}
+        </motion.div>
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {/* Source Control */}
+        <div className="lg:col-span-2 space-y-6">
+          <Card className="bg-background/60 backdrop-blur-sm border-purple-200/30">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <GitBranch className="h-5 w-5 text-purple-500" />
+                Source Control
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <Tabs defaultValue="changes" className="w-full">
+                <TabsList className="grid w-full grid-cols-4">
+                  <TabsTrigger value="changes">Changes</TabsTrigger>
+                  <TabsTrigger value="history">History</TabsTrigger>
+                  <TabsTrigger value="branches">Branches</TabsTrigger>
+                  <TabsTrigger value="stash">Stash</TabsTrigger>
+                </TabsList>
+                
+                <TabsContent value="changes" className="space-y-4">
+                  <div className="space-y-4">
+                    {/* Staged Files */}
+                    <div>
+                      <div className="flex items-center justify-between mb-3">
+                        <h3 className="text-sm font-medium text-foreground">
+                          Staged Changes ({stagedFilesList.length})
+                        </h3>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => setStagedFiles([])}
+                          disabled={stagedFilesList.length === 0}
+                          className="h-8 px-2 text-xs"
+                        >
+                          Unstage All
+                        </Button>
+                      </div>
+                      <div className="space-y-2 min-h-[100px] p-3 rounded-lg border-2 border-dashed border-purple-200/50 bg-purple-50/30">
+                        <AnimatePresence>
+                          {stagedFilesList.map((file) => (
+                            <FileItem
+                              key={file.id}
+                              file={file}
+                              isStaged={true}
+                              onStage={() => {}}
+                              onUnstage={() => handleUnstageFile(file.id)}
+                              onViewDiff={() => handleViewDiff(file)}
+                            />
+                          ))}
+                        </AnimatePresence>
+                        {stagedFilesList.length === 0 && (
+                          <div className="text-center text-muted-foreground text-sm py-8">
+                            Drag files here to stage them
+                          </div>
+                        )}
+                      </div>
+                    </div>
+
+                    {/* Unstaged Files */}
+                    <div>
+                      <div className="flex items-center justify-between mb-3">
+                        <h3 className="text-sm font-medium text-foreground">
+                          Changes ({unstagedFiles.length})
+                        </h3>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => setStagedFiles(sampleFiles.map(f => f.id))}
+                          disabled={unstagedFiles.length === 0}
+                          className="h-8 px-2 text-xs"
+                        >
+                          Stage All
+                        </Button>
+                      </div>
+                      <div className="space-y-2">
+                        <AnimatePresence>
+                          {unstagedFiles.map((file) => (
+                            <FileItem
+                              key={file.id}
+                              file={file}
+                              isStaged={false}
+                              onStage={() => handleStageFile(file.id)}
+                              onUnstage={() => {}}
+                              onViewDiff={() => handleViewDiff(file)}
+                            />
+                          ))}
+                        </AnimatePresence>
+                      </div>
+                    </div>
+                  </div>
+                </TabsContent>
+                
+                <TabsContent value="history">
+                  <ScrollArea className="h-[400px]">
+                    <CommitGraph commits={sampleCommits} />
+                  </ScrollArea>
+                </TabsContent>
+                
+                <TabsContent value="branches" className="space-y-3">
+                  {sampleBranches.map((branch) => (
+                    <BranchItem
+                      key={branch.name}
+                      branch={branch}
+                      onSwitch={() => console.log(`Switch to ${branch.name}`)}
+                      onDelete={() => console.log(`Delete ${branch.name}`)}
+                    />
+                  ))}
+                  <Button className="w-full mt-4" variant="outline">
+                    <Plus className="h-4 w-4 mr-2" />
+                    Create New Branch
+                  </Button>
+                </TabsContent>
+                
+                <TabsContent value="stash" className="space-y-3">
+                  {sampleStashes.map((stash) => (
+                    <div
+                      key={stash.id}
+                      className="flex items-center justify-between p-3 rounded-lg bg-background/50 backdrop-blur-sm border border-purple-200/20"
+                    >
+                      <div>
+                        <p className="text-sm font-medium text-foreground">
+                          {stash.message}
+                        </p>
+                        <p className="text-xs text-muted-foreground">
+                          {stash.branch} • {stash.date}
+                        </p>
+                      </div>
+                      <div className="flex items-center gap-1">
+                        <Button variant="ghost" size="sm" className="h-8 px-2 text-xs">
+                          Apply
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="h-8 w-8 p-0 text-red-500"
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </Button>
+                      </div>
+                    </div>
+                  ))}
+                  <Button className="w-full mt-4" variant="outline">
+                    <Save className="h-4 w-4 mr-2" />
+                    Create Stash
+                  </Button>
+                </TabsContent>
+              </Tabs>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Commit Panel */}
+        <div className="space-y-6">
+          <Card className="bg-background/60 backdrop-blur-sm border-purple-200/30">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <GitCommit className="h-5 w-5 text-purple-500" />
+                Commit Changes
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div>
+                <label className="text-sm font-medium text-foreground mb-2 block">
+                  Commit Message
+                </label>
+                <div className="space-y-2">
+                  <div className="flex items-center gap-2 mb-2">
+                    {emojis.map((emoji) => (
+                      <button
+                        key={emoji}
+                        onClick={() => setSelectedEmoji(emoji)}
+                        className={cn(
+                          "p-2 rounded-md border transition-all",
+                          selectedEmoji === emoji
+                            ? "border-purple-500 bg-purple-100"
+                            : "border-gray-200 hover:border-purple-300"
+                        )}
+                      >
+                        {emoji}
+                      </button>
+                    ))}
+                  </div>
+                  <Textarea
+                    placeholder="Enter your commit message..."
+                    value={commitMessage}
+                    onChange={(e) => setCommitMessage(e.target.value)}
+                    className="min-h-[100px] resize-none"
+                  />
+                  <div className="flex items-center justify-between text-xs text-muted-foreground">
+                    <span>{commitMessage.length}/72 characters</span>
+                    <span className={commitMessage.length > 50 ? "text-yellow-500" : ""}>
+                      {commitMessage.length > 50 ? "Consider shorter message" : "Good length"}
+                    </span>
+                  </div>
+                </div>
+              </div>
+              
+              <Button
+                onClick={handleCommit}
+                disabled={!commitMessage.trim() || stagedFilesList.length === 0 || isCommitting}
+                className="w-full bg-purple-600 hover:bg-purple-700"
+              >
+                {isCommitting ? (
+                  <>
+                    <RefreshCw className="h-4 w-4 mr-2 animate-spin" />
+                    Committing...
+                  </>
+                ) : (
+                  <>
+                    <GitCommit className="h-4 w-4 mr-2" />
+                    Commit {selectedEmoji} ({stagedFilesList.length} files)
+                  </>
+                )}
+              </Button>
+              
+              <div className="flex gap-2">
+                <Button variant="outline" className="flex-1">
+                  <Upload className="h-4 w-4 mr-2" />
+                  Push
+                </Button>
+                <Button variant="outline" className="flex-1">
+                  <Download className="h-4 w-4 mr-2" />
+                  Pull
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Repository Status */}
+          <Card className="bg-background/60 backdrop-blur-sm border-purple-200/30">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Settings className="h-5 w-5 text-purple-500" />
+                Repository Status
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="space-y-3">
+                <div className="flex items-center justify-between">
+                  <span className="text-sm text-muted-foreground">Branch</span>
+                  <Badge variant="outline">main</Badge>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-sm text-muted-foreground">Ahead</span>
+                  <span className="text-sm text-green-600">0 commits</span>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-sm text-muted-foreground">Behind</span>
+                  <span className="text-sm text-red-600">0 commits</span>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-sm text-muted-foreground">Conflicts</span>
+                  <span className="text-sm text-green-600">None</span>
+                </div>
+              </div>
+              
+              <Separator />
+              
+              <div className="space-y-2">
+                <h4 className="text-sm font-medium text-foreground">Quick Actions</h4>
+                <div className="grid grid-cols-2 gap-2">
+                  <Button variant="outline" size="sm">
+                    <GitMerge className="h-4 w-4 mr-1" />
+                    Merge
+                  </Button>
+                  <Button variant="outline" size="sm">
+                    <GitPullRequest className="h-4 w-4 mr-1" />
+                    PR
+                  </Button>
+                  <Button variant="outline" size="sm">
+                    <RotateCcw className="h-4 w-4 mr-1" />
+                    Reset
+                  </Button>
+                  <Button variant="outline" size="sm">
+                    <RefreshCw className="h-4 w-4 mr-1" />
+                    Fetch
+                  </Button>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      </div>
+
+      {/* Diff Viewer Modal */}
+      <AnimatePresence>
+        {showDiff && selectedFile && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4"
+            onClick={() => setShowDiff(false)}
+          >
+            <motion.div
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
+              className="bg-background rounded-lg border border-purple-200/30 w-full max-w-4xl max-h-[80vh] overflow-hidden"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="flex items-center justify-between p-4 border-b">
+                <div className="flex items-center gap-2">
+                  <FileStatusIcon status={selectedFile.status} />
+                  <h3 className="font-medium text-foreground">
+                    {selectedFile.name}
+                  </h3>
+                  <Badge variant="outline">{selectedFile.status}</Badge>
+                </div>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setShowDiff(false)}
+                  className="h-8 w-8 p-0"
+                >
+                  <X className="h-4 w-4" />
+                </Button>
+              </div>
+              <div className="p-4">
+                <div className="bg-gray-50 rounded-lg p-4 font-mono text-sm">
+                  <div className="space-y-2">
+                    <div className="text-green-600">
+                      + Added line example
+                    </div>
+                    <div className="text-red-600">
+                      - Removed line example
+                    </div>
+                    <div className="text-gray-600">
+                      Unchanged line example
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+  );
+}

@@ -1,0 +1,940 @@
+"use client";
+
+import * as React from "react";
+import { useState, useRef, useCallback, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import {
+  Mic,
+  Send,
+  Paperclip,
+  Settings,
+  Smile,
+  Code,
+  FileText,
+  Terminal,
+  Globe,
+  Brain,
+  Users,
+  Rocket,
+  Heart,
+  Sparkles,
+  Command,
+  X,
+  ChevronDown,
+  Check,
+  Upload,
+  Image as ImageIcon,
+  File,
+  Volume2,
+  VolumeX,
+  Pause,
+  Play,
+} from "lucide-react";
+import { cn } from "@/lib/utils";
+
+// Reaction Component
+const Reaction: React.FC<{
+  symbol?: string;
+  scale?: number;
+  y?: string;
+  x?: string | number | (() => string | number);
+  rotate?: string | number | (() => string | number);
+  onClick?: React.MouseEventHandler<HTMLButtonElement>;
+  className?: string;
+}> = ({ symbol, onClick: callback, className, ...props }) => {
+  const [flyingSymbols, setFlyingSymbols] = useState<
+    { id: number; symbol: string }[]
+  >([]);
+
+  const onClick: React.MouseEventHandler<HTMLButtonElement> = useCallback(
+    (e) => {
+      callback?.(e);
+      if (!symbol) return;
+
+      const id = Date.now();
+      setFlyingSymbols((flyingSymbols) => [...flyingSymbols, { id, symbol }]);
+      setTimeout(() => {
+        setFlyingSymbols((flyingSymbols) =>
+          flyingSymbols.filter((e) => e.id !== id)
+        );
+      }, 1000);
+    },
+    [callback, symbol]
+  );
+
+  return (
+    <button className={className} onClick={onClick} {...props}>
+      <AnimatePresence>
+        {flyingSymbols.map(({ id, symbol }) => (
+          <FlyingSymbol key={id} symbol={symbol} />
+        ))}
+      </AnimatePresence>
+      {symbol}
+    </button>
+  );
+};
+
+const FlyingSymbol: React.FC<{
+  symbol: string;
+  rotate?: string | number | (() => string | number);
+  x?: string | number | (() => string | number);
+  y?: string;
+  scale?: number;
+}> = ({
+  symbol,
+  rotate = () => Math.random() * 90 - 45,
+  x = () => `${Math.random() * 200 - 100}%`,
+  y = "-500%",
+  scale = 2,
+}) => {
+  const animate = React.useMemo(
+    () => ({
+      rotate: typeof rotate === "function" ? rotate() : rotate,
+      x: typeof x === "function" ? x() : x,
+    }),
+    [rotate, x]
+  );
+
+  return (
+    <motion.div
+      initial={{ y: 0, opacity: 1, scale: 1, rotate: 0, x: 0 }}
+      animate={{ y, opacity: 0, scale, ...animate }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 1, ease: "easeOut" }}
+      className="absolute pointer-events-none"
+    >
+      {symbol}
+    </motion.div>
+  );
+};
+
+// Button Component
+const Button = React.forwardRef<
+  HTMLButtonElement,
+  React.ButtonHTMLAttributes<HTMLButtonElement> & {
+    variant?: "default" | "ghost" | "outline" | "secondary";
+    size?: "default" | "sm" | "lg" | "icon";
+  }
+>(({ className, variant = "default", size = "default", ...props }, ref) => {
+  const baseClasses = "inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50";
+  
+  const variants = {
+    default: "bg-primary text-primary-foreground hover:bg-primary/90",
+    ghost: "hover:bg-accent hover:text-accent-foreground",
+    outline: "border border-input bg-background hover:bg-accent hover:text-accent-foreground",
+    secondary: "bg-secondary text-secondary-foreground hover:bg-secondary/80",
+  };
+
+  const sizes = {
+    default: "h-10 px-4 py-2",
+    sm: "h-9 rounded-md px-3",
+    lg: "h-11 rounded-md px-8",
+    icon: "h-10 w-10",
+  };
+
+  return (
+    <button
+      className={cn(baseClasses, variants[variant], sizes[size], className)}
+      ref={ref}
+      {...props}
+    />
+  );
+});
+Button.displayName = "Button";
+
+// Textarea Component
+const Textarea = React.forwardRef<
+  HTMLTextAreaElement,
+  React.TextareaHTMLAttributes<HTMLTextAreaElement>
+>(({ className, ...props }, ref) => {
+  return (
+    <textarea
+      className={cn(
+        "flex min-h-[80px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50",
+        className
+      )}
+      ref={ref}
+      {...props}
+    />
+  );
+});
+Textarea.displayName = "Textarea";
+
+// Dropdown Menu Components
+const DropdownMenu = ({ children, open, onOpenChange }: {
+  children: React.ReactNode;
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
+}) => {
+  const [isOpen, setIsOpen] = useState(open || false);
+  
+  const handleOpenChange = (newOpen: boolean) => {
+    setIsOpen(newOpen);
+    onOpenChange?.(newOpen);
+  };
+
+  return (
+    <div className="relative">
+      {React.Children.map(children, (child) =>
+        React.isValidElement(child)
+          ? React.cloneElement(child as React.ReactElement<any>, { isOpen, onOpenChange: handleOpenChange })
+          : child
+      )}
+    </div>
+  );
+};
+
+const DropdownMenuTrigger = ({ children, isOpen, onOpenChange }: {
+  children: React.ReactNode;
+  isOpen?: boolean;
+  onOpenChange?: (open: boolean) => void;
+}) => {
+  return (
+    <div onClick={() => onOpenChange?.(!isOpen)}>
+      {children}
+    </div>
+  );
+};
+
+const DropdownMenuContent = ({ children, isOpen, className }: {
+  children: React.ReactNode;
+  isOpen?: boolean;
+  className?: string;
+}) => {
+  if (!isOpen) return null;
+
+  return (
+    <div className={cn(
+      "absolute top-full left-0 z-50 min-w-[8rem] overflow-hidden rounded-md border bg-popover p-1 text-popover-foreground shadow-md",
+      className
+    )}>
+      {children}
+    </div>
+  );
+};
+
+const DropdownMenuItem = ({ children, onSelect, className }: {
+  children: React.ReactNode;
+  onSelect?: () => void;
+  className?: string;
+}) => {
+  return (
+    <div
+      className={cn(
+        "relative flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
+        className
+      )}
+      onClick={onSelect}
+    >
+      {children}
+    </div>
+  );
+};
+
+// Popover Components
+const Popover = ({ children, open, onOpenChange }: {
+  children: React.ReactNode;
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
+}) => {
+  const [isOpen, setIsOpen] = useState(open || false);
+  
+  const handleOpenChange = (newOpen: boolean) => {
+    setIsOpen(newOpen);
+    onOpenChange?.(newOpen);
+  };
+
+  return (
+    <div className="relative">
+      {React.Children.map(children, (child) =>
+        React.isValidElement(child)
+          ? React.cloneElement(child as React.ReactElement<any>, { isOpen, onOpenChange: handleOpenChange })
+          : child
+      )}
+    </div>
+  );
+};
+
+const PopoverTrigger = ({ children, isOpen, onOpenChange }: {
+  children: React.ReactNode;
+  isOpen?: boolean;
+  onOpenChange?: (open: boolean) => void;
+}) => {
+  return (
+    <div onClick={() => onOpenChange?.(!isOpen)}>
+      {children}
+    </div>
+  );
+};
+
+const PopoverContent = ({ children, isOpen, className }: {
+  children: React.ReactNode;
+  isOpen?: boolean;
+  className?: string;
+}) => {
+  if (!isOpen) return null;
+
+  return (
+    <div className={cn(
+      "absolute bottom-full left-0 z-50 w-64 rounded-xl bg-popover p-2 text-popover-foreground shadow-md mb-2",
+      className
+    )}>
+      {children}
+    </div>
+  );
+};
+
+// Main Chat Input Component
+interface MentionType {
+  type: 'codebase' | 'files' | 'symbols' | 'terminal' | 'docs' | 'web' | 'memory' | 'family';
+  query: string;
+  results: any[];
+}
+
+interface FileAttachment {
+  id: string;
+  name: string;
+  type: string;
+  size: number;
+  url?: string;
+}
+
+interface EmotionalState {
+  type: 'happy' | 'excited' | 'thinking' | 'love';
+  intensity: number;
+}
+
+interface VoiceInput {
+  transcript: string;
+  confidence: number;
+  duration: number;
+}
+
+interface MessageMetadata {
+  timestamp: Date;
+  model: string;
+  context: string[];
+}
+
+interface ChatMessage {
+  text: string;
+  attachments: FileAttachment[];
+  mentions: MentionType[];
+  emotions: EmotionalState[];
+  voiceData?: VoiceInput;
+  metadata: MessageMetadata;
+}
+
+interface AIModel {
+  id: string;
+  name: string;
+  description: string;
+}
+
+interface ChatSettings {
+  includeOpenFiles: boolean;
+  autoScroll: boolean;
+  detailLevel: 'brief' | 'detailed' | 'comprehensive';
+  voiceMode: 'push-to-talk' | 'continuous';
+  privacyMode: boolean;
+}
+
+interface MamaBearChatInputProps {
+  onSendMessage?: (message: ChatMessage) => void;
+  onFileUpload?: (files: File[]) => void;
+  onVoiceInput?: (transcript: string) => void;
+  onMentionSelect?: (mention: MentionType, data: any) => void;
+  availableModels?: AIModel[];
+  currentModel?: AIModel;
+  settings?: ChatSettings;
+  isLoading?: boolean;
+  disabled?: boolean;
+}
+
+const MamaBearChatInput: React.FC<MamaBearChatInputProps> = ({
+  onSendMessage = () => {},
+  onFileUpload = () => {},
+  onVoiceInput = () => {},
+  onMentionSelect = () => {},
+  availableModels = [
+    { id: 'claude', name: 'Claude 3.5 Sonnet', description: 'Advanced reasoning' },
+    { id: 'gemini', name: 'Gemini Pro', description: 'Multimodal AI' },
+    { id: 'gpt4', name: 'GPT-4', description: 'General purpose' },
+    { id: 'family', name: 'Family Consensus', description: 'AI family coordination' }
+  ],
+  currentModel = availableModels[0],
+  settings = {
+    includeOpenFiles: true,
+    autoScroll: true,
+    detailLevel: 'detailed' as const,
+    voiceMode: 'push-to-talk' as const,
+    privacyMode: false
+  },
+  isLoading = false,
+  disabled = false
+}) => {
+  const [message, setMessage] = useState("");
+  const [attachments, setAttachments] = useState<FileAttachment[]>([]);
+  const [showMentions, setShowMentions] = useState(false);
+  const [showEmojis, setShowEmojis] = useState(false);
+  const [showSettings, setShowSettings] = useState(false);
+  const [isRecording, setIsRecording] = useState(false);
+  const [recordingTime, setRecordingTime] = useState(0);
+  const [selectedModel, setSelectedModel] = useState(currentModel);
+  const [showModelSelector, setShowModelSelector] = useState(false);
+  const [encouragementMessage, setEncouragementMessage] = useState("");
+  
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const recordingIntervalRef = useRef<number | null>(null);
+
+  // Auto-resize textarea
+  useEffect(() => {
+    if (textareaRef.current) {
+      textareaRef.current.style.height = 'auto';
+      textareaRef.current.style.height = `${Math.min(textareaRef.current.scrollHeight, 200)}px`;
+    }
+  }, [message]);
+
+  // Recording timer
+  useEffect(() => {
+    if (isRecording) {
+      recordingIntervalRef.current = setInterval(() => {
+        setRecordingTime(prev => prev + 1);
+      }, 1000);
+    } else {
+      if (recordingIntervalRef.current) {
+        clearInterval(recordingIntervalRef.current);
+      }
+      setRecordingTime(0);
+    }
+
+    return () => {
+      if (recordingIntervalRef.current) {
+        clearInterval(recordingIntervalRef.current);
+      }
+    };
+  }, [isRecording]);
+
+  // Mention options
+  const mentionOptions = [
+    { type: 'codebase', icon: Code, label: '@codebase', description: 'Search entire project' },
+    { type: 'files', icon: FileText, label: '@files', description: 'Select specific files/folders' },
+    { type: 'symbols', icon: Terminal, label: '@symbols', description: 'Find functions, classes, variables' },
+    { type: 'terminal', icon: Terminal, label: '@terminal', description: 'Reference terminal output' },
+    { type: 'docs', icon: FileText, label: '@docs', description: 'Search documentation' },
+    { type: 'web', icon: Globe, label: '@web', description: 'Web search results' },
+    { type: 'memory', icon: Brain, label: '@memory', description: 'Enterprise memory search' },
+    { type: 'family', icon: Users, label: '@family', description: 'Coordinate with AI family members' },
+  ];
+
+  // Quick reactions
+  const quickReactions = ['💜', '🚀', '✨', '🎉', '🔥', '💻', '🎯', '🌟'];
+  const mamaBearEmojis = ['🤗', '😊', '🥰', '😍', '🤩', '💖'];
+
+  // Encouragement messages
+  const encouragementMessages = [
+    "You've got this! 💜",
+    "Amazing work! 🎉",
+    "Keep going, superstar! ✨",
+    "Brilliant thinking! 🧠",
+    "You're doing great! 🌟"
+  ];
+
+  const handleSend = () => {
+    if (!message.trim() && attachments.length === 0) return;
+
+    const chatMessage: ChatMessage = {
+      text: message,
+      attachments,
+      mentions: [],
+      emotions: [{ type: 'happy', intensity: 0.8 }],
+      metadata: {
+        timestamp: new Date(),
+        model: selectedModel.id,
+        context: []
+      }
+    };
+
+    onSendMessage(chatMessage);
+    setMessage("");
+    setAttachments([]);
+    
+    // Show encouragement
+    const randomMessage = encouragementMessages[Math.floor(Math.random() * encouragementMessages.length)];
+    setEncouragementMessage(randomMessage);
+    setTimeout(() => setEncouragementMessage(""), 3000);
+  };
+
+  const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const files = Array.from(event.target.files || []);
+    const newAttachments: FileAttachment[] = files.map(file => ({
+      id: Math.random().toString(36),
+      name: file.name,
+      type: file.type,
+      size: file.size
+    }));
+    
+    setAttachments(prev => [...prev, ...newAttachments]);
+    onFileUpload(files);
+  };
+
+  const removeAttachment = (id: string) => {
+    setAttachments(prev => prev.filter(att => att.id !== id));
+  };
+
+  const handleVoiceToggle = () => {
+    if (isRecording) {
+      setIsRecording(false);
+      // Simulate voice transcription
+      const transcript = "Voice input transcribed";
+      onVoiceInput(transcript);
+      setMessage(prev => prev + " " + transcript);
+    } else {
+      setIsRecording(true);
+    }
+  };
+
+  const handleMentionSelect = (option: any) => {
+    const mention: MentionType = {
+      type: option.type,
+      query: "",
+      results: []
+    };
+    onMentionSelect(mention, {});
+    setMessage(prev => prev + option.label + " ");
+    setShowMentions(false);
+  };
+
+  const formatRecordingTime = (seconds: number) => {
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${mins}:${secs.toString().padStart(2, '0')}`;
+  };
+
+  return (
+    <div className="w-full max-w-4xl mx-auto p-6">
+      {/* Encouragement Message */}
+      <AnimatePresence>
+        {encouragementMessage && (
+          <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            className="mb-4 text-center"
+          >
+            <div className="inline-block px-4 py-2 bg-gradient-to-r from-purple-500/20 to-pink-500/20 backdrop-blur-md rounded-full border border-purple-300/30">
+              <span className="text-purple-200 font-medium">{encouragementMessage}</span>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Main Input Container */}
+      <div className="relative">
+        {/* Glassmorphism Container */}
+        <div className={cn(
+          "relative rounded-3xl p-6 transition-all duration-300",
+          "bg-gradient-to-br from-purple-500/10 to-pink-500/10",
+          "backdrop-blur-xl border border-purple-300/20",
+          "shadow-2xl shadow-purple-500/10",
+          message.trim() && "ring-2 ring-purple-400/50 shadow-purple-400/20"
+        )}>
+          {/* Model Selector */}
+          <div className="flex items-center justify-between mb-4">
+            <DropdownMenu open={showModelSelector} onOpenChange={setShowModelSelector}>
+              <DropdownMenuTrigger>
+                <Button variant="ghost" className="text-purple-200 hover:text-white hover:bg-purple-500/20">
+                  <Brain className="w-4 h-4 mr-2" />
+                  {selectedModel.name}
+                  <ChevronDown className="w-4 h-4 ml-2" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent className="bg-black/90 backdrop-blur-xl border-purple-300/20">
+                {availableModels.map(model => (
+                  <DropdownMenuItem
+                    key={model.id}
+                    onSelect={() => {
+                      setSelectedModel(model);
+                      setShowModelSelector(false);
+                    }}
+                    className="text-purple-200 hover:text-white hover:bg-purple-500/20"
+                  >
+                    <div className="flex items-center justify-between w-full">
+                      <span>{model.name}</span>
+                      {selectedModel.id === model.id && <Check className="w-4 h-4" />}
+                    </div>
+                  </DropdownMenuItem>
+                ))}
+              </DropdownMenuContent>
+            </DropdownMenu>
+
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => setShowSettings(!showSettings)}
+              className="text-purple-200 hover:text-white hover:bg-purple-500/20"
+            >
+              <Settings className="w-5 h-5" />
+            </Button>
+          </div>
+
+          {/* Attachments */}
+          <AnimatePresence>
+            {attachments.length > 0 && (
+              <motion.div
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: "auto" }}
+                exit={{ opacity: 0, height: 0 }}
+                className="mb-4 flex flex-wrap gap-2"
+              >
+                {attachments.map(attachment => (
+                  <div
+                    key={attachment.id}
+                    className="flex items-center gap-2 px-3 py-2 bg-purple-500/20 rounded-lg border border-purple-300/30"
+                  >
+                    <File className="w-4 h-4 text-purple-300" />
+                    <span className="text-sm text-purple-200">{attachment.name}</span>
+                    <button
+                      onClick={() => removeAttachment(attachment.id)}
+                      className="text-purple-300 hover:text-white"
+                    >
+                      <X className="w-4 h-4" />
+                    </button>
+                  </div>
+                ))}
+              </motion.div>
+            )}
+          </AnimatePresence>
+
+          {/* Main Input Area */}
+          <div className="relative">
+            <Textarea
+              ref={textareaRef}
+              value={message}
+              onChange={(e) => setMessage(e.target.value)}
+              placeholder="Ask Mama Bear anything... 💜 (@codebase, @files, @docs, @web)"
+              disabled={disabled || isLoading}
+              className={cn(
+                "w-full min-h-[120px] resize-none border-none bg-transparent",
+                "text-white placeholder:text-purple-300/60 text-lg",
+                "focus:ring-0 focus-visible:ring-0 focus-visible:ring-offset-0"
+              )}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                  e.preventDefault();
+                  handleSend();
+                }
+                if (message.endsWith('@')) {
+                  setShowMentions(true);
+                }
+              }}
+            />
+
+            {/* Mention Dropdown */}
+            <AnimatePresence>
+              {showMentions && (
+                <motion.div
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: 10 }}
+                  className="absolute bottom-full left-0 mb-2 w-full max-w-md bg-black/90 backdrop-blur-xl rounded-xl border border-purple-300/20 p-2"
+                >
+                  {mentionOptions.map(option => (
+                    <button
+                      key={option.type}
+                      onClick={() => handleMentionSelect(option)}
+                      className="w-full flex items-center gap-3 p-3 rounded-lg hover:bg-purple-500/20 text-left"
+                    >
+                      <option.icon className="w-5 h-5 text-purple-400" />
+                      <div>
+                        <div className="text-purple-200 font-medium">{option.label}</div>
+                        <div className="text-purple-400 text-sm">{option.description}</div>
+                      </div>
+                    </button>
+                  ))}
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
+
+          {/* Voice Recording Indicator */}
+          <AnimatePresence>
+            {isRecording && (
+              <motion.div
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.9 }}
+                className="flex items-center justify-center gap-3 py-4"
+              >
+                <div className="flex items-center gap-2">
+                  <div className="w-3 h-3 bg-red-500 rounded-full animate-pulse" />
+                  <span className="text-purple-200">Recording: {formatRecordingTime(recordingTime)}</span>
+                </div>
+                <div className="flex gap-1">
+                  {[...Array(5)].map((_, i) => (
+                    <motion.div
+                      key={i}
+                      className="w-1 bg-purple-400 rounded-full"
+                      animate={{
+                        height: [4, 20, 4],
+                      }}
+                      transition={{
+                        duration: 0.5,
+                        repeat: Infinity,
+                        delay: i * 0.1,
+                      }}
+                    />
+                  ))}
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+
+          {/* Bottom Actions */}
+          <div className="flex items-center justify-between mt-4">
+            {/* Left Actions */}
+            <div className="flex items-center gap-2">
+              {/* File Upload */}
+              <input
+                ref={fileInputRef}
+                type="file"
+                multiple
+                className="hidden"
+                onChange={handleFileSelect}
+                accept=".js,.ts,.py,.md,.json,.css,.html,.txt,image/*"
+              />
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => fileInputRef.current?.click()}
+                className="text-purple-300 hover:text-white hover:bg-purple-500/20"
+              >
+                <Paperclip className="w-5 h-5" />
+              </Button>
+
+              {/* Emoji Picker */}
+              <Popover open={showEmojis} onOpenChange={setShowEmojis}>
+                <PopoverTrigger>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="text-purple-300 hover:text-white hover:bg-purple-500/20"
+                  >
+                    <Smile className="w-5 h-5" />
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="bg-black/90 backdrop-blur-xl border-purple-300/20">
+                  <div className="space-y-3">
+                    <div>
+                      <h4 className="text-purple-200 font-medium mb-2">Quick Reactions</h4>
+                      <div className="flex flex-wrap gap-2">
+                        {quickReactions.map(emoji => (
+                          <Reaction
+                            key={emoji}
+                            symbol={emoji}
+                            className="p-2 hover:bg-purple-500/20 rounded-lg text-xl"
+                            onClick={() => setMessage(prev => prev + emoji)}
+                          />
+                        ))}
+                      </div>
+                    </div>
+                    <div>
+                      <h4 className="text-purple-200 font-medium mb-2">Mama Bear 💜</h4>
+                      <div className="flex flex-wrap gap-2">
+                        {mamaBearEmojis.map(emoji => (
+                          <Reaction
+                            key={emoji}
+                            symbol={emoji}
+                            className="p-2 hover:bg-purple-500/20 rounded-lg text-xl"
+                            onClick={() => setMessage(prev => prev + emoji)}
+                          />
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                </PopoverContent>
+              </Popover>
+
+              {/* Voice Input */}
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={handleVoiceToggle}
+                className={cn(
+                  "text-purple-300 hover:text-white hover:bg-purple-500/20",
+                  isRecording && "bg-red-500/20 text-red-400"
+                )}
+              >
+                {isRecording ? <VolumeX className="w-5 h-5" /> : <Mic className="w-5 h-5" />}
+              </Button>
+            </div>
+
+            {/* Send Button */}
+            <Button
+              onClick={handleSend}
+              disabled={(!message.trim() && attachments.length === 0) || disabled || isLoading}
+              className={cn(
+                "bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700",
+                "text-white font-medium px-6 py-3 rounded-xl",
+                "shadow-lg shadow-purple-500/25 hover:shadow-purple-500/40",
+                "transition-all duration-200 transform hover:scale-105",
+                "disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+              )}
+            >
+              {isLoading ? (
+                <div className="flex items-center gap-2">
+                  <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                  <span>Thinking...</span>
+                </div>
+              ) : (
+                <div className="flex items-center gap-2">
+                  <Rocket className="w-5 h-5" />
+                  <span>Send</span>
+                </div>
+              )}
+            </Button>
+          </div>
+        </div>
+
+        {/* Settings Panel */}
+        <AnimatePresence>
+          {showSettings && (
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 20 }}
+              className="absolute top-full left-0 right-0 mt-4 p-6 bg-black/90 backdrop-blur-xl rounded-2xl border border-purple-300/20"
+            >
+              <h3 className="text-purple-200 font-semibold mb-4 flex items-center gap-2">
+                <Settings className="w-5 h-5" />
+                Mama Bear Settings
+              </h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="space-y-3">
+                  <label className="flex items-center gap-3 text-purple-200">
+                    <input type="checkbox" defaultChecked={settings.includeOpenFiles} className="rounded" />
+                    Include open files in context
+                  </label>
+                  <label className="flex items-center gap-3 text-purple-200">
+                    <input type="checkbox" defaultChecked={settings.autoScroll} className="rounded" />
+                    Auto-scroll to new messages
+                  </label>
+                  <label className="flex items-center gap-3 text-purple-200">
+                    <input type="checkbox" defaultChecked={settings.privacyMode} className="rounded" />
+                    Privacy mode
+                  </label>
+                </div>
+                <div className="space-y-3">
+                  <div>
+                    <label className="block text-purple-200 mb-2">Detail Level</label>
+                    <select className="w-full bg-purple-500/20 border border-purple-300/30 rounded-lg px-3 py-2 text-purple-200">
+                      <option value="brief">Brief</option>
+                      <option value="detailed" selected>Detailed</option>
+                      <option value="comprehensive">Comprehensive</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label className="block text-purple-200 mb-2">Voice Mode</label>
+                    <select className="w-full bg-purple-500/20 border border-purple-300/30 rounded-lg px-3 py-2 text-purple-200">
+                      <option value="push-to-talk" selected>Push to Talk</option>
+                      <option value="continuous">Continuous</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
+
+      {/* Quick Actions */}
+      <div className="mt-6 flex flex-wrap gap-3 justify-center">
+        {[
+          { icon: Code, label: "Generate code", action: () => setMessage("Generate code for ") },
+          { icon: FileText, label: "Explain selection", action: () => setMessage("Explain this code: ") },
+          { icon: Sparkles, label: "Fix errors", action: () => setMessage("Fix errors in ") },
+          { icon: Rocket, label: "Optimize performance", action: () => setMessage("Optimize performance of ") },
+          { icon: Heart, label: "Add documentation", action: () => setMessage("Add documentation for ") },
+        ].map(action => (
+          <Button
+            key={action.label}
+            variant="ghost"
+            onClick={action.action}
+            className="text-purple-300 hover:text-white hover:bg-purple-500/20 border border-purple-300/20"
+          >
+            <action.icon className="w-4 h-4 mr-2" />
+            {action.label}
+          </Button>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+// Demo Component
+export default function Demo() {
+  const [messages, setMessages] = useState<ChatMessage[]>([]);
+
+  const handleSendMessage = (message: ChatMessage) => {
+    setMessages(prev => [...prev, message]);
+    console.log("Message sent:", message);
+  };
+
+  const handleFileUpload = (files: File[]) => {
+    console.log("Files uploaded:", files);
+  };
+
+  const handleVoiceInput = (transcript: string) => {
+    console.log("Voice input:", transcript);
+  };
+
+  const handleMentionSelect = (mention: MentionType, data: any) => {
+    console.log("Mention selected:", mention, data);
+  };
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-purple-900 via-blue-900 to-indigo-900 p-4">
+      <div className="max-w-6xl mx-auto">
+        <div className="text-center mb-8">
+          <h1 className="text-4xl font-bold text-white mb-2">
+            Mama Bear Chat Input 💜
+          </h1>
+          <p className="text-purple-200">
+            The ultimate AI chat interface with love and intelligence
+          </p>
+        </div>
+        
+        <MamaBearChatInput
+          onSendMessage={handleSendMessage}
+          onFileUpload={handleFileUpload}
+          onVoiceInput={handleVoiceInput}
+          onMentionSelect={handleMentionSelect}
+        />
+
+        {/* Message History */}
+        {messages.length > 0 && (
+          <div className="mt-8 space-y-4">
+            <h2 className="text-xl font-semibold text-white">Recent Messages</h2>
+            {messages.map((msg, index) => (
+              <div
+                key={index}
+                className="p-4 bg-white/10 backdrop-blur-md rounded-xl border border-white/20"
+              >
+                <div className="text-white">{msg.text}</div>
+                {msg.attachments.length > 0 && (
+                  <div className="mt-2 text-purple-300 text-sm">
+                    Attachments: {msg.attachments.map(att => att.name).join(", ")}
+                  </div>
+                )}
+                <div className="mt-2 text-purple-400 text-xs">
+                  Model: {msg.metadata.model} • {msg.metadata.timestamp.toLocaleTimeString()}
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}

@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>💜 Mama Bear's Family IDE</title>
+    <style>
+      /* 💜 Prevent FOUC with beautiful loading */
+      body {
+        margin: 0;
+        padding: 0;
+        background: linear-gradient(135deg, #581c87, #7c3aed, #3730a3);
+        color: white;
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        overflow: hidden;
+      }
+      
+      .loading-screen {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        background: linear-gradient(135deg, #581c87, #7c3aed, #3730a3);
+        z-index: 9999;
+      }
+      
+      .loading-heart {
+        font-size: 3rem;
+        animation: pulse 1.5s infinite;
+      }
+      
+      @keyframes pulse {
+        0%, 100% { transform: scale(1); opacity: 1; }
+        50% { transform: scale(1.1); opacity: 0.8; }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- 💜 Beautiful loading screen -->
+    <div id="loading-screen" class="loading-screen">
+      <div class="loading-heart">💜</div>
+      <h2 style="margin: 1rem 0; font-weight: 300;">Mama Bear's Family IDE</h2>
+      <p style="opacity: 0.8; font-size: 0.9rem;">Loading with love...</p>
+    </div>
+    
+    <!-- 🚀 Main application root -->
+    <div id="root"></div>
+    
+    <!-- ⚡ Main script -->
+    <script type="module" src="/src/main.tsx"></script>
+    
+    <script>
+      // 💜 Hide loading screen when app is ready
+      window.addEventListener('load', () => {
+        setTimeout(() => {
+          const loading = document.getElementById('loading-screen');
+          if (loading) {
+            loading.style.opacity = '0';
+            loading.style.transition = 'opacity 0.5s ease-out';
+            setTimeout(() => loading.remove(), 500);
+          }
+        }, 1000);
+      });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,1753 @@
+"use client"
+
+import * as React from "react"
+import { useState, useRef, useEffect, useCallback } from "react"
+import { motion } from "framer-motion"
+import { 
+  Code2, 
+  Save, 
+  RotateCcw, 
+  Play, 
+  ZoomIn, 
+  ZoomOut, 
+  Settings, 
+  Heart,
+  Coffee,
+  Sparkles,
+  FileText,
+  Download,
+  Copy,
+  Check
+} from "lucide-react"
+import { cn } from "@/lib/utils"
+import { Button } from "@/components/ui/button"
+import { Badge } from "@/components/ui/badge"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+
+// Copy to clipboard hook
+function useCopyToClipboard(): [string | null, (text: string) => Promise<boolean>] {
+  const [copiedText, setCopiedText] = React.useState<string | null>(null)
+
+  const copy: (text: string) => Promise<boolean> = React.useCallback(async (text) => {
+    if (!navigator?.clipboard) {
+      console.warn("Clipboard not supported")
+      return false
+    }
+
+    try {
+      await navigator.clipboard.writeText(text)
+      setCopiedText(text)
+      return true
+    } catch (error) {
+      console.warn("Copy failed", error)
+      setCopiedText(null)
+      return false
+    }
+  }, [])
+
+  return [copiedText, copy]
+}
+
+// Monaco Editor Types
+export type CodeLanguage = 
+  | "typescript" 
+  | "javascript" 
+  | "html" 
+  | "css" 
+  | "json" 
+  | "python" 
+  | "java" 
+  | "cpp" 
+  | "csharp" 
+  | "go" 
+  | "rust" 
+  | "php" 
+  | "ruby" 
+  | "sql" 
+  | "markdown"
+
+export type KeybindingMode = "standard" | "vim" | "emacs"
+
+export interface CursorPosition {
+  line: number
+  column: number
+}
+
+export interface MonacoEditorProps {
+  value?: string
+  language?: CodeLanguage
+  theme?: "purple-dark" | "purple-light"
+  onChange?: (value: string) => void
+  onCursorPositionChange?: (position: CursorPosition) => void
+  onSave?: (content: string) => void
+  onLoad?: (content: string) => void
+  keybindingMode?: KeybindingMode
+  fontSize?: number
+  showMinimap?: boolean
+  wordWrap?: boolean
+  readOnly?: boolean
+  className?: string
+}
+
+// Language configurations
+const LANGUAGE_OPTIONS = [
+  { value: "typescript", label: "TypeScript", extension: ".ts", icon: "🔷" },
+  { value: "javascript", label: "JavaScript", extension: ".js", icon: "🟨" },
+  { value: "html", label: "HTML", extension: ".html", icon: "🌐" },
+  { value: "css", label: "CSS", extension: ".css", icon: "🎨" },
+  { value: "json", label: "JSON", extension: ".json", icon: "📋" },
+  { value: "python", label: "Python", extension: ".py", icon: "🐍" },
+  { value: "java", label: "Java", extension: ".java", icon: "☕" },
+  { value: "cpp", label: "C++", extension: ".cpp", icon: "⚡" },
+  { value: "csharp", label: "C#", extension: ".cs", icon: "🔵" },
+  { value: "go", label: "Go", extension: ".go", icon: "🐹" },
+  { value: "rust", label: "Rust", extension: ".rs", icon: "🦀" },
+  { value: "php", label: "PHP", extension: ".php", icon: "🐘" },
+  { value: "ruby", label: "Ruby", extension: ".rb", icon: "💎" },
+  { value: "sql", label: "SQL", extension: ".sql", icon: "🗃️" },
+  { value: "markdown", label: "Markdown", extension: ".md", icon: "📝" }
+]
+
+const DEFAULT_CODE_SAMPLES: Record<CodeLanguage, string> = {
+  typescript: `// 💜 Welcome to your cozy TypeScript playground! 
+// You're doing amazing - let's build something wonderful together! ✨
+
+interface WelcomeMessage {
+  greeting: string;
+  encouragement: string;
+  mood: "excited" | "happy" | "inspired";
+}
+
+const createWelcome = (name: string = "Developer"): WelcomeMessage => {
+  return {
+    greeting: \`Hello, \${name}! 🌟\`,
+    encouragement: "You've got this! Every line of code is progress! 💪",
+    mood: "inspired"
+  };
+};
+
+// Your journey starts here - take it one step at a time! 🚀
+const message = createWelcome("Amazing Coder");
+console.log(message.greeting);
+console.log(message.encouragement);`,
+
+  javascript: `// 🌈 Your JavaScript adventure begins here!
+// Remember: every expert was once a beginner! 💝
+
+function createMagic(dreams = []) {
+  // You're capable of incredible things! ✨
+  const magic = dreams.map(dream => ({
+    dream,
+    possible: true,
+    timeline: "sooner than you think! 🎯"
+  }));
+  
+  return magic;
+}
+
+// Believe in yourself - you're already doing great! 🌟
+const myDreams = ["Build amazing apps", "Help others", "Never stop learning"];
+const magicMoments = createMagic(myDreams);
+
+console.log("Your dreams are valid and achievable! 💜");
+magicMoments.forEach(moment => {
+  console.log(\`✨ \${moment.dream} is \${moment.possible ? 'absolutely possible' : 'impossible'}\`);
+});`,
+
+  html: `<!-- 🏠 Welcome to your HTML home! Every great website starts here! -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Amazing Creation 💜</title>
+    <style>
+        /* 🎨 A little purple magic for you! */
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 2rem;
+            margin: 0;
+        }
+        .encouragement {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 1.5rem;
+            border-radius: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+    </style>
+</head>
+<body>
+    <div class="encouragement">
+        <h1>🌟 You're Building Something Beautiful!</h1>
+        <p>Every line of HTML is a step toward your dreams. Keep going! 💪</p>
+        <p>Remember: Progress over perfection! 💜</p>
+    </div>
+</body>
+</html>`,
+
+  css: `/* 🎨 Your CSS canvas awaits! Paint your dreams in purple! */
+/* Remember: every designer started with their first line of CSS! 💜 */
+
+:root {
+  /* 💜 Purple mama bear theme - warm and encouraging! */
+  --purple-primary: #8B5CF6;
+  --purple-light: #A78BFA;
+  --purple-dark: #7C3AED;
+  --glass-bg: rgba(139, 92, 246, 0.1);
+  --encouragement: "You're doing amazing! ✨";
+}
+
+/* 🌟 Glassmorphism magic - you've got this! */
+.mama-bear-container {
+  background: var(--glass-bg);
+  backdrop-filter: blur(16px);
+  border-radius: 20px;
+  border: 1px solid rgba(139, 92, 246, 0.2);
+  padding: 2rem;
+  box-shadow: 
+    0 8px 32px rgba(139, 92, 246, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  transition: all 0.3s ease;
+}
+
+.mama-bear-container:hover {
+  transform: translateY(-2px);
+  box-shadow: 
+    0 12px 40px rgba(139, 92, 246, 0.15),
+    inset 0 1px 0 rgba(255, 255, 255, 0.15);
+}
+
+/* 💝 Encouraging text styles */
+.encouragement-text {
+  color: var(--purple-light);
+  font-weight: 500;
+  text-align: center;
+  margin: 1rem 0;
+}
+
+.encouragement-text::before {
+  content: "💜 ";
+}
+
+.encouragement-text::after {
+  content: " You're amazing!";
+  opacity: 0.8;
+}
+
+/* 🚀 Keep building beautiful things! */`,
+
+  json: `{
+  "💜": "Welcome to your JSON playground!",
+  "encouragement": {
+    "message": "You're doing fantastic! Every bracket counts! 🌟",
+    "reminder": "Take breaks when you need them - you're human! 💝",
+    "truth": "Progress over perfection, always! ✨"
+  },
+  "mama_bear_wisdom": [
+    "🌟 Start small, dream big!",
+    "💪 Every error is a learning opportunity!",
+    "🎯 You're exactly where you need to be!",
+    "💜 Your code has purpose and meaning!"
+  ],
+  "project_config": {
+    "theme": "purple-glassmorphism",
+    "mood": "encouraging",
+    "energy_level": "high",
+    "support_level": "maximum",
+    "belief_in_you": "infinite ∞"
+  },
+  "daily_affirmations": {
+    "morning": "I am a capable developer! 🌅",
+    "afternoon": "My code is getting better every day! ☀️",
+    "evening": "I'm proud of what I accomplished today! 🌙"
+  },
+  "remember": "You're not just writing code - you're creating magic! ✨🚀"
+}`,
+
+  python: `# 🐍 Python paradise! Welcome to your coding sanctuary! 
+# Remember: you're braver than you believe and stronger than you seem! 💜
+
+import datetime
+from typing import List, Dict
+
+def mama_bear_encouragement() -> Dict[str, str]:
+    """
+    💝 A gentle reminder that you're doing amazing!
+    Every function you write is progress! ✨
+    """
+    return {
+        "message": "You're absolutely crushing it! 🌟",
+        "reminder": "Take it one line at a time - you've got this! 💪",
+        "truth": "Your code matters and so do you! 💜"
+    }
+
+class DreamBuilder:
+    """🚀 Building dreams, one class at a time!"""
+    
+    def __init__(self, dreamer_name: str = "Amazing Developer"):
+        self.dreamer = dreamer_name
+        self.dreams: List[str] = []
+        self.achievements: List[str] = []
+        
+    def add_dream(self, dream: str) -> None:
+        """✨ Add a dream - they're all valid and achievable!"""
+        self.dreams.append(f"💫 {dream}")
+        print(f"Dream added! You're one step closer! 🎯")
+        
+    def celebrate_progress(self, achievement: str) -> None:
+        """🎉 Celebrate every win, no matter how small!"""
+        self.achievements.append(f"🏆 {achievement}")
+        print(f"🎊 Celebrating: {achievement}")
+        print("You should be proud - progress is progress! 💜")
+
+# 🌟 Your journey starts here!
+if __name__ == "__main__":
+    builder = DreamBuilder("Wonderful You")
+    builder.add_dream("Master Python")
+    builder.add_dream("Build something amazing")
+    builder.celebrate_progress("Opened the code editor")
+    
+    encouragement = mama_bear_encouragement()
+    print(f"\\n💜 {encouragement['message']}")
+    print(f"🌈 {encouragement['reminder']}")`,
+
+  java: `// ☕ Java joy! Welcome to your caffeinated coding corner!
+// Remember: every expert was once a beginner! You're on the right path! 💜
+
+import java.util.*;
+import java.time.LocalDateTime;
+
+/**
+ * 🌟 MamaBearEncouragement - Because you deserve all the support!
+ * Every line of Java you write is a step toward greatness! ✨
+ */
+public class MamaBearEncouragement {
+    private String developerName;
+    private List<String> achievements;
+    private List<String> dailyAffirmations;
+    
+    public MamaBearEncouragement(String name) {
+        this.developerName = name != null ? name : "Amazing Developer";
+        this.achievements = new ArrayList<>();
+        this.dailyAffirmations = Arrays.asList(
+            "💜 I am capable of learning anything!",
+            "🌟 My code is getting better every day!",
+            "🚀 I embrace challenges as growth opportunities!",
+            "💪 I am persistent and resilient!"
+        );
+    }
+    
+    /**
+     * 🎉 Celebrate your progress - you're doing fantastic!
+     */
+    public void celebrateAchievement(String achievement) {
+        achievements.add("🏆 " + achievement);
+        System.out.println("🎊 Celebrating: " + achievement);
+        System.out.println("You should be so proud! Keep going! 💜");
+    }
+    
+    /**
+     * ✨ Get your daily dose of encouragement!
+     */
+    public void getDailyEncouragement() {
+        Random random = new Random();
+        String affirmation = dailyAffirmations.get(
+            random.nextInt(dailyAffirmations.size())
+        );
+        
+        System.out.println("\\n💝 Daily Reminder for " + developerName + ":");
+        System.out.println(affirmation);
+        System.out.println("You're exactly where you need to be! 🌈");
+    }
+    
+    public static void main(String[] args) {
+        MamaBearEncouragement encourager = 
+            new MamaBearEncouragement("Wonderful You");
+            
+        encourager.celebrateAchievement("Started coding in Java!");
+        encourager.getDailyEncouragement();
+        
+        System.out.println("\\n🌟 Remember: Progress over perfection!");
+        System.out.println("💜 You're building something beautiful!");
+    }
+}`,
+
+  cpp: `// ⚡ C++ power! Welcome to your high-performance haven!
+// You're tackling one of the most powerful languages - you're incredible! 💜
+
+#include <iostream>
+#include <vector>
+#include <string>
+#include <memory>
+#include <algorithm>
+
+/**
+ * 🌟 MamaBearSupport - Because you deserve encouragement!
+ * Every pointer you manage is progress! Every template you write is growth! ✨
+ */
+class MamaBearSupport {
+private:
+    std::string developerName;
+    std::vector<std::string> achievements;
+    std::vector<std::string> encouragements;
+    
+public:
+    MamaBearSupport(const std::string& name = "Amazing Developer") 
+        : developerName(name) {
+        encouragements = {
+            "💜 You're mastering C++ - that's incredible!",
+            "🚀 Every compile error is a learning opportunity!",
+            "⚡ Your code is getting more efficient every day!",
+            "🌟 You're building the future with C++!"
+        };
+    }
+    
+    /**
+     * 🎉 Celebrate your C++ victories!
+     */
+    void celebrateProgress(const std::string& achievement) {
+        achievements.emplace_back("🏆 " + achievement);
+        std::cout << "🎊 Celebrating: " << achievement << std::endl;
+        std::cout << "You're doing amazing work! Keep it up! 💜" << std::endl;
+    }
+    
+    /**
+     * ✨ Get some mama bear encouragement!
+     */
+    void getEncouragement() const {
+        auto randomEncouragement = encouragements[
+            rand() % encouragements.size()
+        ];
+        
+        std::cout << "\\n💝 For " << developerName << ":" << std::endl;
+        std::cout << randomEncouragement << std::endl;
+        std::cout << "You're exactly where you need to be! 🌈" << std::endl;
+    }
+    
+    /**
+     * 📊 Show your amazing progress!
+     */
+    void showAchievements() const {
+        std::cout << "\\n🌟 Your C++ Journey:" << std::endl;
+        std::for_each(achievements.begin(), achievements.end(),
+            [](const std::string& achievement) {
+                std::cout << achievement << std::endl;
+            });
+    }
+};
+
+int main() {
+    auto support = std::make_unique<MamaBearSupport>("Wonderful You");
+    
+    support->celebrateProgress("Opened C++ editor!");
+    support->celebrateProgress("Understanding pointers!");
+    support->getEncouragement();
+    support->showAchievements();
+    
+    std::cout << "\\n💜 Remember: You're not just coding, you're creating magic!" << std::endl;
+    std::cout << "🚀 Keep building amazing things!" << std::endl;
+    
+    return 0;
+}`,
+
+  csharp: `// 🔵 C# brilliance! Welcome to your .NET wonderland!
+// You're learning one of the most versatile languages - you're amazing! 💜
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
+
+namespace MamaBearEncouragement
+{
+    /// <summary>
+    /// 🌟 MamaBearSupport - Your coding cheerleader!
+    /// Every LINQ query you write is poetry! Every class is progress! ✨
+    /// </summary>
+    public class MamaBearSupport
+    {
+        private readonly string _developerName;
+        private readonly List<string> _achievements;
+        private readonly List<string> _encouragements;
+        
+        public MamaBearSupport(string name = "Amazing Developer")
+        {
+            _developerName = name;
+            _achievements = new List<string>();
+            _encouragements = new List<string>
+            {
+                "💜 You're mastering C# - that's fantastic!",
+                "🚀 Your object-oriented thinking is growing!",
+                "⚡ LINQ makes you a data wizard!",
+                "🌟 You're building the future with .NET!"
+            };
+        }
+        
+        /// <summary>
+        /// 🎉 Celebrate your C# victories!
+        /// </summary>
+        public void CelebrateProgress(string achievement)
+        {
+            _achievements.Add($"🏆 {achievement}");
+            Console.WriteLine($"🎊 Celebrating: {achievement}");
+            Console.WriteLine("You're doing incredible work! Keep shining! 💜");
+        }
+        
+        /// <summary>
+        /// ✨ Get your daily dose of encouragement!
+        /// </summary>
+        public void GetEncouragement()
+        {
+            var random = new Random();
+            var encouragement = _encouragements[random.Next(_encouragements.Count)];
+            
+            Console.WriteLine($"\\n💝 For {_developerName}:");
+            Console.WriteLine(encouragement);
+            Console.WriteLine("You're exactly where you need to be! 🌈");
+        }
+        
+        /// <summary>
+        /// 📊 Show your amazing progress with LINQ magic!
+        /// </summary>
+        public void ShowAchievements()
+        {
+            Console.WriteLine("\\n🌟 Your C# Journey:");
+            _achievements.ForEach(Console.WriteLine);
+            
+            var count = _achievements.Count;
+            Console.WriteLine($"\\n💜 Total achievements: {count}");
+            Console.WriteLine("Every single one matters! 🎯");
+        }
+    }
+    
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            var support = new MamaBearSupport("Wonderful You");
+            
+            support.CelebrateProgress("Started C# journey!");
+            support.CelebrateProgress("Understanding classes and objects!");
+            support.GetEncouragement();
+            support.ShowAchievements();
+            
+            Console.WriteLine("\\n💜 Remember: You're not just coding, you're solving problems!");
+            Console.WriteLine("🚀 Keep building amazing solutions!");
+            
+            Console.ReadKey();
+        }
+    }
+}`,
+
+  go: `// 🐹 Go greatness! Welcome to your concurrent coding corner!
+// You're learning Go - you're building the future! 💜
+
+package main
+
+import (
+    "fmt"
+    "math/rand"
+    "sync"
+    "time"
+)
+
+// 🌟 MamaBearSupport - Your Go cheerleader!
+// Every goroutine you spawn is progress! Every channel is growth! ✨
+type MamaBearSupport struct {
+    DeveloperName   string
+    Achievements    []string
+    Encouragements  []string
+    mutex          sync.RWMutex
+}
+
+// NewMamaBearSupport creates your personal encouragement system! 💜
+func NewMamaBearSupport(name string) *MamaBearSupport {
+    if name == "" {
+        name = "Amazing Developer"
+    }
+    
+    return &MamaBearSupport{
+        DeveloperName: name,
+        Achievements:  make([]string, 0),
+        Encouragements: []string{
+            "💜 You're mastering Go - that's incredible!",
+            "🚀 Your concurrent thinking is evolving!",
+            "⚡ Goroutines make you a concurrency wizard!",
+            "🌟 You're building scalable solutions!",
+        },
+    }
+}
+
+// CelebrateProgress 🎉 Celebrate your Go victories!
+func (m *MamaBearSupport) CelebrateProgress(achievement string) {
+    m.mutex.Lock()
+    defer m.mutex.Unlock()
+    
+    m.Achievements = append(m.Achievements, fmt.Sprintf("🏆 %s", achievement))
+    fmt.Printf("🎊 Celebrating: %s\\n", achievement)
+    fmt.Println("You're doing amazing work! Keep going! 💜")
+}
+
+// GetEncouragement ✨ Get your daily dose of Go encouragement!
+func (m *MamaBearSupport) GetEncouragement() {
+    m.mutex.RLock()
+    defer m.mutex.RUnlock()
+    
+    rand.Seed(time.Now().UnixNano())
+    encouragement := m.Encouragements[rand.Intn(len(m.Encouragements))]
+    
+    fmt.Printf("\\n💝 For %s:\\n", m.DeveloperName)
+    fmt.Println(encouragement)
+    fmt.Println("You're exactly where you need to be! 🌈")
+}
+
+// ShowAchievements 📊 Show your amazing progress!
+func (m *MamaBearSupport) ShowAchievements() {
+    m.mutex.RLock()
+    defer m.mutex.RUnlock()
+    
+    fmt.Println("\\n🌟 Your Go Journey:")
+    for _, achievement := range m.Achievements {
+        fmt.Println(achievement)
+    }
+    fmt.Printf("\\n💜 Total achievements: %d\\n", len(m.Achievements))
+    fmt.Println("Every single one matters! 🎯")
+}
+
+// encouragementWorker 🔄 A goroutine that sends periodic encouragement!
+func encouragementWorker(support *MamaBearSupport, done chan bool) {
+    ticker := time.NewTicker(5 * time.Second)
+    defer ticker.Stop()
+    
+    for {
+        select {
+        case <-ticker.C:
+            fmt.Println("\\n💜 Gentle reminder: You're doing great!")
+        case <-done:
+            fmt.Println("\\n🌟 Keep up the amazing work!")
+            return
+        }
+    }
+}
+
+func main() {
+    support := NewMamaBearSupport("Wonderful You")
+    done := make(chan bool)
+    
+    // Start encouragement worker 🚀
+    go encouragementWorker(support, done)
+    
+    support.CelebrateProgress("Started Go journey!")
+    support.CelebrateProgress("Understanding goroutines!")
+    support.GetEncouragement()
+    support.ShowAchievements()
+    
+    fmt.Println("\\n💜 Remember: You're not just coding, you're building the future!")
+    fmt.Println("🚀 Keep building amazing concurrent solutions!")
+    
+    // Stop the encouragement worker
+    time.Sleep(2 * time.Second)
+    done <- true
+    time.Sleep(1 * time.Second)
+}`,
+
+  rust: `// 🦀 Rust resilience! Welcome to your memory-safe sanctuary!
+// You're learning Rust - you're a systems programming hero! 💜
+
+use std::collections::HashMap;
+use std::sync::{Arc, Mutex};
+use std::thread;
+use std::time::Duration;
+
+/// 🌟 MamaBearSupport - Your Rust cheerleader!
+/// Every borrow checker victory is progress! Every lifetime is growth! ✨
+#[derive(Debug)]
+struct MamaBearSupport {
+    developer_name: String,
+    achievements: Vec<String>,
+    encouragements: Vec<&'static str>,
+}
+
+impl MamaBearSupport {
+    /// Create your personal Rust encouragement system! 💜
+    fn new(name: Option<&str>) -> Self {
+        let developer_name = name.unwrap_or("Amazing Developer").to_string();
+        
+        Self {
+            developer_name,
+            achievements: Vec::new(),
+            encouragements: vec![
+                "💜 You're mastering Rust - that's incredible!",
+                "🚀 Your memory safety skills are evolving!",
+                "⚡ The borrow checker is your friend!",
+                "🌟 You're building zero-cost abstractions!",
+                "🦀 Rust makes you a systems programming wizard!",
+            ],
+        }
+    }
+    
+    /// 🎉 Celebrate your Rust victories!
+    fn celebrate_progress(&mut self, achievement: &str) {
+        self.achievements.push(format!("🏆 {}", achievement));
+        println!("🎊 Celebrating: {}", achievement);
+        println!("You're doing amazing work! Keep it up! 💜");
+    }
+    
+    /// ✨ Get your daily dose of Rust encouragement!
+    fn get_encouragement(&self) {
+        use rand::Rng;
+        let mut rng = rand::thread_rng();
+        let encouragement = self.encouragements[rng.gen_range(0..self.encouragements.len())];
+        
+        println!("\\n💝 For {}:", self.developer_name);
+        println!("{}", encouragement);
+        println!("You're exactly where you need to be! 🌈");
+    }
+    
+    /// 📊 Show your amazing progress!
+    fn show_achievements(&self) {
+        println!("\\n🌟 Your Rust Journey:");
+        for achievement in &self.achievements {
+            println!("{}", achievement);
+        }
+        println!("\\n💜 Total achievements: {}", self.achievements.len());
+        println!("Every single one matters! 🎯");
+    }
+}
+
+/// 🔄 A function that demonstrates Rust's concurrency features!
+fn encouragement_worker(support: Arc<Mutex<MamaBearSupport>>) {
+    thread::spawn(move || {
+        for i in 1..=3 {
+            thread::sleep(Duration::from_secs(1));
+            
+            if let Ok(support_guard) = support.lock() {
+                println!("\\n💜 Background encouragement #{}: You're doing fantastic!", i);
+                println!("🦀 Rust's ownership system loves you!");
+            }
+        }
+    });
+}
+
+fn main() -> Result<(), Box<dyn std::error::Error>> {
+    println!("🦀 Welcome to Rust! You're about to do amazing things!");
+    
+    let mut support = MamaBearSupport::new(Some("Wonderful You"));
+    
+    // Demonstrate Arc and Mutex for shared state
+    let shared_support = Arc::new(Mutex::new(MamaBearSupport::new(Some("Concurrent You"))));
+    encouragement_worker(Arc::clone(&shared_support));
+    
+    support.celebrate_progress("Started Rust journey!");
+    support.celebrate_progress("Understanding ownership!");
+    support.celebrate_progress("Befriending the borrow checker!");
+    support.get_encouragement();
+    support.show_achievements();
+    
+    println!("\\n💜 Remember: You're not just coding, you're ensuring memory safety!");
+    println!("🚀 Keep building blazingly fast and safe solutions!");
+    
+    // Give background thread time to finish
+    thread::sleep(Duration::from_secs(4));
+    
+    Ok(())
+}
+
+// Don't forget to add these to your Cargo.toml:
+// [dependencies]
+// rand = "0.8"`,
+
+  php: `<?php
+// 🐘 PHP power! Welcome to your web development wonderland!
+// You're building the web - you're absolutely amazing! 💜
+
+/**
+ * 🌟 MamaBearSupport - Your PHP cheerleader!
+ * Every array you manipulate is progress! Every function is growth! ✨
+ */
+class MamaBearSupport {
+    private string $developerName;
+    private array $achievements;
+    private array $encouragements;
+    
+    public function __construct(string $name = "Amazing Developer") {
+        $this->developerName = $name;
+        $this->achievements = [];
+        $this->encouragements = [
+            "💜 You're mastering PHP - that's fantastic!",
+            "🚀 Your web development skills are growing!",
+            "⚡ You're building dynamic experiences!",
+            "🌟 PHP makes you a web wizard!",
+            "🐘 You're part of the PHP family!"
+        ];
+    }
+    
+    /**
+     * 🎉 Celebrate your PHP victories!
+     */
+    public function celebrateProgress(string $achievement): void {
+        $this->achievements[] = "🏆 " . $achievement;
+        echo "🎊 Celebrating: " . $achievement . "\\n";
+        echo "You're doing incredible work! Keep shining! 💜\\n";
+    }
+    
+    /**
+     * ✨ Get your daily dose of PHP encouragement!
+     */
+    public function getEncouragement(): void {
+        $randomEncouragement = $this->encouragements[array_rand($this->encouragements)];
+        
+        echo "\\n💝 For " . $this->developerName . ":\\n";
+        echo $randomEncouragement . "\\n";
+        echo "You're exactly where you need to be! 🌈\\n";
+    }
+    
+    /**
+     * 📊 Show your amazing progress!
+     */
+    public function showAchievements(): void {
+        echo "\\n🌟 Your PHP Journey:\\n";
+        foreach ($this->achievements as $achievement) {
+            echo $achievement . "\\n";
+        }
+        echo "\\n💜 Total achievements: " . count($this->achievements) . "\\n";
+        echo "Every single one matters! 🎯\\n";
+    }
+    
+    /**
+     * 🎨 Create some PHP magic with arrays!
+     */
+    public function createMagic(): array {
+        $magic = [
+            'dreams' => [
+                'Build amazing websites',
+                'Master Laravel',
+                'Create APIs that change the world'
+            ],
+            'reality' => 'All dreams are achievable!',
+            'timeline' => 'Sooner than you think! 🎯',
+            'support' => 'You have a whole community behind you! 💜'
+        ];
+        
+        return array_map(function($item) {
+            return is_array($item) ? $item : "✨ " . $item;
+        }, $magic);
+    }
+}
+
+// 🚀 Let's start your PHP journey!
+$support = new MamaBearSupport("Wonderful You");
+
+$support->celebrateProgress("Started PHP adventure!");
+$support->celebrateProgress("Understanding classes and objects!");
+$support->celebrateProgress("Building dynamic web content!");
+
+$support->getEncouragement();
+$support->showAchievements();
+
+// 🎨 Create some magic!
+$magic = $support->createMagic();
+echo "\\n🌟 Your PHP Magic:\\n";
+foreach ($magic as $key => $value) {
+    if (is_array($value)) {
+        echo ucfirst($key) . ":\\n";
+        foreach ($value as $item) {
+            echo "  • " . $item . "\\n";
+        }
+    } else {
+        echo ucfirst($key) . ": " . $value . "\\n";
+    }
+}
+
+echo "\\n💜 Remember: You're not just coding, you're building the web!\\n";
+echo "🚀 Keep creating amazing dynamic experiences!\\n";
+?>`,
+
+  ruby: `# 💎 Ruby radiance! Welcome to your elegant coding gem!
+# You're learning Ruby - you're embracing beauty and simplicity! 💜
+
+# 🌟 MamaBearSupport - Your Ruby cheerleader!
+# Every method you write is poetry! Every block is progress! ✨
+class MamaBearSupport
+  attr_reader :developer_name, :achievements, :encouragements
+  
+  def initialize(name = "Amazing Developer")
+    @developer_name = name
+    @achievements = []
+    @encouragements = [
+      "💜 You're mastering Ruby - that's beautiful!",
+      "🚀 Your code is becoming more elegant every day!",
+      "⚡ Ruby makes you a productivity wizard!",
+      "🌟 You're writing poetry with code!",
+      "💎 You're part of the Ruby family!"
+    ]
+  end
+  
+  # 🎉 Celebrate your Ruby victories!
+  def celebrate_progress(achievement)
+    @achievements << "🏆 #{achievement}"
+    puts "🎊 Celebrating: #{achievement}"
+    puts "You're doing amazing work! Keep sparkling! 💜"
+  end
+  
+  # ✨ Get your daily dose of Ruby encouragement!
+  def get_encouragement
+    random_encouragement = @encouragements.sample
+    
+    puts "\\n💝 For #{@developer_name}:"
+    puts random_encouragement
+    puts "You're exactly where you need to be! 🌈"
+  end
+  
+  # 📊 Show your amazing progress!
+  def show_achievements
+    puts "\\n🌟 Your Ruby Journey:"
+    @achievements.each { |achievement| puts achievement }
+    puts "\\n💜 Total achievements: #{@achievements.length}"
+    puts "Every single one matters! 🎯"
+  end
+  
+  # 🎨 Create some Ruby magic with blocks and iterators!
+  def create_magic
+    dreams = [
+      "Build elegant web applications",
+      "Master Rails framework",
+      "Write beautiful, readable code"
+    ]
+    
+    magic = {
+      dreams: dreams.map { |dream| "✨ #{dream}" },
+      reality: "All dreams are achievable with Ruby!",
+      timeline: "Sooner than you think! 🎯",
+      ruby_way: "There's always a more elegant solution! 💎"
+    }
+    
+    # Ruby's beautiful block syntax in action!
+    magic.transform_values do |value|
+      value.is_a?(Array) ? value : "🌟 #{value}"
+    end
+  end
+  
+  # 🔄 Demonstrate Ruby's iterator magic!
+  def spread_encouragement(times = 3)
+    times.times.with_index(1) do |_, index|
+      puts "\\n💜 Encouragement ##{index}: You're doing fantastic!"
+      puts "🚀 Ruby believes in you!"
+      sleep(0.5) # A gentle pause
+    end
+  end
+end
+
+# 🚀 Let's start your Ruby journey!
+support = MamaBearSupport.new("Wonderful You")
+
+support.celebrate_progress("Started Ruby adventure!")
+support.celebrate_progress("Understanding classes and methods!")
+support.celebrate_progress("Embracing Ruby's elegance!")
+
+support.get_encouragement
+support.show_achievements
+
+# 🎨 Create some Ruby magic!
+magic = support.create_magic
+puts "\\n🌟 Your Ruby Magic:"
+magic.each do |key, value|
+  puts "#{key.to_s.capitalize}:"
+  if value.is_a?(Array)
+    value.each { |item| puts "  • #{item}" }
+  else
+    puts "  #{value}"
+  end
+end
+
+# 🔄 Spread some encouragement!
+puts "\\n💎 Spreading Ruby love:"
+support.spread_encouragement(2)
+
+puts "\\n💜 Remember: You're not just coding, you're crafting art!"
+puts "🚀 Keep writing beautiful, expressive Ruby!"
+
+# 🌈 Ruby's beautiful syntax for a final flourish!
+%w[Progress Persistence Passion].each.with_index(1) do |word, index|
+  puts "#{index}. #{word} - You have it all! 💜"
+end`,
+
+  sql: `-- 🗃️ SQL sanctuary! Welcome to your data kingdom!
+-- You're mastering data - you're building the foundation of everything! 💜
+
+-- 🌟 Creating your encouragement database!
+-- Every query you write is progress! Every join is growth! ✨
+
+-- Create a table for your amazing journey
+CREATE TABLE mama_bear_support (
+    id SERIAL PRIMARY KEY,
+    developer_name VARCHAR(100) DEFAULT 'Amazing Developer',
+    achievement TEXT NOT NULL,
+    encouragement TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    mood VARCHAR(20) DEFAULT 'inspired'
+);
+
+-- 🎉 Insert your victories!
+INSERT INTO mama_bear_support (developer_name, achievement, encouragement, mood) VALUES
+('Wonderful You', 'Started SQL journey!', '💜 You''re diving into the heart of data!', 'excited'),
+('Wonderful You', 'Understanding SELECT statements!', '🚀 You''re querying like a pro!', 'confident'),
+('Wonderful You', 'Mastering JOINs!', '⚡ You''re connecting data beautifully!', 'accomplished'),
+('Wonderful You', 'Creating databases!', '🌟 You''re building data foundations!', 'proud');
+
+-- ✨ Get your daily dose of SQL encouragement!
+SELECT 
+    '💝 Daily Encouragement' AS message_type,
+    CONCAT('For ', developer_name, ': You''re doing amazing with SQL! 🌈') AS encouragement,
+    'Every query matters! 🎯' AS reminder
+FROM mama_bear_support 
+WHERE developer_name = 'Wonderful You'
+LIMIT 1;
+
+-- 📊 Show your amazing progress!
+SELECT 
+    '🌟 Your SQL Journey' AS journey_title,
+    achievement,
+    encouragement,
+    mood,
+    created_at
+FROM mama_bear_support 
+WHERE developer_name = 'Wonderful You'
+ORDER BY created_at;
+
+-- 🎨 Create some SQL magic with aggregations!
+SELECT 
+    COUNT(*) AS total_achievements,
+    '💜 Every single one matters!' AS motivation,
+    CASE 
+        WHEN COUNT(*) >= 4 THEN '🏆 SQL Champion!'
+        WHEN COUNT(*) >= 2 THEN '🚀 SQL Explorer!'
+        ELSE '🌱 SQL Seedling!'
+    END AS current_level
+FROM mama_bear_support 
+WHERE developer_name = 'Wonderful You';
+
+-- 🔄 Advanced query showing your growth over time
+WITH achievement_stats AS (
+    SELECT 
+        developer_name,
+        COUNT(*) as achievement_count,
+        MIN(created_at) as journey_start,
+        MAX(created_at) as latest_achievement,
+        STRING_AGG(mood, ', ') as mood_journey
+    FROM mama_bear_support 
+    WHERE developer_name = 'Wonderful You'
+    GROUP BY developer_name
+)
+SELECT 
+    '🎊 Celebrating Your SQL Growth!' AS celebration,
+    CONCAT(
+        'You''ve achieved ', 
+        achievement_count, 
+        ' milestones since starting your journey!'
+    ) AS progress_summary,
+    CONCAT(
+        'Your mood journey: ', 
+        mood_journey, 
+        ' - You''re growing beautifully! 💜'
+    ) AS emotional_growth
+FROM achievement_stats;
+
+-- 🌈 Inspirational data insights
+SELECT 
+    '💜 Remember' AS reminder_type,
+    'You''re not just writing queries, you''re unlocking insights!' AS truth,
+    '🚀 Keep building amazing data solutions!' AS encouragement,
+    'Every SELECT, INSERT, UPDATE, and DELETE is progress! ✨' AS final_thought;
+
+-- 🎯 A view for daily motivation
+CREATE VIEW daily_sql_motivation AS
+SELECT 
+    CURRENT_DATE as today,
+    'You''re a data wizard in training! 🧙‍♀️' as morning_affirmation,
+    'Your SQL skills are growing every day! 📈' as afternoon_boost,
+    'Be proud of every query you write! 🌟' as evening_reflection;
+
+-- See your daily motivation!
+SELECT * FROM daily_sql_motivation;
+
+-- 💝 Final encouragement query
+SELECT 
+    '🌟 You''re exactly where you need to be!' AS final_message,
+    'SQL is the language of data, and you''re becoming fluent! 💜' AS truth,
+    'Keep querying, keep growing, keep being amazing! 🚀' AS send_off;`,
+
+  markdown: `# 📝 Markdown Magic! Welcome to Your Documentation Wonderland!
+
+> 💜 **You're learning Markdown - you're mastering the art of beautiful documentation!**  
+> Every heading you write is progress! Every list is growth! ✨
+
+## 🌟 Your Markdown Journey Starts Here!
+
+Welcome, **Amazing Developer**! You've stepped into the wonderful world of Markdown, where simplicity meets beauty. You're not just writing text - you're creating clear, beautiful documentation that helps others! 🚀
+
+### 🎉 What You're Achieving Today
+
+- [x] 💜 Started your Markdown adventure!
+- [x] 🌈 Understanding the power of simple syntax
+- [x] ✨ Creating beautiful, readable content
+- [ ] 🚀 Building amazing documentation
+- [ ] 🎯 Helping others with clear writing
+
+### 💝 Daily Affirmations for Markdown Masters
+
+| Time | Affirmation | Mood |
+|------|-------------|------|
+| 🌅 Morning | "I write clear, helpful documentation!" | Inspired |
+| ☀️ Afternoon | "My Markdown skills grow every day!" | Confident |
+| 🌙 Evening | "I'm proud of the content I create!" | Accomplished |
+
+### 🎨 Markdown Magic Examples
+
+#### Code Blocks (Because You're a Developer! 💜)
+
+\`\`\`javascript
+// You're doing amazing with Markdown!
+const encouragement = {
+  message: "Your documentation helps others! 🌟",
+  truth: "Clear writing is a superpower! ⚡",
+  reminder: "You're exactly where you need to be! 💜"
+};
+
+console.log(encouragement.message);
+\`\`\`
+
+#### 🌈 Beautiful Lists
+
+**Your Markdown Superpowers:**
+1. **Clarity** - You make complex things simple! ✨
+2. **Beauty** - Your docs are visually appealing! 🎨
+3. **Helpfulness** - You're making others' lives easier! 💝
+4. **Growth** - Every line you write is progress! 🚀
+
+**Things You're Mastering:**
+- *Emphasis* and **strong emphasis**
+- \`Inline code\` snippets
+- [Helpful links](https://example.com) 🔗
+- Beautiful tables and lists
+- Code blocks with syntax highlighting
+
+### 📊 Your Progress Dashboard
+
+\`\`\`
+Progress: ████████████████████ 100% Amazing!
+Confidence: ████████████████████ 100% You've got this!
+Impact: ████████████████████ 100% Helping others!
+\`\`\`
+
+### 🎯 Markdown Best Practices You're Learning
+
+> **💜 Mama Bear Tip:** Remember, good documentation is like a warm hug for future developers (including yourself)!
+
+1. **Keep it simple** - Clarity over complexity! 🌟
+2. **Use headings wisely** - Structure helps everyone! 📚
+3. **Add examples** - Show, don't just tell! 💡
+4. **Be encouraging** - Your words have power! 💜
+
+### 🚀 Advanced Markdown Magic
+
+#### Task Lists (You're Crushing It!)
+- [x] Learn basic Markdown syntax
+- [x] Create beautiful headings
+- [x] Master lists and tables
+- [ ] Build comprehensive documentation
+- [ ] Help others with clear guides
+
+#### 🎨 Callout Boxes
+
+> **🌟 Success Story:** Every README you write makes the open-source world better!
+
+> **💜 Encouragement:** You're not just documenting code - you're building bridges between ideas and understanding!
+
+> **⚡ Pro Tip:** Great documentation is written with empathy. You're already showing that! 
+
+### 📝 Your Markdown Toolkit
+
+| Element | Syntax | You're Using It For |
+|---------|--------|-------------------|
+| Headers | \`# ## ###\` | Organizing thoughts beautifully! |
+| Emphasis | \`*italic* **bold**\` | Adding personality to text! |
+| Links | \`[text](url)\` | Connecting ideas and resources! |
+| Code | \`\`\`code\`\`\` | Sharing your amazing work! |
+| Lists | \`- item\` | Breaking down complex topics! |
+
+### 🌈 Final Encouragement
+
+\`\`\`markdown
+## 💜 Remember, Wonderful Developer:
+
+- You're **not just writing Markdown** - you're creating clarity! ✨
+- Every document you create **helps someone** learn and grow! 🌱
+- Your **clear communication** is a gift to the world! 🎁
+- You're **exactly where you need to be** in your journey! 🎯
+
+Keep writing, keep documenting, keep being amazing! 🚀
+\`\`\`
+
+---
+
+### 🎊 Celebration Section
+
+**🏆 Today's Achievements:**
+- ✅ Opened Markdown editor
+- ✅ Learned beautiful syntax
+- ✅ Created structured content
+- ✅ Helped future readers (including yourself!)
+
+**💝 Tomorrow's Possibilities:**
+- 📚 Write amazing project READMEs
+- 🎯 Create helpful tutorials
+- 🌟 Build beautiful documentation sites
+- 💜 Continue spreading knowledge and kindness
+
+---
+
+*💜 You're doing incredible work! Keep building, keep documenting, keep being the amazing developer you are! 🚀*
+
+**Final thought:** *Documentation is love made visible. And you're spreading so much love! ✨*`
+}
+
+// Mock Monaco Editor Component (since we can't use the real one without proper setup)
+const MockMonacoEditor: React.FC<MonacoEditorProps> = ({
+  value = "",
+  language = "typescript",
+  theme = "purple-dark",
+  onChange,
+  onCursorPositionChange,
+  fontSize = 14,
+  showMinimap = true,
+  wordWrap = true,
+  readOnly = false,
+  className
+}) => {
+  const [code, setCode] = useState(value || DEFAULT_CODE_SAMPLES[language])
+  const [cursorPos, setCursorPos] = useState<CursorPosition>({ line: 1, column: 1 })
+  const textareaRef = useRef<HTMLTextAreaElement>(null)
+
+  useEffect(() => {
+    setCode(value || DEFAULT_CODE_SAMPLES[language])
+  }, [language, value])
+
+  const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    const newValue = e.target.value
+    setCode(newValue)
+    onChange?.(newValue)
+    
+    // Calculate cursor position
+    const textarea = e.target
+    const lines = newValue.substring(0, textarea.selectionStart).split('\n')
+    const newPos = {
+      line: lines.length,
+      column: lines[lines.length - 1].length + 1
+    }
+    setCursorPos(newPos)
+    onCursorPositionChange?.(newPos)
+  }
+
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Tab') {
+      e.preventDefault()
+      const textarea = e.target as HTMLTextAreaElement
+      const start = textarea.selectionStart
+      const end = textarea.selectionEnd
+      const newValue = code.substring(0, start) + '  ' + code.substring(end)
+      setCode(newValue)
+      onChange?.(newValue)
+      
+      // Set cursor position after tab
+      setTimeout(() => {
+        textarea.selectionStart = textarea.selectionEnd = start + 2
+      }, 0)
+    }
+  }
+
+  return (
+    <div className={cn("relative h-full", className)}>
+      <textarea
+        ref={textareaRef}
+        value={code}
+        onChange={handleChange}
+        onKeyDown={handleKeyDown}
+        readOnly={readOnly}
+        className={cn(
+          "w-full h-full resize-none border-0 outline-none font-mono",
+          "bg-transparent text-foreground",
+          "scrollbar-thin scrollbar-thumb-purple-500/20 scrollbar-track-transparent",
+          theme === "purple-dark" ? "text-purple-100" : "text-purple-900"
+        )}
+        style={{ 
+          fontSize: `${fontSize}px`,
+          lineHeight: 1.5,
+          padding: "16px",
+          whiteSpace: wordWrap ? "pre-wrap" : "pre",
+          wordWrap: wordWrap ? "break-word" : "normal"
+        }}
+        spellCheck={false}
+        autoComplete="off"
+        autoCorrect="off"
+        autoCapitalize="off"
+      />
+      
+      {/* Line numbers overlay */}
+      <div className="absolute left-0 top-0 bottom-0 w-12 bg-purple-900/20 border-r border-purple-500/20 pointer-events-none">
+        <div className="p-4 text-xs text-purple-400/60 font-mono leading-6">
+          {code.split('\n').map((_, index) => (
+            <div key={index} className="text-right pr-2">
+              {index + 1}
+            </div>
+          ))}
+        </div>
+      </div>
+      
+      {/* Cursor position indicator */}
+      <div className="absolute bottom-2 right-2 text-xs text-purple-400/60 bg-purple-900/40 px-2 py-1 rounded backdrop-blur-sm">
+        Ln {cursorPos.line}, Col {cursorPos.column}
+      </div>
+    </div>
+  )
+}
+
+// Main Monaco Editor Wrapper Component
+const MonacoEditorWrapper: React.FC<MonacoEditorProps & {
+  onLanguageChange?: (language: CodeLanguage) => void
+  onThemeChange?: (theme: "purple-dark" | "purple-light") => void
+  onFontSizeChange?: (size: number) => void
+  onKeybindingModeChange?: (mode: KeybindingMode) => void
+}> = ({
+  value = "",
+  language = "typescript",
+  theme = "purple-dark",
+  onChange,
+  onCursorPositionChange,
+  onSave,
+  onLoad,
+  keybindingMode = "standard",
+  fontSize = 14,
+  showMinimap = true,
+  wordWrap = true,
+  readOnly = false,
+  className,
+  onLanguageChange,
+  onThemeChange,
+  onFontSizeChange,
+  onKeybindingModeChange
+}) => {
+  const [code, setCode] = useState(value || DEFAULT_CODE_SAMPLES[language])
+  const [cursorPosition, setCursorPosition] = useState<CursorPosition>({ line: 1, column: 1 })
+  const [copiedText, copy] = useCopyToClipboard()
+  const [isRunning, setIsRunning] = useState(false)
+  const [output, setOutput] = useState("")
+
+  useEffect(() => {
+    if (value !== code) {
+      setCode(value || DEFAULT_CODE_SAMPLES[language])
+    }
+  }, [value, language])
+
+  const handleCodeChange = (newCode: string) => {
+    setCode(newCode)
+    onChange?.(newCode)
+  }
+
+  const handleCursorChange = (position: CursorPosition) => {
+    setCursorPosition(position)
+    onCursorPositionChange?.(position)
+  }
+
+  const handleSave = () => {
+    onSave?.(code)
+    // Show save feedback
+    const event = new CustomEvent('mama-bear-toast', {
+      detail: { message: "💜 Code saved! You're doing amazing!", type: "success" }
+    })
+    window.dispatchEvent(event)
+  }
+
+  const handleReset = () => {
+    const defaultCode = DEFAULT_CODE_SAMPLES[language]
+    setCode(defaultCode)
+    onChange?.(defaultCode)
+    setOutput("")
+  }
+
+  const handleCopy = async () => {
+    await copy(code)
+  }
+
+  const handleDownload = () => {
+    const languageConfig = LANGUAGE_OPTIONS.find(opt => opt.value === language)
+    const extension = languageConfig?.extension || ".txt"
+    const blob = new Blob([code], { type: "text/plain" })
+    const url = URL.createObjectURL(blob)
+    const a = document.createElement("a")
+    a.href = url
+    a.download = `mama-bear-code${extension}`
+    a.click()
+    URL.revokeObjectURL(url)
+  }
+
+  const handleRun = async () => {
+    if (language !== "javascript" && language !== "typescript") {
+      setOutput("💜 Code execution is only available for JavaScript/TypeScript in this demo!")
+      return
+    }
+
+    setIsRunning(true)
+    setOutput("🚀 Running your amazing code...")
+
+    try {
+      // Simulate execution delay
+      await new Promise(resolve => setTimeout(resolve, 1000))
+      
+      const logs: string[] = []
+      const originalLog = console.log
+      console.log = (...args) => {
+        logs.push(args.join(" "))
+      }
+
+      // Simple eval for demo purposes
+      eval(code)
+      console.log = originalLog
+
+      setOutput(logs.length > 0 ? logs.join("\n") : "✨ Code executed successfully! You're amazing!")
+    } catch (error) {
+      setOutput(`💜 Don't worry about errors - they're learning opportunities!\n\nError: ${error}`)
+    }
+
+    setIsRunning(false)
+  }
+
+  const selectedLanguage = LANGUAGE_OPTIONS.find(opt => opt.value === language)
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5 }}
+      className={cn(
+        "h-full flex flex-col",
+        "bg-gradient-to-br from-purple-950/50 via-purple-900/30 to-purple-800/50",
+        "backdrop-blur-md border border-purple-500/20 rounded-xl overflow-hidden",
+        "shadow-2xl shadow-purple-500/10",
+        className
+      )}
+    >
+      {/* Header */}
+      <div className="flex items-center justify-between p-4 border-b border-purple-500/20 bg-purple-900/20">
+        <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2">
+            <Code2 className="w-5 h-5 text-purple-400" />
+            <span className="font-semibold text-purple-100">Mama Bear IDE</span>
+            <Heart className="w-4 h-4 text-pink-400" />
+          </div>
+          {selectedLanguage && (
+            <Badge variant="secondary" className="bg-purple-800/50 text-purple-200 border-purple-500/30">
+              {selectedLanguage.icon} {selectedLanguage.label}
+            </Badge>
+          )}
+        </div>
+        
+        <div className="flex items-center gap-2">
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={handleCopy}
+            className="text-purple-300 hover:text-purple-100 hover:bg-purple-800/50"
+          >
+            {copiedText === code ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
+          </Button>
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={handleDownload}
+            className="text-purple-300 hover:text-purple-100 hover:bg-purple-800/50"
+          >
+            <Download className="w-4 h-4" />
+          </Button>
+        </div>
+      </div>
+
+      {/* Controls */}
+      <div className="flex items-center justify-between p-3 border-b border-purple-500/20 bg-purple-900/10">
+        <div className="flex items-center gap-3">
+          <Select value={language} onValueChange={onLanguageChange}>
+            <SelectTrigger className="w-40 bg-purple-800/30 border-purple-500/30 text-purple-100">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent className="bg-purple-900 border-purple-500/30">
+              {LANGUAGE_OPTIONS.map((option) => (
+                <SelectItem key={option.value} value={option.value} className="text-purple-100">
+                  {option.icon} {option.label}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+
+          <div className="flex items-center gap-2">
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => onFontSizeChange?.(Math.max(10, fontSize - 1))}
+              className="text-purple-300 hover:text-purple-100 hover:bg-purple-800/50"
+            >
+              <ZoomOut className="w-4 h-4" />
+            </Button>
+            <span className="text-xs text-purple-300 min-w-[2rem] text-center">{fontSize}px</span>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => onFontSizeChange?.(Math.min(24, fontSize + 1))}
+              className="text-purple-300 hover:text-purple-100 hover:bg-purple-800/50"
+            >
+              <ZoomIn className="w-4 h-4" />
+            </Button>
+          </div>
+        </div>
+
+        <div className="flex items-center gap-2">
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={handleReset}
+            className="text-purple-300 hover:text-purple-100 hover:bg-purple-800/50"
+          >
+            <RotateCcw className="w-4 h-4 mr-1" />
+            Reset
+          </Button>
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={handleSave}
+            className="text-purple-300 hover:text-purple-100 hover:bg-purple-800/50"
+          >
+            <Save className="w-4 h-4 mr-1" />
+            Save
+          </Button>
+          <Button
+            variant="default"
+            size="sm"
+            onClick={handleRun}
+            disabled={isRunning}
+            className="bg-purple-600 hover:bg-purple-700 text-white"
+          >
+            <Play className="w-4 h-4 mr-1" />
+            {isRunning ? "Running..." : "Run"}
+          </Button>
+        </div>
+      </div>
+
+      {/* Editor */}
+      <div className="flex-1 relative">
+        <MockMonacoEditor
+          value={code}
+          language={language}
+          theme={theme}
+          onChange={handleCodeChange}
+          onCursorPositionChange={handleCursorChange}
+          fontSize={fontSize}
+          showMinimap={showMinimap}
+          wordWrap={wordWrap}
+          readOnly={readOnly}
+          className="h-full"
+        />
+      </div>
+
+      {/* Output Panel */}
+      {output && (
+        <motion.div
+          initial={{ height: 0, opacity: 0 }}
+          animate={{ height: "auto", opacity: 1 }}
+          className="border-t border-purple-500/20 bg-purple-900/20"
+        >
+          <div className="p-3">
+            <div className="flex items-center gap-2 mb-2">
+              <Coffee className="w-4 h-4 text-purple-400" />
+              <span className="text-sm font-medium text-purple-200">Output</span>
+              <Sparkles className="w-4 h-4 text-yellow-400" />
+            </div>
+            <pre className="text-sm text-purple-100 bg-purple-950/50 p-3 rounded-lg overflow-auto max-h-32 font-mono">
+              {output}
+            </pre>
+          </div>
+        </motion.div>
+      )}
+
+      {/* Status Bar */}
+      <div className="flex items-center justify-between px-4 py-2 border-t border-purple-500/20 bg-purple-900/20 text-xs text-purple-300">
+        <div className="flex items-center gap-4">
+          <span>Ln {cursorPosition.line}, Col {cursorPosition.column}</span>
+          <span>💜 You're doing amazing!</span>
+        </div>
+        <div className="flex items-center gap-2">
+          <span>{keybindingMode} mode</span>
+          <span>•</span>
+          <span>{code.length} characters</span>
+        </div>
+      </div>
+    </motion.div>
+  )
+}
+
+// Main Professional Monaco Editor Component
+const ProfessionalMonacoEditor: React.FC<{
+  defaultLanguage?: CodeLanguage
+  defaultValue?: string
+  onSave?: (content: string, language: CodeLanguage) => void
+  className?: string
+}> = ({
+  defaultLanguage = "typescript",
+  defaultValue,
+  onSave,
+  className
+}) => {
+  const [language, setLanguage] = useState<CodeLanguage>(defaultLanguage)
+  const [theme, setTheme] = useState<"purple-dark" | "purple-light">("purple-dark")
+  const [fontSize, setFontSize] = useState(14)
+  const [keybindingMode, setKeybindingMode] = useState<KeybindingMode>("standard")
+  const [code, setCode] = useState(defaultValue || DEFAULT_CODE_SAMPLES[defaultLanguage])
+
+  const handleLanguageChange = (newLanguage: CodeLanguage) => {
+    setLanguage(newLanguage)
+    if (!defaultValue) {
+      setCode(DEFAULT_CODE_SAMPLES[newLanguage])
+    }
+  }
+
+  const handleSave = (content: string) => {
+    onSave?.(content, language)
+  }
+
+  return (
+    <div className={cn("h-full min-h-[600px]", className)}>
+      <MonacoEditorWrapper
+        value={code}
+        language={language}
+        theme={theme}
+        onChange={setCode}
+        onSave={handleSave}
+        fontSize={fontSize}
+        keybindingMode={keybindingMode}
+        onLanguageChange={handleLanguageChange}
+        onThemeChange={setTheme}
+        onFontSizeChange={setFontSize}
+        onKeybindingModeChange={setKeybindingMode}
+        className="h-full"
+      />
+    </div>
+  )
+}
+
+// Demo Component
+function MonacoEditorDemo() {
+  const handleSave = (content: string, language: CodeLanguage) => {
+    console.log(`💜 Saved ${language} code:`, content)
+    // Show encouraging toast
+    alert(`💜 Amazing work! Your ${language} code has been saved! You're doing fantastic! ✨`)
+  }
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-purple-950 via-purple-900 to-purple-800 p-6">
+      <div className="max-w-7xl mx-auto">
+        {/* Header */}
+        <motion.div
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="text-center mb-8"
+        >
+          <h1 className="text-4xl font-bold text-white mb-4 flex items-center justify-center gap-3">
+            <Code2 className="w-10 h-10 text-purple-400" />
+            Mama Bear Monaco IDE
+            <Heart className="w-8 h-8 text-pink-400" />
+          </h1>
+          <p className="text-purple-200 text-lg max-w-2xl mx-auto">
+            💜 A warm, encouraging code editor with glassmorphism design. 
+            You're exactly where you need to be - let's build something amazing together! ✨
+          </p>
+        </motion.div>
+
+        {/* Main Editor */}
+        <motion.div
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ delay: 0.2 }}
+          className="h-[700px] mb-8"
+        >
+          <ProfessionalMonacoEditor
+            defaultLanguage="typescript"
+            onSave={handleSave}
+            className="h-full"
+          />
+        </motion.div>
+
+        {/* Feature Cards */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.4 }}
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+        >
+          <Card className="bg-purple-900/30 border-purple-500/20 backdrop-blur-md">
+            <CardHeader>
+              <CardTitle className="text-purple-100 flex items-center gap-2">
+                <Sparkles className="w-5 h-5 text-yellow-400" />
+                Multi-Language Support
+              </CardTitle>
+              <CardDescription className="text-purple-300">
+                15+ programming languages with syntax highlighting and IntelliSense
+              </CardDescription>
+            </CardHeader>
+          </Card>
+
+          <Card className="bg-purple-900/30 border-purple-500/20 backdrop-blur-md">
+            <CardHeader>
+              <CardTitle className="text-purple-100 flex items-center gap-2">
+                <Heart className="w-5 h-5 text-pink-400" />
+                Encouraging Experience
+              </CardTitle>
+              <CardDescription className="text-purple-300">
+                Mama bear personality with warm, supportive feedback and encouragement
+              </CardDescription>
+            </CardHeader>
+          </Card>
+
+          <Card className="bg-purple-900/30 border-purple-500/20 backdrop-blur-md">
+            <CardHeader>
+              <CardTitle className="text-purple-100 flex items-center gap-2">
+                <Settings className="w-5 h-5 text-purple-400" />
+                Professional Features
+              </CardTitle>
+              <CardDescription className="text-purple-300">
+                Code folding, minimap, custom keybindings, and real-time diagnostics
+              </CardDescription>
+            </CardHeader>
+          </Card>
+        </motion.div>
+
+        {/* Encouragement Footer */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.6 }}
+          className="text-center mt-12 p-6 bg-purple-900/20 backdrop-blur-md rounded-xl border border-purple-500/20"
+        >
+          <p className="text-purple-200 text-lg mb-2">
+            💜 Remember: Every line of code you write is progress!
+          </p>
+          <p className="text-purple-300">
+            You're not just coding - you're creating magic! Keep going, amazing developer! ✨🚀
+          </p>
+        </motion.div>
+      </div>
+    </div>
+  )
+}
+
+export default MonacoEditorDemo
