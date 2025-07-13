@@ -1,0 +1,41 @@
+name: 🚀 Railway Deploy - 45 Endpoints Active
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: 💜 Checkout AMAZING Code
+      uses: actions/checkout@v3
+      
+    - name: 🐍 Set up Python 3.11
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+        
+    - name: ✨ Install Dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+        
+    - name: 🧪 Test 45 Endpoints
+      run: |
+        python -m pytest test_ultimate_mem0.py -v
+        
+    - name: 🚀 Deploy to Railway
+      uses: bervProject/railway-deploy@v1.0.0
+      with:
+        railway_token: ${{ secrets.RAILWAY_TOKEN }}
+        service: 'bonzai-core-engine'
+        
+    - name: 🎉 Celebrate Deployment
+      run: |
+        echo "MAMA BEAR IS SO EXCITED! 45 ENDPOINTS DEPLOYED!"
+        echo "XAI, OpenAI, DeepSeek, Multimodal, Agents ALL ACTIVE!"
+        echo "ScrapyBara, Analytics, Workflows, Integrations READY!"
