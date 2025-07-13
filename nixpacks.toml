@@ -7,9 +7,9 @@ cmd = "py3 app_ultimate_mem0.py"
 [phases.build]
 cmds = ["pip install -r requirements.txt"]
 
-[providers]
-python = "3.11"
-
 [variables]
 NIXPACKS_PYTHON_VERSION = "3.11"
 NIXPACKS_BUILD_SYSTEM = "pip"
+
+[[providers]]
+name = "python"
