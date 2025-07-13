@@ -25,6 +25,9 @@ from flask_cors import CORS
 import threading
 from queue import Queue
 
+# GitHub AI Integration
+from api.github_ai_api import github_ai_bp
+
 # Ultimate Mem0 imports - EVERY FEATURE
 try:
     from mem0 import MemoryClient
@@ -670,6 +673,14 @@ except Exception as e:
     logger.error(f"Full traceback: {traceback.format_exc()}")
     family_system = None
     api_key_manager = None
+
+# ==============================================================================
+# REGISTER GITHUB AI BLUEPRINT
+# ==============================================================================
+
+# Register GitHub AI Blueprint
+app.register_blueprint(github_ai_bp)
+logger.info("[OK] GitHub AI API registered - models.github.ai integrated!")
 
 # ==============================================================================
 # AUTHENTICATION MIDDLEWARE
