@@ -631,6 +631,22 @@ app = Flask(__name__)
 app.config['SECRET_KEY'] = os.getenv('FLASK_SECRET_KEY', 'bonzai-ultimate-mem0-secret')
 CORS(app, origins=["*"])
 
+# ==============================================================================
+# HEALTH CHECK ENDPOINT - CRITICAL FOR RAILWAY DEPLOYMENT!
+# ==============================================================================
+
+@app.route('/api/health', methods=['GET'])
+def health_check():
+    """Railway health check endpoint - MUST RESPOND QUICKLY!"""
+    return jsonify({
+        'success': True,
+        'status': 'healthy',
+        'service': 'bonzai-core-engine',
+        'endpoints': 45,
+        'timestamp': datetime.now().isoformat(),
+        'message': 'MAMA BEAR SUPERHERO ENDPOINTS ACTIVE!'
+    })
+
 # Initialize Ultimate Mem0 system
 logger.info("Starting Ultimate Mem0 system initialization...")
 
