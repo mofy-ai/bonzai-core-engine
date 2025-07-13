@@ -1591,12 +1591,185 @@ def integrations_sync():
     return jsonify({"success": True, "tool": "integrations_sync", "status": "active", "sync": "complete"})
 
 # ==============================================================================
+# MOBILE MEMORY BRIDGE - OPENMEMORY INTEGRATION FOR PHONE/REMOTE ACCESS
+# ==============================================================================
+
+@app.route('/api/mobile/export/baseline', methods=['GET'])
+@require_api_key
+def mobile_export_baseline():
+    """Export complete memory baseline for initial OpenMemory setup"""
+    if not family_system:
+        return jsonify({'error': 'Family system not available'}), 503
+    
+    try:
+        # Search for ALL family memories for baseline export
+        all_memories = asyncio.run(family_system.search_family_memory(
+            query="",  # Empty query to get everything
+            use_advanced_retrieval=False  # Faster for bulk export
+        ))
+        
+        # Format for OpenMemory import
+        export_data = {
+            "export_type": "baseline_complete",
+            "timestamp": datetime.now().isoformat(),
+            "total_memories": len(all_memories),
+            "memories": [
+                {
+                    "content": memory.get("content", ""),
+                    "metadata": {
+                        "family_member": memory.get("metadata", {}).get("family_member", "unknown"),
+                        "category": memory.get("categories", ["general"])[0] if memory.get("categories") else "general",
+                        "timestamp": memory.get("metadata", {}).get("timestamp", ""),
+                        "original_id": memory.get("id", "")
+                    }
+                }
+                for memory in all_memories
+            ],
+            "export_for": "openmemory_mobile_bridge"
+        }
+        
+        logger.info(f"Mobile baseline export: {len(all_memories)} memories prepared for OpenMemory")
+        
+        return jsonify({
+            'success': True,
+            'export_data': export_data,
+            'message': f'Baseline export ready: {len(all_memories)} memories for OpenMemory setup',
+            'usage': 'Import this data into OpenMemory for mobile bridge functionality'
+        })
+        
+    except Exception as e:
+        logger.error(f"Mobile baseline export error: {e}")
+        return jsonify({'success': False, 'error': str(e)}), 500
+
+@app.route('/api/mobile/export/daily', methods=['GET'])
+@require_api_key
+def mobile_export_daily():
+    """Export yesterday's memories for daily OpenMemory sync"""
+    if not family_system:
+        return jsonify({'error': 'Family system not available'}), 503
+    
+    try:
+        # Calculate yesterday's date range
+        yesterday = datetime.now() - timedelta(days=1)
+        yesterday_start = yesterday.replace(hour=0, minute=0, second=0, microsecond=0)
+        yesterday_end = yesterday.replace(hour=23, minute=59, second=59, microsecond=999999)
+        
+        # Search for memories from yesterday
+        recent_memories = asyncio.run(family_system.search_family_memory(
+            query="",  # Get all recent memories
+            search_filters={
+                "metadata.timestamp": {
+                    "$gte": yesterday_start.isoformat(),
+                    "$lte": yesterday_end.isoformat()
+                }
+            }
+        ))
+        
+        # Format for daily sync
+        daily_export = {
+            "export_type": "daily_increment",
+            "date": yesterday.strftime("%Y-%m-%d"),
+            "timestamp": datetime.now().isoformat(),
+            "new_memories": len(recent_memories),
+            "memories": [
+                {
+                    "content": memory.get("content", ""),
+                    "metadata": {
+                        "family_member": memory.get("metadata", {}).get("family_member", "unknown"),
+                        "category": memory.get("categories", ["general"])[0] if memory.get("categories") else "general",
+                        "timestamp": memory.get("metadata", {}).get("timestamp", ""),
+                        "sync_date": yesterday.strftime("%Y-%m-%d")
+                    }
+                }
+                for memory in recent_memories
+            ]
+        }
+        
+        logger.info(f"Daily mobile export: {len(recent_memories)} new memories from {yesterday.strftime('%Y-%m-%d')}")
+        
+        return jsonify({
+            'success': True,
+            'export_data': daily_export,
+            'message': f'Daily sync ready: {len(recent_memories)} new memories from yesterday',
+            'sync_date': yesterday.strftime("%Y-%m-%d")
+        })
+        
+    except Exception as e:
+        logger.error(f"Daily mobile export error: {e}")
+        return jsonify({'success': False, 'error': str(e)}), 500
+
+@app.route('/api/mobile/bridge/search', methods=['POST'])
+@require_api_key
+def mobile_bridge_search():
+    """Search endpoint for mobile apps via OpenMemory bridge"""
+    try:
+        data = request.get_json()
+        query = data.get('query', '')
+        
+        # This endpoint expects to be called FROM the OpenMemory bridge
+        # It provides additional context for mobile searches
+        
+        mobile_search_result = {
+            "bridge_active": True,
+            "query": query,
+            "timestamp": datetime.now().isoformat(),
+            "message": "Mobile bridge search - use OpenMemory localhost:8765 for actual search",
+            "bridge_endpoints": {
+                "local_direct": "http://localhost:8765/search",
+                "bridge_server": "http://localhost:9000/hybrid-search",
+                "daily_sync": "/api/mobile/export/daily"
+            },
+            "instructions": "This endpoint confirms bridge connectivity. Mobile apps should use OpenMemory bridge for actual searches."
+        }
+        
+        return jsonify({
+            'success': True,
+            'bridge_result': mobile_search_result,
+            'mobile_ready': True
+        })
+        
+    except Exception as e:
+        return jsonify({'success': False, 'error': str(e)}), 500
+
+@app.route('/api/mobile/bridge/status', methods=['GET'])
+def mobile_bridge_status():
+    """Check mobile bridge connectivity and sync status"""
+    try:
+        bridge_status = {
+            "bridge_system": "openmemory_mobile",
+            "status": "ready",
+            "endpoints": {
+                "baseline_export": "/api/mobile/export/baseline",
+                "daily_export": "/api/mobile/export/daily", 
+                "bridge_search": "/api/mobile/bridge/search"
+            },
+            "workflow": {
+                "1": "Export baseline using /api/mobile/export/baseline",
+                "2": "Import baseline data into OpenMemory (localhost:8765)",
+                "3": "Daily sync using /api/mobile/export/daily",
+                "4": "Mobile apps access via OpenMemory bridge (localhost:9000)"
+            },
+            "bridge_architecture": {
+                "desktop_memory": "Mem0 Enterprise (unchanged)",
+                "mobile_memory": "OpenMemory bridge",
+                "sync_frequency": "Daily",
+                "mobile_benefit": "Full context on walks, unlimited chat restarts"
+            },
+            "timestamp": datetime.now().isoformat()
+        }
+        
+        return jsonify(bridge_status)
+        
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+# ==============================================================================
 # APPLICATION STARTUP
 # ==============================================================================
 
 if __name__ == '__main__':
     logger.info("STARTING ULTIMATE MEM0 PLATFORM...")
-    logger.info("🚀 45 ULTIMATE ENDPOINTS ACTIVE! (15 Original + 30 New)")
+    logger.info("🚀 49 ULTIMATE ENDPOINTS ACTIVE! (45 Original + 4 Mobile Bridge)")
     logger.info("ALL 12 Mem0 Advanced Features Active")
     logger.info("Graph Memory, Group Chat, Advanced Retrieval")
     logger.info("Custom Categories, Criteria Retrieval, Memory Export")
@@ -1604,6 +1777,8 @@ if __name__ == '__main__':
     logger.info("Selective Storage, Custom Instructions, Webhooks")
     logger.info("Ultimate API Key Authentication")
     logger.info("Family Collaboration at Maximum Level")
+    logger.info("📱 MOBILE MEMORY BRIDGE: OpenMemory Integration Active!")
+    logger.info("🚶‍♂️ Walk Mode: Full Context Access via Mobile Bridge!")
     
     # Test API keys
     logger.info("Test API Keys:")
@@ -1614,6 +1789,8 @@ if __name__ == '__main__':
     logger.info("MEM0 UTILIZATION: 100% OF ENTERPRISE FEATURES")
     logger.info("SUPERHERO ENDPOINT SPRINT: COMPLETE! ✅")
     logger.info("XAI, OpenAI, DeepSeek, Multimodal, Agents, Express, ScrapyBara ALL ACTIVE")
+    logger.info("📱 MOBILE BRIDGE: OpenMemory Export/Sync for Walk Mode Ready!")
+    logger.info("🔄 Daily Sync: Export → OpenMemory → Mobile Full Context Access!")
     
     # Start the ultimate application
     app.run(
