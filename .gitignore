@@ -2,6 +2,7 @@
 logs/
 venv/
 test_venv/
+test_env/
 ultimate_mem0_env/
 __pycache__/
 *.pyc
